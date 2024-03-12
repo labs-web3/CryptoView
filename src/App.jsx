@@ -1,3 +1,5 @@
+import { useBearStore } from "./zustand/store";
+
 function App() {
   return <></>;
 }
