@@ -5,7 +5,9 @@ function App() {
   return (
     <>
       <div className="md:container min-h-screen">
-        <TableNext />
+        <div className="shadow-lg">
+          <TableNext />
+        </div>
       </div>
     </>
   );

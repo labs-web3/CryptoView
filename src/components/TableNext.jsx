@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -46,38 +45,40 @@ export default function TableNext() {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <div>
-              {posts.map((post, index) => (
-                <TableRow key={index}>
-                  <TableCell>
+            posts.map((post, index) => (
+              <TableRow key={index}>
+                <TableCell
+                  key={post.name}
+                  className={`${post.name === "Chiliz" ? "text-red-500" : ""}`}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <span style={{ marginRight: "5px" }}>
                     {post.market_cap_rank}.
-                    <img width={25} alt={post.name} src={post.image} />
-                  </TableCell>
-                  <TableCell
-                    key={post.name}
-                    className={`${
-                      post.name === "Chiliz" ? "text-red-500" : ""
-                    }`}
-                  >
-                    {post.name}
-                  </TableCell>
-                  <TableCell key={post.current_price}>
-                    {post.current_price}
-                  </TableCell>
-                  <TableCell
-                    key={post.price_change_24h}
-                    className={`${
-                      post.price_change_24h.toString().startsWith("-")
-                        ? "text-red-500"
-                        : "text-green-500"
-                    }`}
-                  >
-                    {post.price_change_24h}
-                  </TableCell>
-                  <TableCell key={post.ath}>ATH : {post.ath}</TableCell>
-                </TableRow>
-              ))}
-            </div>
+                  </span>
+                  <img
+                    width={25}
+                    alt={post.name}
+                    src={post.image}
+                    style={{ marginRight: "5px" }}
+                  />
+                  <span>{post.name}</span>
+                </TableCell>
+                <TableCell key={post.current_price}>
+                  ${post.current_price}
+                </TableCell>
+                <TableCell
+                  key={post.price_change_24h}
+                  className={`${
+                    post.price_change_24h.toString().startsWith("-")
+                      ? "text-red-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  {post.price_change_24h}
+                </TableCell>
+                <TableCell key={post.ath}>${post.ath}</TableCell>
+              </TableRow>
+            ))
           )}
         </TableBody>
       </Table>
