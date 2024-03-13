@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 export default function TableNext() {
   const [posts, setPosts] = useState([]);
