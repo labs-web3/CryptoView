@@ -4,7 +4,7 @@ import TableNext from "./components/TableNext";
 function App() {
   return (
     <>
-      <div className="lg:container mx-auto dark min-h-screen">
+      <div className="md:container min-h-screen">
         <TableNext />
       </div>
     </>
