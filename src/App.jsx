@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <div className="md:container min-h-screen">
-        <div className="shadow-lg">
+        <div className="flex dark">
           <TableNext />
         </div>
       </div>

@@ -16,7 +16,7 @@ export default function TableNext() {
     const fetchAsync = async () => {
       try {
         const response = await fetch(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
         );
         const data = await response.json();
         setPosts(data);
@@ -28,7 +28,14 @@ export default function TableNext() {
     };
     fetchAsync();
   }, []);
-  // console.log(posts);
+  console.log(posts);
+
+  const formatPercentage = (value) => {
+    return Intl.NumberFormat({
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 2,
+    }).format(value);
+  };
 
   return (
     <>
@@ -37,6 +44,9 @@ export default function TableNext() {
           <TableRow>
             <TableHead className="font-bold">Name </TableHead>
             <TableHead className="font-bold">Price </TableHead>
+            <TableHead className="font-bold">1 h </TableHead>
+            <TableHead className="font-bold">24 h </TableHead>
+            <TableHead className="font-bold">7 j </TableHead>
             <TableHead className="font-bold">Last 24h </TableHead>
             <TableHead className="font-bold">ATH </TableHead>
           </TableRow>
@@ -65,6 +75,24 @@ export default function TableNext() {
                 </TableCell>
                 <TableCell key={post.current_price}>
                   ${post.current_price}
+                </TableCell>
+                <TableCell key={post.price_change_percentage_1h_in_currency}>
+                  {formatPercentage(
+                    post.price_change_percentage_1h_in_currency
+                  )}
+                  %
+                </TableCell>
+                <TableCell key={post.price_change_percentage_24h_in_currency}>
+                  {formatPercentage(
+                    post.price_change_percentage_24h_in_currency
+                  )}
+                  %
+                </TableCell>
+                <TableCell key={post.price_change_percentage_7d_in_currency}>
+                  {formatPercentage(
+                    post.price_change_percentage_7d_in_currency
+                  )}
+                  %
                 </TableCell>
                 <TableCell
                   key={post.price_change_24h}
