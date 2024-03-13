@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Image } from "@nextui-org/image";
 
 export default function TableNext() {
   const [posts, setPosts] = useState([]);
@@ -41,7 +40,7 @@ export default function TableNext() {
                 <tr key={index}>
                   <td>
                     {post.market_cap_rank}.
-                    <Image width={25} alt={post.name} src={post.image} />
+                    <img width={25} alt={post.name} src={post.image} />
                   </td>
                   <td
                     key={post.name}
