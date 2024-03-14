@@ -67,101 +67,97 @@ export default function Home() {
 
   return (
     <>
-      <div className="md:container">
-        <Table className="table-auto">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="font-bold">Name </TableHead>
-              <TableHead className="font-bold">Price </TableHead>
-              <TableHead className="font-bold">1 h </TableHead>
-              <TableHead className="font-bold">24 h </TableHead>
-              <TableHead className="font-bold">7 j </TableHead>
-              <TableHead className="font-bold">ATH </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {posts.map((post, index) => (
-              <TableRow key={index}>
-                <TableCell
-                  key={post.name}
-                  className={`${post.name === "Chiliz" ? "text-red-500" : ""}`}
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  <span style={{ marginRight: "5px" }}>
-                    {post.market_cap_rank}.
-                  </span>
-                  <img
-                    width={25}
-                    alt={post.name}
-                    src={post.image}
-                    style={{ marginRight: "5px" }}
-                  />
-                  <Link to={`/detailed/${post.id}`}>
-                    <span>{post.name}</span>
-                  </Link>
-                </TableCell>
-                <TableCell key={post.current_price}>
-                  ${post.current_price}
-                </TableCell>
-                <TableCell
-                  key={post.price_change_percentage_1h_in_currency}
-                  className={`${
+      <Table className="table-auto">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="font-bold">Name </TableHead>
+            <TableHead className="font-bold">Price </TableHead>
+            <TableHead className="font-bold">1 h </TableHead>
+            <TableHead className="font-bold">24 h </TableHead>
+            <TableHead className="font-bold">7 j </TableHead>
+            <TableHead className="font-bold">ATH </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {posts.map((post, index) => (
+            <TableRow key={index}>
+              <TableCell
+                key={post.name}
+                className={`${post.name === "Chiliz" ? "text-red-500" : ""}`}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <span style={{ marginRight: "5px" }}>
+                  {post.market_cap_rank}.
+                </span>
+                <img
+                  width={25}
+                  alt={post.name}
+                  src={post.image}
+                  style={{ marginRight: "5px" }}
+                />
+                <Link to={`/detailed/${post.id}`}>
+                  <span>{post.name}</span>
+                </Link>
+              </TableCell>
+              <TableCell key={post.current_price}>
+                ${post.current_price}
+              </TableCell>
+              <TableCell
+                key={post.price_change_percentage_1h_in_currency}
+                className={`${
+                  post.price_change_percentage_1h_in_currency
+                    .toString()
+                    .startsWith("-")
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                <span style={{ display: "flex" }}>
+                  {arrowUpOrDown(post.price_change_percentage_1h_in_currency)}
+                  {formatPercentage(
                     post.price_change_percentage_1h_in_currency
-                      .toString()
-                      .startsWith("-")
-                      ? "text-red-500"
-                      : "text-green-500"
-                  }`}
-                >
-                  <span style={{ display: "flex" }}>
-                    {arrowUpOrDown(post.price_change_percentage_1h_in_currency)}
-                    {formatPercentage(
-                      post.price_change_percentage_1h_in_currency
-                    )}
-                  </span>
-                </TableCell>
-                <TableCell
-                  key={post.price_change_percentage_24h_in_currency}
-                  className={`${
+                  )}
+                </span>
+              </TableCell>
+              <TableCell
+                key={post.price_change_percentage_24h_in_currency}
+                className={`${
+                  post.price_change_percentage_24h_in_currency
+                    .toString()
+                    .startsWith("-")
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                <span style={{ display: "flex" }}>
+                  {arrowUpOrDown(post.price_change_percentage_24h_in_currency)}
+                  {formatPercentage(
                     post.price_change_percentage_24h_in_currency
-                      .toString()
-                      .startsWith("-")
-                      ? "text-red-500"
-                      : "text-green-500"
-                  }`}
-                >
-                  <span style={{ display: "flex" }}>
-                    {arrowUpOrDown(
-                      post.price_change_percentage_24h_in_currency
-                    )}
-                    {formatPercentage(
-                      post.price_change_percentage_24h_in_currency
-                    )}
-                  </span>
-                </TableCell>
-                <TableCell
-                  key={post.price_change_percentage_7d_in_currency}
-                  className={`${
+                  )}
+                </span>
+              </TableCell>
+              <TableCell
+                key={post.price_change_percentage_7d_in_currency}
+                className={`${
+                  post.price_change_percentage_7d_in_currency
+                    .toString()
+                    .startsWith("-")
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                <span style={{ display: "flex" }}>
+                  {arrowUpOrDown(post.price_change_percentage_7d_in_currency)}
+                  {formatPercentage(
                     post.price_change_percentage_7d_in_currency
-                      .toString()
-                      .startsWith("-")
-                      ? "text-red-500"
-                      : "text-green-500"
-                  }`}
-                >
-                  <span style={{ display: "flex" }}>
-                    {arrowUpOrDown(post.price_change_percentage_7d_in_currency)}
-                    {formatPercentage(
-                      post.price_change_percentage_7d_in_currency
-                    )}
-                  </span>
-                </TableCell>
-                <TableCell key={post.ath}>${post.ath}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+                  )}
+                </span>
+              </TableCell>
+              <TableCell key={post.ath}>${post.ath}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
   );
 }
