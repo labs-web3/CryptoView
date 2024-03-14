@@ -1,14 +1,17 @@
 import { useBearStore } from "./zustand/store";
-import TableNext from "./components/TableNext";
+import Home from "./pages/Home.jsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Detailed from "./pages/Detailed.jsx";
 
 function App() {
   return (
     <>
-      <div className="md:container min-h-screen">
-        <div className="flex dark">
-          <TableNext />
-        </div>
-      </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/detailed/:id" element={<Detailed />}></Route>
+        </Routes>
+      </Router>
     </>
   );
 }
