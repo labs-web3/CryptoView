@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,28 +6,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import FetchCrypto from "@/hooks/FetchCrypto";
 
 export default function TableNext() {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAsync = async () => {
-      try {
-        const response = await fetch(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
-        );
-        const data = await response.json();
-        setPosts(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    };
-    fetchAsync();
-  }, []);
-  console.log(posts);
+  const { posts, loading } = FetchCrypto(
+    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+  );
 
   const formatPercentage = (value) => {
     return Intl.NumberFormat("en-US", {
