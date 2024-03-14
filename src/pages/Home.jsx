@@ -67,7 +67,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="md:container dark">
+      <div className="md:container">
         <Table className="table-auto">
           <TableHeader>
             <TableRow>
