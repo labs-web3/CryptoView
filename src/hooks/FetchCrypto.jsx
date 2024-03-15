@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useCryptoStore } from "@/zustand/store";
 
 export default function FetchCrypto(url) {
-  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ export default function FetchCrypto(url) {
       try {
         const response = await fetch(url);
         const data = await response.json();
-        setPosts(data);
+        useCryptoStore.setState({ cryptos: data });
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -19,5 +19,5 @@ export default function FetchCrypto(url) {
     fetchAsync();
   }, [url]);
 
-  return { posts, loading };
+  return { loading };
 }

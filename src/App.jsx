@@ -1,4 +1,3 @@
-import { useBearStore } from "./zustand/store";
 import Home from "./pages/Home.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Detailed from "./pages/Detailed.jsx";
