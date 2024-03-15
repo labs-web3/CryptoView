@@ -8,13 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useCryptoStore } from "@/zustand/store";
 
 export default function Detailed() {
+  const { cryptos } = useCryptoStore();
   const { id } = useParams();
-  const { posts, loading } = FetchCrypto(
+  const { loading } = FetchCrypto(
     `https://api.coingecko.com/api/v3/coins/${id}?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
-  console.log(posts);
+  console.log(cryptos);
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -24,7 +26,7 @@ export default function Detailed() {
         <div className="flex">
           <Card>
             <CardHeader>
-              <CardTitle>{posts.name}</CardTitle>
+              <CardTitle>{cryptos.name}</CardTitle>
               <CardDescription>Card Description</CardDescription>
             </CardHeader>
             <CardContent>
