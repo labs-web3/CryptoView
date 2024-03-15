@@ -1,5 +1,13 @@
 import FetchCrypto from "@/hooks/FetchCrypto";
 import { useParams } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function Detailed() {
   const { id } = useParams();
@@ -12,16 +20,21 @@ export default function Detailed() {
   }
   return (
     <>
-      <div className="md:container">
-        <h1 className="text-center scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-          {posts.id}
-        </h1>
-        <p
-          className="leading-7 [&:not(:first-child)]:mt-6"
-          dangerouslySetInnerHTML={{ __html: posts.description.en }}
-        >
-          {/* {posts.description.en} */}
-        </p>
+      <div className="lg:container py-10">
+        <div className="flex">
+          <Card>
+            <CardHeader>
+              <CardTitle>{posts.name}</CardTitle>
+              <CardDescription>Card Description</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Card Content</p>
+            </CardContent>
+            <CardFooter>
+              <p>Card Footer</p>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </>
   );

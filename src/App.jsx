@@ -14,7 +14,6 @@ import {
   LayoutDashboard,
   Settings,
 } from "lucide-react";
-// import Navbar from "./components/Navbar";
 
 function App() {
   return (
