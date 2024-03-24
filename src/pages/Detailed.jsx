@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useCryptoStore } from "@/zustand/store";
+import { Line } from "react-chartjs-2";
 
 export default function Detailed() {
   const { cryptos } = useCryptoStore();
@@ -20,10 +21,35 @@ export default function Detailed() {
   if (loading) {
     return <p>Loading...</p>;
   }
+
+  let test = [
+    {
+      un: 1,
+    },
+    {
+      deux: 2,
+    },
+    {
+      trois: 3,
+    },
+  ];
   return (
     <>
-      <div className="lg:container py-10">
-        <div className="flex"></div>
+      <div className="container py-10">
+        <div className="flex flex-1 bg-green-300 h-1/2">
+          <Line
+            data={{
+              datasets: [
+                {
+                  labels: "Volume",
+                  data: test.map((data) => data.label),
+                  backgroundColor: "#333",
+                  borderColor: "#fff",
+                },
+              ],
+            }}
+          />
+        </div>
       </div>
     </>
   );
