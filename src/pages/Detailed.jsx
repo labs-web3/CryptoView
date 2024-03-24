@@ -23,20 +23,7 @@ export default function Detailed() {
   return (
     <>
       <div className="lg:container py-10">
-        <div className="flex">
-          <Card>
-            <CardHeader>
-              <CardTitle>{cryptos.name}</CardTitle>
-              <CardDescription>Card Description</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Card Content</p>
-            </CardContent>
-            <CardFooter>
-              <p>Card Footer</p>
-            </CardFooter>
-          </Card>
-        </div>
+        <div className="flex"></div>
       </div>
     </>
   );
