@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useCryptoStore } from "@/zustand/store";
-import { Line } from "react-chartjs-2";
+import LineChart from "@/components/LineChart";
 
 export default function Detailed() {
   const { cryptos } = useCryptoStore();
@@ -21,34 +21,19 @@ export default function Detailed() {
   if (loading) {
     return <p>Loading...</p>;
   }
-
-  let test = [
-    {
-      un: 1,
-    },
-    {
-      deux: 2,
-    },
-    {
-      trois: 3,
-    },
+  const data = [
+    { time: "Janvier", value: 100 },
+    { time: "Février", value: 120 },
+    { time: "Mars", value: 130 },
+    { time: "Avril", value: 110 },
+    { time: "Mai", value: 110 },
   ];
+
   return (
     <>
       <div className="container py-10">
         <div className="flex flex-1 bg-green-300 h-1/2">
-          <Line
-            data={{
-              datasets: [
-                {
-                  labels: "Volume",
-                  data: test.map((data) => data.label),
-                  backgroundColor: "#333",
-                  borderColor: "#fff",
-                },
-              ],
-            }}
-          />
+          <LineChart data={data} />
         </div>
       </div>
     </>
