@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { useCryptoStore } from "@/zustand/store";
 import LineChart from "@/components/LineChart";
-import { useState } from "react";
 
 export default function Detailed() {
   const { cryptos } = useCryptoStore();
@@ -22,23 +21,18 @@ export default function Detailed() {
   const { loading } = FetchCrypto(
     `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1, ${options}`
   );
-  console.log(cryptos);
   if (loading) {
     return <p>Loading...</p>;
   }
 
-  const formattedPrices = cryptos.prices.map((entry) => ({
-    time: new Date(entry[0]).toLocaleTimeString(),
-    value: entry[1],
-  }));
+  const formattedPrices = cryptos.prices
+    .map((entry) => ({
+      time: new Date(entry[0]).toLocaleTimeString(),
+      value: entry[1],
+    }))
+    .filter((entry, index) => index % 4 === 0);
 
-  // const data = [
-  //   { time: "Janvier", value: 100 },
-  //   { time: "Février", value: 120 },
-  //   { time: "Mars", value: 130 },
-  //   { time: "Avril", value: 110 },
-  //   { time: "Mai", value: 110 },
-  // ];
+  console.log(formattedPrices);
 
   return (
     <>

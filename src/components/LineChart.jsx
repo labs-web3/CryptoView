@@ -7,10 +7,15 @@ import {
   PointElement,
 } from "chart.js";
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+ChartJS.defaults.scale.border.display = false;
 
 export default function LineChart({ data }) {
+  const hourlyLabels = data
+    .filter((entry, index) => index % 4 === 0)
+    .map((entry) => entry.time);
+
   const chartData = {
-    labels: data.map((entry) => entry.time),
+    labels: hourlyLabels,
     datasets: [
       {
         label: "Valeur Crypto",
@@ -21,9 +26,24 @@ export default function LineChart({ data }) {
       },
     ],
   };
+
+  const chartOptions = {
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
   return (
     <>
-      <Line data={chartData} />
+      <Line data={chartData} options={chartOptions} />
     </>
   );
 }
