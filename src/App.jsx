@@ -1,7 +1,7 @@
 import Home from "./pages/Home.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Detailed from "./pages/Detailed.jsx";
-import MyAccount from "./pages/MyAccount.jsx";
+import Portfolio from "./pages/Portfolio.jsx";
 import Sidebar from "./components/Sidebar";
 import { SidebarItem } from "./components/Sidebar";
 import {
@@ -22,8 +22,8 @@ function App() {
         <Sidebar>
           <SidebarItem
             icon={<UserCircle size={20} />}
-            text="My Account"
-            to="/MyAccount"
+            text="Portfolio"
+            to="/Portfolio"
           />
           <SidebarItem
             to="/"
@@ -41,7 +41,7 @@ function App() {
         </Sidebar>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/MyAccount" element={<MyAccount />}></Route>
+          <Route path="/Portfolio" element={<Portfolio />}></Route>
           <Route path="/:id" element={<Detailed />}></Route>
         </Routes>
       </div>
