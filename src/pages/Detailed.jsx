@@ -33,7 +33,7 @@ export default function Detailed() {
       }),
       value: entry[1],
     }))
-    .filter((entry, index) => index % 4 === 0);
+    .filter((entry, index) => index % 2 === 0);
   console.log(formattedPrices);
 
   const lastPrice = cryptos.prices.at(0);

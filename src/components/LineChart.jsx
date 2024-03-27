@@ -11,7 +11,7 @@ ChartJS.defaults.scale.border.display = false;
 
 export default function LineChart({ data }) {
   const hourlyLabels = data
-    .filter((entry, index) => index % 4 === 0)
+    .filter((entry, index) => index % 2 === 0)
     .map((entry) => entry.time);
 
   const chartData = {

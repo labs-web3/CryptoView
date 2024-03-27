@@ -95,7 +95,7 @@ export default function Home() {
                   src={post.image}
                   style={{ marginRight: "5px" }}
                 />
-                <Link to={`/detailed/${post.id}`}>
+                <Link to={`/${post.id}`}>
                   <span>{post.name}</span>
                 </Link>
               </TableCell>

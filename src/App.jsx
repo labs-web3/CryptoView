@@ -1,6 +1,7 @@
 import Home from "./pages/Home.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Detailed from "./pages/Detailed.jsx";
+import MyAccount from "./pages/MyAccount.jsx";
 import Sidebar from "./components/Sidebar";
 import { SidebarItem } from "./components/Sidebar";
 import {
@@ -20,12 +21,17 @@ function App() {
       <div className="flex">
         <Sidebar>
           <SidebarItem
+            icon={<UserCircle size={20} />}
+            text="My Account"
+            to="/MyAccount"
+          />
+          <SidebarItem
+            to="/"
             icon={<LayoutDashboard size={20} />}
             text="Dashboard"
             alert
           />
           <SidebarItem icon={<BarChart3 size={20} />} text="Statistics" />
-          <SidebarItem icon={<UserCircle size={20} />} text="Users" />
           <SidebarItem icon={<Boxes size={20} />} text="Inventory" />
           <SidebarItem icon={<Package size={20} />} text="Orders" />
           <SidebarItem icon={<Receipt size={20} />} text="Billings" />
@@ -35,7 +41,8 @@ function App() {
         </Sidebar>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/detailed/:id" element={<Detailed />}></Route>
+          <Route path="/MyAccount" element={<MyAccount />}></Route>
+          <Route path="/:id" element={<Detailed />}></Route>
         </Routes>
       </div>
     </Router>
