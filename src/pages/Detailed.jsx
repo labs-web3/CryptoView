@@ -27,16 +27,22 @@ export default function Detailed() {
 
   const formattedPrices = cryptos.prices
     .map((entry) => ({
-      time: new Date(entry[0]).toLocaleTimeString(),
+      time: new Date(entry[0]).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       value: entry[1],
     }))
     .filter((entry, index) => index % 4 === 0);
-
   console.log(formattedPrices);
+
+  const lastPrice = cryptos.prices.at(0);
+  const roundedLastPrice = Math.round(lastPrice[1]);
 
   return (
     <>
       <div className="container py-10">
+        <h1>{roundedLastPrice}</h1>
         <div className="flex justify-center h-1/2">
           <LineChart data={formattedPrices} />
         </div>
