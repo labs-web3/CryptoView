@@ -8,14 +8,27 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Web3 } from "web3";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
   const [balance, setBalance] = useState();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const web3 = new Web3(
-    "https://mainnet.infura.io/v3/384d912916a74323b0d3d9583a77b8b9"
-  );
+  useEffect(() => {
+    if (connectedAccount) {
+      setLoading(true);
+      getBalance(connectedAccount)
+        .then((balance) => {
+          setBalance(balance);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error.message);
+          setLoading(false);
+        });
+    }
+  }, [connectedAccount]);
 
   const connectMetamask = async () => {
     try {
@@ -27,25 +40,32 @@ export default function MyAccount() {
         getBalance(accounts[0]);
       }
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     }
   };
 
-  const getBalance = async (account) => {
-    try {
-      const balanceWallet = await web3.eth.getBalance(account);
-      setBalance(web3.utils.fromWei(balanceWallet, "ether"));
-    } catch (error) {
-      console.log(error);
-    }
+  const getBalance = async (connectedAccount) => {
+    const web3 = new Web3(
+      "https://mainnet.infura.io/v3/384d912916a74323b0d3d9583a77b8b9"
+    );
+
+    const balanceWallet = await web3.eth.getBalance(connectedAccount);
+    return web3.utils.fromWei(balanceWallet, "ether");
   };
 
   return (
     <>
       <div className="container py-16">
         <div className="flex flex-col mb-4 items-start">
-          <Button onClick={() => connectMetamask()}>Connect my Wallet</Button>
-          <span className="mt-4">{balance}</span>
+          <Button onClick={connectMetamask}>Connecter MetaMask</Button>
+          {connectedAccount && <p>Compte connecté : {connectedAccount}</p>}
+          {loading ? (
+            <p>Chargement...</p>
+          ) : error ? (
+            <p>Erreur: {error}</p>
+          ) : balance ? (
+            <p>Solde : {parseFloat(balance).toFixed(4)} ETH</p>
+          ) : null}
         </div>
         <Card className="bg-[#eeeeee] shadow-xl">
           <CardHeader className="pb-3">
