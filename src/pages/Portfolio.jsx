@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Web3 } from "web3";
 import { useState, useEffect } from "react";
+import { ChevronDown, BadgeMinus } from "lucide-react";
 export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
   const [balance, setBalance] = useState();
@@ -56,13 +57,6 @@ export default function MyAccount() {
   return (
     <>
       <div className="container py-16">
-        <div className="flex flex-col mb-4 items-start">
-          {connectedAccount ? (
-            ""
-          ) : (
-            <Button onClick={connectMetamask}>Connecter MetaMask</Button>
-          )}
-        </div>
         <div className="flex justify-between text-center">
           <Card className="bg-[#eeeeee] shadow-xl w-1/3">
             <CardHeader className="pb-3">
@@ -94,7 +88,7 @@ export default function MyAccount() {
           </Card>
         </div>
         <div className="bg-black rounded-2xl h-1/2 w-1/2 mt-16 content-center p-16">
-          <div className="flex mb-4">
+          <div className="flex mb-4 justify-end relative items-center">
             <input
               type="number"
               name=""
@@ -102,8 +96,12 @@ export default function MyAccount() {
               placeholder="0"
               className="w-full rounded-xl h-[100px] text-3xl p-3"
             />
+            <Button icon name="" id="" className="absolute bg-red-500 right-10">
+              <BadgeMinus className="mr-2" />
+              ETH
+            </Button>
           </div>
-          <div className="flex">
+          <div className="flex justify-end relative items-center ">
             <input
               type="number"
               name=""
@@ -111,7 +109,21 @@ export default function MyAccount() {
               placeholder="0"
               className="w-full rounded-xl h-[100px] text-3xl p-3"
             />
+            <Button icon name="" id="" className="absolute bg-red-500 right-10">
+              Séléctionnez le jeton
+              <ChevronDown className="ml-2" />
+            </Button>
           </div>
+          {connectedAccount ? (
+            ""
+          ) : (
+            <Button
+              onClick={connectMetamask}
+              className="w-full mt-3 py-8 font-bold text-lg"
+            >
+              Connecter MetaMask
+            </Button>
+          )}
         </div>
       </div>
     </>
