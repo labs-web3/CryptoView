@@ -57,36 +57,46 @@ export default function MyAccount() {
     <>
       <div className="container py-16">
         <div className="flex flex-col mb-4 items-start">
-          <Button onClick={connectMetamask}>Connecter MetaMask</Button>
-          {connectedAccount && <p>Compte connecté : {connectedAccount}</p>}
-          {loading ? (
-            <p>Chargement...</p>
-          ) : error ? (
-            <p>Erreur: {error}</p>
-          ) : balance ? (
-            <p>Solde : {parseFloat(balance).toFixed(4)} ETH</p>
-          ) : null}
+          {connectedAccount ? (
+            ""
+          ) : (
+            <Button onClick={connectMetamask}>Connecter MetaMask</Button>
+          )}
         </div>
-        <Card className="bg-[#eeeeee] shadow-xl">
-          <CardHeader className="pb-3">
-            <CardDescription className="text-xl t text-[#777]">
-              Balance Available
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-between">
-              <span className="text-black font-bold text-3xl">40000 $</span>
-              <div className="flex gap-3">
-                <Button className="bg-white text-black font-bold shadow-xl px-6">
-                  Buy
-                </Button>
-                <Button className="bg-white text-black font-bold shadow-xl px-6">
-                  Receive
-                </Button>
+        <div className="flex justify-between text-center">
+          <Card className="bg-[#eeeeee] shadow-xl w-1/3">
+            <CardHeader className="pb-3">
+              <CardDescription className="text-xl t text-[#777]">
+                Balance Available
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center flex-col gap-3">
+                <span className="text-black font-bold text-3xl">
+                  {loading ? (
+                    <p>Chargement...</p>
+                  ) : error ? (
+                    <p>Erreur: {error}</p>
+                  ) : balance ? (
+                    <p>{parseFloat(balance).toFixed(4)} ETH</p>
+                  ) : null}
+                </span>
+                <div className="flex gap-3">
+                  <Button className="bg-white text-black font-bold shadow-xl px-6">
+                    Buy
+                  </Button>
+                  <Button className="bg-white text-black font-bold shadow-xl px-6">
+                    Receive
+                  </Button>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader></CardHeader>
+            <CardContent></CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );
