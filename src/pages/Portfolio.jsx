@@ -92,10 +92,26 @@ export default function MyAccount() {
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader></CardHeader>
-            <CardContent></CardContent>
-          </Card>
+        </div>
+        <div className="bg-black rounded-2xl h-1/2 w-1/2 mt-16 content-center p-16">
+          <div className="flex mb-4">
+            <input
+              type="number"
+              name=""
+              id=""
+              placeholder="0"
+              className="w-full rounded-xl h-[100px] text-3xl p-3"
+            />
+          </div>
+          <div className="flex">
+            <input
+              type="number"
+              name=""
+              id=""
+              placeholder="0"
+              className="w-full rounded-xl h-[100px] text-3xl p-3"
+            />
+          </div>
         </div>
       </div>
     </>
