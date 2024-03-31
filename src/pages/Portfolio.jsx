@@ -10,6 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Web3 } from "web3";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTriggerButton,
+} from "@/components/ui/dialog";
+
 export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
   const [balance, setBalance] = useState();
@@ -96,12 +105,22 @@ export default function MyAccount() {
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
-            <Button className="rounded-full bg-black hover:bg-neutral-800 font-bold">
-              ETH
-              <ChevronDown />
-            </Button>
+            <Dialog>
+              <DialogTriggerButton className="rounded-full bg-black hover:bg-neutral-800 font-bold text-xl">
+                ETH
+                <ChevronDown />
+              </DialogTriggerButton>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
-
           <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent">
             <input
               type="number"
@@ -110,10 +129,21 @@ export default function MyAccount() {
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
-            <Button className="rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb]">
-              Sélectionnez le jeton
-              <ChevronDown />
-            </Button>
+            <Dialog>
+              <DialogTriggerButton className="rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg">
+                Sélectionnez le jeton
+                <ChevronDown />
+              </DialogTriggerButton>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
           {connectedAccount ? (
             ""
