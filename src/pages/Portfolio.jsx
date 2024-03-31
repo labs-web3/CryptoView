@@ -23,8 +23,12 @@ export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
   const [balance, setBalance] = useState();
   const [loading, setLoading] = useState(false);
+  const [loadingList, setLoadingList] = useState(false);
   const [error, setError] = useState(null);
+  const [tokenList, setTokenList] = useState([]);
+  console.log(tokenList);
 
+  // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
       setLoading(true);
@@ -40,6 +44,7 @@ export default function MyAccount() {
     }
   }, [connectedAccount]);
 
+  // connection au wallet metamask
   const connectMetamask = async () => {
     try {
       if (window.ethereum) {
@@ -54,6 +59,7 @@ export default function MyAccount() {
     }
   };
 
+  // récuperation de la balance du wallet metamask de l'user et affichage conversion eth
   const getBalance = async (connectedAccount) => {
     const web3 = new Web3(
       "https://mainnet.infura.io/v3/384d912916a74323b0d3d9583a77b8b9"
@@ -62,6 +68,24 @@ export default function MyAccount() {
     const balanceWallet = await web3.eth.getBalance(connectedAccount);
     return web3.utils.fromWei(balanceWallet, "ether");
   };
+
+  // récuperation des tokens trusted par coingecko ERC20
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const response = await fetch(
+          "https://tokens.coingecko.com/uniswap/all.json"
+        );
+        const tokenList = await response.json();
+        setTokenList(tokenList);
+        setLoadingList(true);
+      } catch (error) {
+        console.log(error.message);
+        setLoadingList(false);
+      }
+    };
+    init();
+  }, []);
 
   return (
     <>
@@ -105,19 +129,23 @@ export default function MyAccount() {
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
+
             <Dialog>
               <DialogTriggerButton className="rounded-full bg-black hover:bg-neutral-800 font-bold text-xl">
                 ETH
                 <ChevronDown />
               </DialogTriggerButton>
               <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </DialogDescription>
-                </DialogHeader>
+                {loadingList
+                  ? tokenList.tokens.map((token, index) => {
+                      return (
+                        <div key={index}>
+                          <img src={token.logoURI} alt={token.name} />
+                          <span>{token.name}</span>
+                        </div>
+                      );
+                    })
+                  : ""}
               </DialogContent>
             </Dialog>
           </div>
