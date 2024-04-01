@@ -49,3 +49,23 @@
     --ring: 346.8 77.2% 49.8%;
   }
 }
+
+/* Largeur de la barre de défilement */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Couleur de fond de la barre de défilement */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Couleur de la poignée de défilement */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Effet de surbrillance lors du survol de la poignée de défilement */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

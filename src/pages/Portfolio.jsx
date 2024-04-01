@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTriggerButton,
+  DialogOverlay,
 } from "@/components/ui/dialog";
 
 export default function MyAccount() {
@@ -26,8 +27,7 @@ export default function MyAccount() {
   const [loadingList, setLoadingList] = useState(false);
   const [error, setError] = useState(null);
   const [tokenList, setTokenList] = useState([]);
-  console.log(tokenList);
-
+  const [selectedItem, setSelectedItem] = useState();
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
@@ -87,6 +87,10 @@ export default function MyAccount() {
     init();
   }, []);
 
+  const handleSelectItem = (item) => {
+    setSelectedItem(item);
+  };
+
   return (
     <>
       <div className="container py-16">
@@ -135,18 +139,34 @@ export default function MyAccount() {
                 ETH
                 <ChevronDown />
               </DialogTriggerButton>
-              <DialogContent>
-                {loadingList
-                  ? tokenList.tokens.map((token, index) => {
-                      return (
-                        <div key={index}>
-                          <img src={token.logoURI} alt={token.name} />
-                          <span>{token.name}</span>
-                        </div>
-                      );
-                    })
-                  : ""}
-              </DialogContent>
+              <DialogOverlay>
+                <DialogContent className="block h-full">
+                  <ul>
+                    {loadingList
+                      ? tokenList.tokens.map((token, index) => {
+                          return (
+                            <li
+                              key={index}
+                              onClick={() => handleSelectItem(token.symbol)}
+                              className={
+                                selectedItem === token.symbol ? "selected" : ""
+                              }
+                            >
+                              <div className="flex cursor-pointer hover:bg-slate-300 py-3">
+                                <img
+                                  src={token.logoURI}
+                                  alt={token.symbol}
+                                  className="mr-3"
+                                />
+                                <span>{token.symbol}</span>
+                              </div>
+                            </li>
+                          );
+                        })
+                      : ""}
+                  </ul>
+                </DialogContent>
+              </DialogOverlay>
             </Dialog>
           </div>
           <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent">

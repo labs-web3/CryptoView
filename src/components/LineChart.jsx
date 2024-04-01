@@ -36,7 +36,7 @@ export default function LineChart({ data }) {
       },
       y: {
         grid: {
-          display: false,
+          display: true,
         },
       },
     },
