@@ -26,7 +26,8 @@ export default function MyAccount() {
   const [loadingList, setLoadingList] = useState(false);
   const [error, setError] = useState(null);
   const [tokenList, setTokenList] = useState([]);
-  const [selectedItem, setSelectedItem] = useState();
+  const [selectedItem, setSelectedItem] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
@@ -86,8 +87,9 @@ export default function MyAccount() {
     init();
   }, []);
 
-  const handleSelectItem = (item) => {
-    setSelectedItem(item);
+  const handleSelectItem = (symbol, logo) => {
+    setSelectedItem(symbol, logo);
+    console.log(selectedItem);
   };
 
   return (
@@ -133,11 +135,25 @@ export default function MyAccount() {
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
 
-            <Dialog>
-              <DialogTriggerButton className="rounded-full bg-black hover:bg-neutral-800 font-bold text-xl">
-                ETH
-                <ChevronDown />
-              </DialogTriggerButton>
+            <Dialog open={isOpen}>
+              <Button
+                className="rounded-full bg-black hover:bg-neutral-800 font-bold text-xl"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {selectedItem.length > 0 ? (
+                  <>
+                    <img
+                      className="mr-2 object-cover"
+                      src={selectedItem[1]}
+                      alt={selectedItem[0]}
+                    />
+                    <span>{selectedItem[0]}</span>
+                    <ChevronDown className="" width={50} />
+                  </>
+                ) : (
+                  ("ETH", (<ChevronDown className="ml-3" />))
+                )}
+              </Button>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Coins</DialogTitle>
@@ -147,14 +163,17 @@ export default function MyAccount() {
                     {loadingList
                       ? tokenList.tokens.map((token, index) => {
                           return (
-                            <li
-                              key={index}
-                              onClick={() => handleSelectItem(token.symbol)}
-                              className={
-                                selectedItem === token.symbol ? "selected" : ""
-                              }
-                            >
-                              <div className="flex cursor-pointer hover:bg-slate-300 py-3">
+                            <li key={index}>
+                              <div
+                                className="flex cursor-pointer hover:bg-slate-300 py-3"
+                                onClick={() => {
+                                  setIsOpen(!isOpen);
+                                  handleSelectItem([
+                                    token.symbol,
+                                    token.logoURI,
+                                  ]);
+                                }}
+                              >
                                 <img
                                   src={token.logoURI}
                                   alt={token.symbol}
