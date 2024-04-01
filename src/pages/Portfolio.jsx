@@ -17,7 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTriggerButton,
-  DialogOverlay,
 } from "@/components/ui/dialog";
 
 export default function MyAccount() {
@@ -139,8 +138,11 @@ export default function MyAccount() {
                 ETH
                 <ChevronDown />
               </DialogTriggerButton>
-              <DialogOverlay>
-                <DialogContent className="block h-full">
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Coins</DialogTitle>
+                </DialogHeader>
+                <div className="flex-1 overflow-auto h-full">
                   <ul>
                     {loadingList
                       ? tokenList.tokens.map((token, index) => {
@@ -165,8 +167,8 @@ export default function MyAccount() {
                         })
                       : ""}
                   </ul>
-                </DialogContent>
-              </DialogOverlay>
+                </div>
+              </DialogContent>
             </Dialog>
           </div>
           <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent">

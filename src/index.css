@@ -50,22 +50,19 @@
   }
 }
 
-/* Largeur de la barre de défilement */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
 }
 
-/* Couleur de fond de la barre de défilement */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #fff;
 }
 
-/* Couleur de la poignée de défilement */
 ::-webkit-scrollbar-thumb {
   background: #888;
+  border-radius: 6px;
 }
 
-/* Effet de surbrillance lors du survol de la poignée de défilement */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
