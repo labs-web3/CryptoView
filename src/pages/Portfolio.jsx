@@ -8,15 +8,13 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Web3 } from "web3";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTriggerButton,
 } from "@/components/ui/dialog";
 
 export default function MyAccount() {
@@ -30,6 +28,10 @@ export default function MyAccount() {
   const [selectedSecondItem, setSelectedSecondItem] = useState([]);
   const [isOpenFirst, setIsOpenFirst] = useState(false);
   const [isOpenSecond, setIsOpenSecond] = useState(false);
+  const [tokenPrice, setTokenPrice] = useState([]);
+  // const [inputFirstValue, setInputFirstValue] = useState("");
+  // const [inputSecondValue, setInputSecondValue] = useState("");
+  const [current, setCurrent] = useState({ from: "", to: "" });
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
@@ -93,16 +95,48 @@ export default function MyAccount() {
     fetchTokenList();
   }, []);
 
-  const handleSelectItem = (symbol, logo) => {
-    setSelectedItem(symbol, logo);
+  const getPrice = async () => {
+    const amount = Number(current.from) * 10;
+    const params = new URLSearchParams({
+      sellToken: selectedItem[2],
+      buyToken: selectedSecondItem[2],
+      sellAmount: amount,
+    });
+    const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
+    try {
+      const response = await fetch(
+        `https://api.0x.org/tx-relay/v1/swap/price?${params}`,
+        { headers }
+      );
+      const tokenPriceResponse = await response.json();
+      setTokenPrice(tokenPriceResponse);
+      console.log(tokenPriceResponse);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getPrice();
+  }, [selectedItem, selectedSecondItem]);
+
+  const handleSelectItem = (symbol, logo, address) => {
+    setSelectedItem(symbol, logo, address);
     setIsOpenFirst(false);
   };
 
-  const handleSecondSelectItem = (symbol, logo) => {
-    setSelectedSecondItem(symbol, logo);
+  const handleSecondSelectItem = (symbol, logo, address) => {
+    setSelectedSecondItem(symbol, logo, address);
     setIsOpenSecond(false);
   };
 
+  const handleFirstInputChange = (event) => {
+    setCurrent({ ...current, from: event.target.value });
+  };
+
+  const handleSecondInputChange = (event) => {
+    setCurrent({ ...current, to: event.target.value });
+  };
   return (
     <>
       <div className="container py-16">
@@ -140,8 +174,9 @@ export default function MyAccount() {
           <div className="flex bg-[#1B1B1B] py-10 rounded-lg justify-between p-3 focus-within:border-white border border-transparent">
             <input
               type="number"
-              name=""
-              id=""
+              value={current.from}
+              onChange={handleFirstInputChange}
+              onBlur={getPrice}
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
@@ -183,7 +218,11 @@ export default function MyAccount() {
                             <div
                               className="flex cursor-pointer hover:bg-slate-300 py-3"
                               onClick={() => {
-                                handleSelectItem([token.symbol, token.logoURI]);
+                                handleSelectItem([
+                                  token.symbol,
+                                  token.logoURI,
+                                  token.address,
+                                ]);
                               }}
                             >
                               <img
@@ -208,8 +247,9 @@ export default function MyAccount() {
           <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent">
             <input
               type="number"
-              name=""
-              id=""
+              value={current.to}
+              onChange={handleSecondInputChange}
+              onBlur={getPrice}
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
@@ -256,6 +296,7 @@ export default function MyAccount() {
                                 handleSecondSelectItem([
                                   token.symbol,
                                   token.logoURI,
+                                  token.address,
                                 ]);
                               }}
                             >
