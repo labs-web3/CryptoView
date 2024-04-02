@@ -23,7 +23,7 @@ export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
   const [balance, setBalance] = useState();
   const [loading, setLoading] = useState(false);
-  const [loadingList, setLoadingList] = useState(false);
+  const [loadingList, setLoadingList] = useState(true);
   const [error, setError] = useState(null);
   const [tokenList, setTokenList] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
@@ -71,25 +71,25 @@ export default function MyAccount() {
 
   // récuperation des tokens trusted par coingecko ERC20
   useEffect(() => {
-    const init = async () => {
+    const fetchTokenList = async () => {
       try {
         const response = await fetch(
           "https://tokens.coingecko.com/uniswap/all.json"
         );
-        const tokenList = await response.json();
-        setTokenList(tokenList);
-        setLoadingList(true);
+        const tokenListData = await response.json();
+        setTokenList(tokenListData.tokens);
+        setLoadingList(false);
       } catch (error) {
         console.log(error.message);
-        setLoadingList(false);
+        setLoadingList(true);
       }
     };
-    init();
+    fetchTokenList();
   }, []);
 
   const handleSelectItem = (symbol, logo) => {
     setSelectedItem(symbol, logo);
-    console.log(selectedItem);
+    setIsOpen(false);
   };
 
   return (
@@ -135,7 +135,7 @@ export default function MyAccount() {
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
 
-            <Dialog open={isOpen}>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <Button
                 className="rounded-full bg-black hover:bg-neutral-800 font-bold text-xl"
                 onClick={() => setIsOpen(!isOpen)}
@@ -143,9 +143,10 @@ export default function MyAccount() {
                 {selectedItem.length > 0 ? (
                   <>
                     <img
-                      className="mr-2 object-cover"
+                      className="mr-2 object-cover rounded-full"
                       src={selectedItem[1]}
                       alt={selectedItem[0]}
+                      loading="lazy"
                     />
                     <span>{selectedItem[0]}</span>
                     <ChevronDown className="" width={50} />
@@ -160,31 +161,30 @@ export default function MyAccount() {
                 </DialogHeader>
                 <div className="flex-1 overflow-auto h-full">
                   <ul>
-                    {loadingList
-                      ? tokenList.tokens.map((token, index) => {
-                          return (
-                            <li key={index}>
-                              <div
-                                className="flex cursor-pointer hover:bg-slate-300 py-3"
-                                onClick={() => {
-                                  setIsOpen(!isOpen);
-                                  handleSelectItem([
-                                    token.symbol,
-                                    token.logoURI,
-                                  ]);
-                                }}
-                              >
-                                <img
-                                  src={token.logoURI}
-                                  alt={token.symbol}
-                                  className="mr-3"
-                                />
-                                <span>{token.symbol}</span>
-                              </div>
-                            </li>
-                          );
-                        })
-                      : ""}
+                    {loadingList ? (
+                      <p>Loading...</p>
+                    ) : (
+                      tokenList.map((token, index) => {
+                        return (
+                          <li key={index}>
+                            <div
+                              className="flex cursor-pointer hover:bg-slate-300 py-3"
+                              onClick={() => {
+                                handleSelectItem([token.symbol, token.logoURI]);
+                              }}
+                            >
+                              <img
+                                src={token.logoURI}
+                                alt={token.symbol}
+                                className="mr-3 rounded-full object-cover"
+                                loading="lazy"
+                              />
+                              <span>{token.symbol}</span>
+                            </div>
+                          </li>
+                        );
+                      })
+                    )}
                   </ul>
                 </div>
               </DialogContent>
