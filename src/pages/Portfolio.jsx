@@ -27,7 +27,9 @@ export default function MyAccount() {
   const [error, setError] = useState(null);
   const [tokenList, setTokenList] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSecondItem, setSelectedSecondItem] = useState([]);
+  const [isOpenFirst, setIsOpenFirst] = useState(false);
+  const [isOpenSecond, setIsOpenSecond] = useState(false);
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
@@ -69,27 +71,36 @@ export default function MyAccount() {
     return web3.utils.fromWei(balanceWallet, "ether");
   };
 
-  // récuperation des tokens trusted par coingecko ERC20
+  // récuperation des tokens ERC20
+  const fetchTokenList = async () => {
+    try {
+      const response = await fetch(
+        "https://gateway.ipfs.io/ipns/tokens.uniswap.org"
+      );
+      const tokenListData = await response.json();
+      const filteredToken = tokenListData.tokens.filter(
+        (entry) => entry.chainId === 1
+      );
+      setTokenList(filteredToken);
+      setLoadingList(false);
+    } catch (error) {
+      console.log(error.message);
+      setLoadingList(true);
+    }
+  };
+
   useEffect(() => {
-    const fetchTokenList = async () => {
-      try {
-        const response = await fetch(
-          "https://tokens.coingecko.com/uniswap/all.json"
-        );
-        const tokenListData = await response.json();
-        setTokenList(tokenListData.tokens);
-        setLoadingList(false);
-      } catch (error) {
-        console.log(error.message);
-        setLoadingList(true);
-      }
-    };
     fetchTokenList();
   }, []);
 
   const handleSelectItem = (symbol, logo) => {
     setSelectedItem(symbol, logo);
-    setIsOpen(false);
+    setIsOpenFirst(false);
+  };
+
+  const handleSecondSelectItem = (symbol, logo) => {
+    setSelectedSecondItem(symbol, logo);
+    setIsOpenSecond(false);
   };
 
   return (
@@ -135,10 +146,10 @@ export default function MyAccount() {
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
 
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
               <Button
                 className="rounded-full bg-black hover:bg-neutral-800 font-bold text-xl"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setIsOpenFirst(!isOpenFirst)}
               >
                 {selectedItem.length > 0 ? (
                   <>
@@ -146,13 +157,15 @@ export default function MyAccount() {
                       className="mr-2 object-cover rounded-full"
                       src={selectedItem[1]}
                       alt={selectedItem[0]}
+                      width={30}
+                      height={30}
                       loading="lazy"
                     />
                     <span>{selectedItem[0]}</span>
-                    <ChevronDown className="" width={50} />
+                    <ChevronDown className="ml-2" width={50} />
                   </>
                 ) : (
-                  ("ETH", (<ChevronDown className="ml-3" />))
+                  <ChevronDown className="ml-3" />
                 )}
               </Button>
               <DialogContent>
@@ -178,6 +191,8 @@ export default function MyAccount() {
                                 alt={token.symbol}
                                 className="mr-3 rounded-full object-cover"
                                 loading="lazy"
+                                width={30}
+                                height={30}
                               />
                               <span>{token.symbol}</span>
                             </div>
@@ -198,19 +213,68 @@ export default function MyAccount() {
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
-            <Dialog>
-              <DialogTriggerButton className="rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg">
-                Sélectionnez le jeton
-                <ChevronDown />
-              </DialogTriggerButton>
+            <Dialog open={isOpenSecond} onOpenChange={setIsOpenSecond}>
+              <Button
+                className="rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg"
+                onClick={() => setIsOpenSecond(!isOpenSecond)}
+              >
+                {selectedSecondItem.length > 0 ? (
+                  <>
+                    <img
+                      className="mr-2 object-cover rounded-full"
+                      src={selectedSecondItem[1]}
+                      alt={selectedSecondItem[0]}
+                      width={30}
+                      height={30}
+                      loading="lazy"
+                    />
+                    <span>{selectedSecondItem[0]}</span>
+                    <ChevronDown className="ml-2" width={50} />
+                  </>
+                ) : (
+                  <>
+                    <span>Sélectionnez le jeton</span>
+                    <ChevronDown width={50} />
+                  </>
+                )}
+              </Button>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </DialogDescription>
+                  <DialogTitle>Coins</DialogTitle>
                 </DialogHeader>
+                <div className="flex-1 overflow-auto h-full">
+                  <ul>
+                    {loadingList ? (
+                      <p>Loading...</p>
+                    ) : (
+                      tokenList.map((token, index) => {
+                        return (
+                          <li key={index}>
+                            <div
+                              className="flex cursor-pointer hover:bg-slate-300 py-3"
+                              onClick={() => {
+                                handleSecondSelectItem([
+                                  token.symbol,
+                                  token.logoURI,
+                                ]);
+                              }}
+                            >
+                              <img
+                                src={token.logoURI}
+                                alt={token.symbol}
+                                className="mr-3 rounded-full object-cover"
+                                loading="lazy"
+                                width={30}
+                                height={30}
+                              />
+                              <span>{token.symbol}</span>
+                            </div>
+                          </li>
+                        );
+                      })
+                    )}
+                  </ul>
+                </div>
               </DialogContent>
             </Dialog>
           </div>
