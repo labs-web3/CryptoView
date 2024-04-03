@@ -96,6 +96,7 @@ export default function MyAccount() {
 
   // Récupération des prix via l'adresse des tokens
   const getPrice = async () => {
+    if (!selectedItem || !selectedSecondItem) return;
     const amount = Number(current.from) * Math.pow(10, current.decimals);
     console.log(amount);
     const params = new URLSearchParams({
@@ -110,9 +111,9 @@ export default function MyAccount() {
         { headers }
       );
       const tokenPriceResponse = await response.json();
-      const convertedTokenPrice =
-        tokenPriceResponse.buyAmount / Math.pow(10, current.decimals);
-      setTokenPrice(convertedTokenPrice);
+      const price = parseFloat(tokenPriceResponse.grossPrice);
+      const adjustedTokenPrice = price * Math.pow(10, current.to);
+      setTokenPrice(adjustedTokenPrice);
       setGasFee(tokenPriceResponse.fees.gasFee.feeAmount);
       console.log(tokenPriceResponse);
     } catch (error) {
@@ -122,7 +123,7 @@ export default function MyAccount() {
 
   useEffect(() => {
     getPrice();
-  }, [selectedItem, selectedSecondItem]);
+  }, [current, selectedItem, selectedSecondItem]);
 
   const handleSelectItem = (symbol, logo, address) => {
     setSelectedItem(symbol, logo, address);
@@ -181,7 +182,6 @@ export default function MyAccount() {
               value={current.from}
               name="from"
               onChange={handleInputChange}
-              onBlur={getPrice}
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
