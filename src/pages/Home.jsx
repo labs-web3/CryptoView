@@ -25,46 +25,46 @@ export default function Home() {
     }).format(value / 100);
   };
 
-  const arrowUpOrDown = (value) => {
-    if (value.toString().startsWith("-")) {
-      const arrow = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="w-5 h-5"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-            clipRule="evenodd"
-          />
-        </svg>
-      );
-      return arrow;
-    } else {
-      const arrow = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="w-5 h-5"
-        >
-          <path
-            fillRule="evenodd"
-            d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z"
-            clipRule="evenodd"
-          />
-        </svg>
-      );
-      return arrow;
-    }
-  };
+  // const arrowUpOrDown = (value) => {
+  //   if (value.toString().startsWith("-")) {
+  //     const arrow = (
+  //       <svg
+  //         xmlns="http://www.w3.org/2000/svg"
+  //         viewBox="0 0 20 20"
+  //         fill="currentColor"
+  //         className="w-5 h-5"
+  //       >
+  //         <path
+  //           fillRule="evenodd"
+  //           d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+  //           clipRule="evenodd"
+  //         />
+  //       </svg>
+  //     );
+  //     return arrow;
+  //   } else {
+  //     const arrow = (
+  //       <svg
+  //         xmlns="http://www.w3.org/2000/svg"
+  //         viewBox="0 0 20 20"
+  //         fill="currentColor"
+  //         className="w-5 h-5"
+  //       >
+  //         <path
+  //           fillRule="evenodd"
+  //           d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z"
+  //           clipRule="evenodd"
+  //         />
+  //       </svg>
+  //     );
+  //     return arrow;
+  //   }
+  // };
 
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  console.log(cryptos);
   return (
     <div className="container">
       <Table className="table-auto">
@@ -106,14 +106,14 @@ export default function Home() {
                 key={post.price_change_percentage_1h_in_currency}
                 className={`${
                   post.price_change_percentage_1h_in_currency
-                    .toString()
-                    .startsWith("-")
-                    ? "text-red-500"
+                    ? // .toString()
+                      // .startsWith("-")
+                      "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_1h_in_currency)}
+                  {/* {arrowUpOrDown(post.price_change_percentage_1h_in_currency)} */}
                   {formatPercentage(
                     post.price_change_percentage_1h_in_currency
                   )}
@@ -123,14 +123,14 @@ export default function Home() {
                 key={post.price_change_percentage_24h_in_currency}
                 className={`${
                   post.price_change_percentage_24h_in_currency
-                    .toString()
-                    .startsWith("-")
-                    ? "text-red-500"
+                    ? // .toString()
+                      // .startsWith("-")
+                      "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_24h_in_currency)}
+                  {/* {arrowUpOrDown(post.price_change_percentage_24h_in_currency)} */}
                   {formatPercentage(
                     post.price_change_percentage_24h_in_currency
                   )}
@@ -140,14 +140,14 @@ export default function Home() {
                 key={post.price_change_percentage_7d_in_currency}
                 className={`${
                   post.price_change_percentage_7d_in_currency
-                    .toString()
-                    .startsWith("-")
-                    ? "text-red-500"
+                    ? // .toString()
+                      // .startsWith("-")
+                      "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_7d_in_currency)}
+                  {/* {arrowUpOrDown(post.price_change_percentage_7d_in_currency)} */}
                   {formatPercentage(
                     post.price_change_percentage_7d_in_currency
                   )}

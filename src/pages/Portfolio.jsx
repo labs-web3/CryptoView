@@ -116,7 +116,7 @@ export default function MyAccount() {
       );
       const tokenPriceResponse = await response.json();
       const convertedPrice =
-        tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
+        tokenPriceResponse.grossBuyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(2);
       setTokenPrice(value);
       setGasFee(tokenPriceResponse.fees.gasFee.feeAmount);
