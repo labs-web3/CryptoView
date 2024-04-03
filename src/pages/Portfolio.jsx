@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Web3 } from "web3";
+import { Contract } from "web3-eth-contract";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import {
@@ -16,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import data from "../data/data.json";
 
 export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
@@ -99,6 +101,7 @@ export default function MyAccount() {
   }, []);
 
   // Récupération des prix via l'adresse des tokens
+  // On récupère le nombre de décimales selon les tokens sélectionnés.
   const getPrice = async () => {
     if (!selectedItem || !selectedSecondItem) return;
     const amount = Number(current.from) * Math.pow(10, selectedItem[3]);
@@ -111,15 +114,15 @@ export default function MyAccount() {
     const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
     try {
       const response = await fetch(
-        `https://api.0x.org/tx-relay/v1/swap/price?${params}`,
+        `https://api.0x.org/swap/v1/price?${params}`,
         { headers }
       );
       const tokenPriceResponse = await response.json();
       const convertedPrice =
-        tokenPriceResponse.grossBuyAmount / Math.pow(10, selectedSecondItem[3]);
+        tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(2);
       setTokenPrice(value);
-      setGasFee(tokenPriceResponse.fees.gasFee.feeAmount);
+      setGasFee(tokenPriceResponse.estimatedGas);
       console.log(tokenPriceResponse);
     } catch (error) {
       console.log(error.message);
@@ -129,6 +132,41 @@ export default function MyAccount() {
   useEffect(() => {
     getPrice();
   }, [current, selectedItem, selectedSecondItem]);
+
+  const getQuote = async (account) => {
+    if (!selectedItem || !selectedSecondItem) return;
+    const amount = Number(current.from) * Math.pow(10, selectedItem[3]);
+    console.log(amount);
+    const params = new URLSearchParams({
+      sellToken: selectedItem[2],
+      buyToken: selectedSecondItem[2],
+      sellAmount: amount,
+      takerAddress: account,
+    });
+    const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
+    try {
+      const response = await fetch(
+        `https://api.0x.org/swap/v1/quote?${params}`,
+        { headers }
+      );
+      const swapQuote = await response.json();
+      const convertedPrice =
+        swapQuote.buyAmount / Math.pow(10, selectedSecondItem[3]);
+      const value = convertedPrice.toFixed(2);
+      setTokenPrice(value);
+      setGasFee(swapQuote.estimatedGas);
+      console.log(swapQuote);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const trySwap = async () => {
+    const swapQuote = await getQuote(connectedAccount);
+
+    const ERC20TokenContract = new Web3.eth.Contract(data, selectedItem[2]);
+    console.log(ERC20TokenContract);
+  };
 
   const handleSelectItem = (symbol, logo, address, decimals) => {
     setSelectedItem(symbol, logo, address, decimals);
@@ -333,7 +371,12 @@ export default function MyAccount() {
           </div>
           <p className="text-white">Estimated Gas: {gasFee}</p>
           {connectedAccount ? (
-            ""
+            <Button
+              className="w-full py-8 font-bold text-lg bg-[#311C31] hover:bg-[#432643] text-[#FC72FF]"
+              onClick={() => trySwap()}
+            >
+              Swap
+            </Button>
           ) : (
             <Button
               onClick={connectMetamask}
