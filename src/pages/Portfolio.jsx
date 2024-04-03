@@ -29,7 +29,11 @@ export default function MyAccount() {
   const [isOpenFirst, setIsOpenFirst] = useState(false);
   const [isOpenSecond, setIsOpenSecond] = useState(false);
   const [tokenPrice, setTokenPrice] = useState([]);
-  const [current, setCurrent] = useState({ from: "", to: "", decimals: 18 });
+  const [current, setCurrent] = useState({
+    from: "",
+    to: "",
+    decimals: 18,
+  });
   const [gasFee, setGasFee] = useState([]);
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
@@ -97,7 +101,7 @@ export default function MyAccount() {
   // Récupération des prix via l'adresse des tokens
   const getPrice = async () => {
     if (!selectedItem || !selectedSecondItem) return;
-    const amount = Number(current.from) * Math.pow(10, current.decimals);
+    const amount = Number(current.from) * Math.pow(10, selectedItem[3]);
     console.log(amount);
     const params = new URLSearchParams({
       sellToken: selectedItem[2],
@@ -111,9 +115,10 @@ export default function MyAccount() {
         { headers }
       );
       const tokenPriceResponse = await response.json();
-      const price = parseFloat(tokenPriceResponse.grossPrice);
-      const adjustedTokenPrice = price * Math.pow(10, current.to);
-      setTokenPrice(adjustedTokenPrice);
+      const convertedPrice =
+        tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
+      const value = convertedPrice.toFixed(2);
+      setTokenPrice(value);
       setGasFee(tokenPriceResponse.fees.gasFee.feeAmount);
       console.log(tokenPriceResponse);
     } catch (error) {
@@ -125,13 +130,13 @@ export default function MyAccount() {
     getPrice();
   }, [current, selectedItem, selectedSecondItem]);
 
-  const handleSelectItem = (symbol, logo, address) => {
-    setSelectedItem(symbol, logo, address);
+  const handleSelectItem = (symbol, logo, address, decimals) => {
+    setSelectedItem(symbol, logo, address, decimals);
     setIsOpenFirst(false);
   };
 
-  const handleSecondSelectItem = (symbol, logo, address) => {
-    setSelectedSecondItem(symbol, logo, address);
+  const handleSecondSelectItem = (symbol, logo, address, decimals) => {
+    setSelectedSecondItem(symbol, logo, address, decimals);
     setIsOpenSecond(false);
   };
 
@@ -227,6 +232,7 @@ export default function MyAccount() {
                                   token.symbol,
                                   token.logoURI,
                                   token.address,
+                                  token.decimals,
                                 ]);
                               }}
                             >
@@ -302,6 +308,7 @@ export default function MyAccount() {
                                   token.symbol,
                                   token.logoURI,
                                   token.address,
+                                  token.decimals,
                                 ]);
                               }}
                             >
