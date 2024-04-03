@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Web3 } from "web3";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import {
   Dialog,
@@ -29,9 +29,8 @@ export default function MyAccount() {
   const [isOpenFirst, setIsOpenFirst] = useState(false);
   const [isOpenSecond, setIsOpenSecond] = useState(false);
   const [tokenPrice, setTokenPrice] = useState([]);
-  // const [inputFirstValue, setInputFirstValue] = useState("");
-  // const [inputSecondValue, setInputSecondValue] = useState("");
-  const [current, setCurrent] = useState({ from: "", to: "" });
+  const [current, setCurrent] = useState({ from: "", to: "", decimals: 18 });
+  const [gasFee, setGasFee] = useState([]);
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
@@ -95,8 +94,10 @@ export default function MyAccount() {
     fetchTokenList();
   }, []);
 
+  // Récupération des prix via l'adresse des tokens
   const getPrice = async () => {
-    const amount = Number(current.from) * 10;
+    const amount = Number(current.from) * Math.pow(10, current.decimals);
+    console.log(amount);
     const params = new URLSearchParams({
       sellToken: selectedItem[2],
       buyToken: selectedSecondItem[2],
@@ -109,7 +110,10 @@ export default function MyAccount() {
         { headers }
       );
       const tokenPriceResponse = await response.json();
-      setTokenPrice(tokenPriceResponse);
+      const convertedTokenPrice =
+        tokenPriceResponse.buyAmount / Math.pow(10, current.decimals);
+      setTokenPrice(convertedTokenPrice);
+      setGasFee(tokenPriceResponse.fees.gasFee.feeAmount);
       console.log(tokenPriceResponse);
     } catch (error) {
       console.log(error.message);
@@ -130,13 +134,13 @@ export default function MyAccount() {
     setIsOpenSecond(false);
   };
 
-  const handleFirstInputChange = (event) => {
-    setCurrent({ ...current, from: event.target.value });
+  const handleInputChange = (event) => {
+    setCurrent({
+      ...current,
+      [event.target.name]: event.target.value,
+    });
   };
 
-  const handleSecondInputChange = (event) => {
-    setCurrent({ ...current, to: event.target.value });
-  };
   return (
     <>
       <div className="container py-16">
@@ -175,7 +179,8 @@ export default function MyAccount() {
             <input
               type="number"
               value={current.from}
-              onChange={handleFirstInputChange}
+              name="from"
+              onChange={handleInputChange}
               onBlur={getPrice}
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -247,9 +252,9 @@ export default function MyAccount() {
           <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent">
             <input
               type="number"
-              value={current.to}
-              onChange={handleSecondInputChange}
-              onBlur={getPrice}
+              value={current.to > 0 ? current.to : tokenPrice}
+              name="to"
+              onChange={handleInputChange}
               placeholder="0"
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
@@ -319,6 +324,7 @@ export default function MyAccount() {
               </DialogContent>
             </Dialog>
           </div>
+          <p className="text-white">Estimated Gas: {gasFee}</p>
           {connectedAccount ? (
             ""
           ) : (
