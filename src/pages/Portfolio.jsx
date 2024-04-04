@@ -163,9 +163,13 @@ export default function MyAccount() {
 
   const trySwap = async () => {
     const swapQuote = await getQuote(connectedAccount);
-
-    const ERC20TokenContract = new Web3.eth.Contract(data, selectedItem[2]);
-    console.log(ERC20TokenContract);
+    const provider = window.ethereum;
+    if (provider) {
+      await provider.request({ method: "eth_requestAccounts" });
+      const web3 = new Web3(provider);
+      const ERC20TokenContract = new web3.eth.Contract(data, selectedItem[2]);
+      console.log(ERC20TokenContract);
+    }
   };
 
   const handleSelectItem = (symbol, logo, address, decimals) => {
@@ -218,7 +222,7 @@ export default function MyAccount() {
             </CardContent>
           </Card>
         </div>
-        <div className="bg-black rounded-2xl flex-col justify-center max-h-1/3 w-1/2 mt-16 flex p-3 gap-3">
+        <div className="bg-black rounded-2xl flex-col justify-center max-h-1/3 max-w-[480px] mt-16 flex p-2 gap-3">
           <div className="flex bg-[#1B1B1B] py-10 rounded-lg justify-between p-3 focus-within:border-white border border-transparent">
             <input
               type="number"
@@ -231,7 +235,7 @@ export default function MyAccount() {
 
             <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
               <Button
-                className="rounded-full bg-black hover:bg-neutral-800 font-bold text-xl"
+                className="rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
                 onClick={() => setIsOpenFirst(!isOpenFirst)}
               >
                 {selectedItem.length > 0 ? (
@@ -304,7 +308,11 @@ export default function MyAccount() {
             />
             <Dialog open={isOpenSecond} onOpenChange={setIsOpenSecond}>
               <Button
-                className="rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg"
+                className={
+                  selectedSecondItem.length > 0
+                    ? "rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
+                    : "rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg pr-0 mt-[-0.2rem]"
+                }
                 onClick={() => setIsOpenSecond(!isOpenSecond)}
               >
                 {selectedSecondItem.length > 0 ? (
