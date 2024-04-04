@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Web3 } from "web3";
-import { Contract } from "web3-eth-contract";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import {
@@ -18,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import data from "../data/data.json";
+import BigNumber from "bignumber.js";
 
 export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
@@ -105,7 +105,6 @@ export default function MyAccount() {
   const getPrice = async () => {
     if (!selectedItem || !selectedSecondItem) return;
     const amount = Number(current.from) * Math.pow(10, selectedItem[3]);
-    console.log(amount);
     const params = new URLSearchParams({
       sellToken: selectedItem[2],
       buyToken: selectedSecondItem[2],
@@ -123,7 +122,6 @@ export default function MyAccount() {
       const value = convertedPrice.toFixed(2);
       setTokenPrice(value);
       setGasFee(tokenPriceResponse.estimatedGas);
-      console.log(tokenPriceResponse);
     } catch (error) {
       console.log(error.message);
     }
@@ -133,10 +131,10 @@ export default function MyAccount() {
     getPrice();
   }, [current, selectedItem, selectedSecondItem]);
 
+  // Fonction pour effectuer un devis via 0x et effectuer une transaction par la suite
   const getQuote = async (account) => {
     if (!selectedItem || !selectedSecondItem) return;
     const amount = Number(current.from) * Math.pow(10, selectedItem[3]);
-    console.log(amount);
     const params = new URLSearchParams({
       sellToken: selectedItem[2],
       buyToken: selectedSecondItem[2],
@@ -146,29 +144,42 @@ export default function MyAccount() {
     const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
     try {
       const response = await fetch(
-        `https://api.0x.org/swap/v1/quote?${params}`,
+        `https://api.0x.org/swap/v1/price?${params}`,
         { headers }
       );
       const swapQuote = await response.json();
       const convertedPrice =
         swapQuote.buyAmount / Math.pow(10, selectedSecondItem[3]);
-      const value = convertedPrice.toFixed(2);
+      const value = convertedPrice.toFixed(1);
       setTokenPrice(value);
       setGasFee(swapQuote.estimatedGas);
-      console.log(swapQuote);
+      return swapQuote;
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  // Fonction pour effectuer un swap de tokens en créant un contrat
   const trySwap = async () => {
-    const swapQuote = await getQuote(connectedAccount);
     const provider = window.ethereum;
+    const web3 = new Web3(provider);
+    if (!provider) return;
     if (provider) {
       await provider.request({ method: "eth_requestAccounts" });
-      const web3 = new Web3(provider);
+      const swapQuote = await getQuote(connectedAccount);
+
+      const maxApproval = new BigNumber(2).pow(256).minus(1).toFixed();
+
       const ERC20TokenContract = new web3.eth.Contract(data, selectedItem[2]);
-      console.log(ERC20TokenContract);
+      await ERC20TokenContract.methods
+        .approve(swapQuote.allowanceTarget, maxApproval)
+        .send({ from: connectedAccount })
+        .then((tx) => {
+          console.log("tx:", tx);
+        });
+
+      const receipt = await web3.eth.sendTransaction(swapQuote);
+      console.log(receipt);
     }
   };
 
