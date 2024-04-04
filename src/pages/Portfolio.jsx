@@ -132,54 +132,67 @@ export default function MyAccount() {
   }, [current, selectedItem, selectedSecondItem]);
 
   // Fonction pour effectuer un devis via 0x et effectuer une transaction par la suite
-  const getQuote = async (account) => {
+  const getQuote = async () => {
     if (!selectedItem || !selectedSecondItem) return;
     const amount = Number(current.from) * Math.pow(10, selectedItem[3]);
     const params = new URLSearchParams({
       sellToken: selectedItem[2],
       buyToken: selectedSecondItem[2],
-      sellAmount: amount,
-      takerAddress: account,
+      sellAmount: amount.toString(),
+      // takerAddress: connectedAccount,
     });
     const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
     try {
       const response = await fetch(
-        `https://api.0x.org/swap/v1/price?${params}`,
+        `https://api.0x.org/swap/v1/quote?${params}`,
         { headers }
       );
       const swapQuote = await response.json();
+      console.log(swapQuote);
       const convertedPrice =
         swapQuote.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(1);
       setTokenPrice(value);
-      setGasFee(swapQuote.estimatedGas);
       return swapQuote;
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  // Fonction pour effectuer un swap de tokens en créant un contrat
+  //Fonction pour effectuer un swap de tokens en créant un contrat
   const trySwap = async () => {
     const provider = window.ethereum;
     const web3 = new Web3(provider);
-    if (!provider) return;
-    if (provider) {
+    if (!provider) {
+      return;
+    } else {
       await provider.request({ method: "eth_requestAccounts" });
-      const swapQuote = await getQuote(connectedAccount);
+      const swapQuote = await getQuote();
 
-      const maxApproval = new BigNumber(2).pow(256).minus(1).toFixed();
+      const ERC20TokenContract = new web3.eth.Contract(
+        data,
+        swapQuote.sellTokenAddress
+      );
 
-      const ERC20TokenContract = new web3.eth.Contract(data, selectedItem[2]);
+      //convertion du montant de l'input from, en wei, suivant le token séléctionné et son nombre de décimals
+      const amountInWei = new BigNumber(current.from).multipliedBy(
+        new BigNumber(10).pow(selectedItem[3])
+      );
+
+      //approbation du contrat, l'adresse target et le montant maximum
       await ERC20TokenContract.methods
-        .approve(swapQuote.allowanceTarget, maxApproval)
-        .send({ from: connectedAccount })
-        .then((tx) => {
-          console.log("tx:", tx);
-        });
+        .approve(swapQuote.allowanceTarget, amountInWei.toString())
+        .send({ from: connectedAccount });
 
-      const receipt = await web3.eth.sendTransaction(swapQuote);
-      console.log(receipt);
+      const receipt = await web3.eth.sendTransaction({
+        from: connectedAccount,
+        to: swapQuote.to,
+        data: swapQuote.data,
+        value: swapQuote.value,
+        gasPrice: swapQuote.gasPrice,
+        gas: swapQuote.gas,
+      });
+      return receipt;
     }
   };
 
