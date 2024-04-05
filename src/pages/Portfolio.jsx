@@ -70,10 +70,8 @@ export default function MyAccount() {
 
   // récuperation de la balance du wallet metamask de l'user et affichage conversion eth
   const getBalance = async (connectedAccount) => {
-    const web3 = new Web3(
-      "https://mainnet.infura.io/v3/384d912916a74323b0d3d9583a77b8b9"
-    );
-
+    const provider = window.ethereum;
+    const web3 = new Web3(provider);
     const balanceWallet = await web3.eth.getBalance(connectedAccount);
     return web3.utils.fromWei(balanceWallet, "ether");
   };
@@ -178,6 +176,7 @@ export default function MyAccount() {
       );
 
       //approbation du contrat, l'adresse target et le montant maximum
+      //sendtransaction avec les informations nécéssaires
       await ERC20TokenContract.methods
         .approve(swapQuote.allowanceTarget, amountInWei.toString())
         .send({
@@ -186,7 +185,7 @@ export default function MyAccount() {
           data: swapQuote.data,
           value: swapQuote.value,
           gasPrice: swapQuote.gasPrice,
-          gas: swapQuote.estimatedGas,
+          gas: swapQuote.gas,
         });
     }
   };
