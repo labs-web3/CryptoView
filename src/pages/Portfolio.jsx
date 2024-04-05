@@ -139,6 +139,7 @@ export default function MyAccount() {
       sellToken: selectedItem[2],
       buyToken: selectedSecondItem[2],
       sellAmount: amount.toString(),
+      takerAdress: connectedAccount,
     });
     const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
     try {
@@ -171,6 +172,7 @@ export default function MyAccount() {
       const ERC20TokenContract = new web3.eth.Contract(data, fromTokenAddress);
 
       //convertion du montant de l'input from, en wei, suivant le token séléctionné et son nombre de décimals
+      //faire en sorte que le montant maximum ne dépasse pas la valeur de l'utilisateur
       const amountInWei = new BigNumber(current.from).multipliedBy(
         new BigNumber(10).pow(selectedItem[3])
       );
@@ -178,17 +180,14 @@ export default function MyAccount() {
       //approbation du contrat, l'adresse target et le montant maximum
       await ERC20TokenContract.methods
         .approve(swapQuote.allowanceTarget, amountInWei.toString())
-        .send({ from: takerAdress, gas: swapQuote.estimatedGas });
-
-      const receipt = await web3.eth.sendTransaction({
-        from: takerAdress,
-        to: swapQuote.to,
-        data: swapQuote.data,
-        value: swapQuote.value,
-        gasPrice: swapQuote.gasPrice,
-        gas: swapQuote.gas,
-      });
-      return receipt;
+        .send({
+          from: takerAdress,
+          to: swapQuote.to,
+          data: swapQuote.data,
+          value: swapQuote.value,
+          gasPrice: swapQuote.gasPrice,
+          gas: swapQuote.estimatedGas,
+        });
     }
   };
 
