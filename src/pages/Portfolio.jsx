@@ -139,7 +139,6 @@ export default function MyAccount() {
       sellToken: selectedItem[2],
       buyToken: selectedSecondItem[2],
       sellAmount: amount.toString(),
-      // takerAddress: connectedAccount,
     });
     const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
     try {
@@ -148,11 +147,6 @@ export default function MyAccount() {
         { headers }
       );
       const swapQuote = await response.json();
-      console.log(swapQuote);
-      const convertedPrice =
-        swapQuote.buyAmount / Math.pow(10, selectedSecondItem[3]);
-      const value = convertedPrice.toFixed(1);
-      setTokenPrice(value);
       return swapQuote;
     } catch (error) {
       console.log(error.message);
@@ -166,13 +160,15 @@ export default function MyAccount() {
     if (!provider) {
       return;
     } else {
-      await provider.request({ method: "eth_requestAccounts" });
+      const accounts = await provider.request({
+        method: "eth_requestAccounts",
+      });
+      let takerAdress = accounts[0];
+      const fromTokenAddress = selectedItem[2];
+
       const swapQuote = await getQuote();
 
-      const ERC20TokenContract = new web3.eth.Contract(
-        data,
-        swapQuote.sellTokenAddress
-      );
+      const ERC20TokenContract = new web3.eth.Contract(data, fromTokenAddress);
 
       //convertion du montant de l'input from, en wei, suivant le token séléctionné et son nombre de décimals
       const amountInWei = new BigNumber(current.from).multipliedBy(
@@ -182,10 +178,10 @@ export default function MyAccount() {
       //approbation du contrat, l'adresse target et le montant maximum
       await ERC20TokenContract.methods
         .approve(swapQuote.allowanceTarget, amountInWei.toString())
-        .send({ from: connectedAccount });
+        .send({ from: takerAdress, gas: swapQuote.estimatedGas });
 
       const receipt = await web3.eth.sendTransaction({
-        from: connectedAccount,
+        from: takerAdress,
         to: swapQuote.to,
         data: swapQuote.data,
         value: swapQuote.value,
