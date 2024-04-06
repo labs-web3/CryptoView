@@ -115,6 +115,7 @@ export default function MyAccount() {
         { headers }
       );
       const tokenPriceResponse = await response.json();
+      console.log(tokenPriceResponse);
       const convertedPrice =
         tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(2);
@@ -396,7 +397,7 @@ export default function MyAccount() {
             </Dialog>
           </div>
           <p className="text-white">Estimated Gas: {gasFee}</p>
-          {connectedAccount ? (
+          {connectedAccount && loadingList === false ? (
             <Button
               className="w-full py-8 font-bold text-lg bg-[#311C31] hover:bg-[#432643] text-[#FC72FF]"
               onClick={() => trySwap()}
