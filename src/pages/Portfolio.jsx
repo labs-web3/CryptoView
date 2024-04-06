@@ -68,12 +68,29 @@ export default function MyAccount() {
     }
   };
 
-  // récuperation de la balance du wallet metamask de l'user et affichage conversion eth
+  // Récupération du solde du portefeuille MetaMask de l'utilisateur et affichage converti en ETH.
+  // Nous obtenons la liste des tokens affichés dans les boutons.
+  // Ensuite, nous créons une nouvelle instance de contrat avec l'ABI et chaque adresse de token de la liste.
+  // Nous utilisons ensuite la méthode balanceOf avec l'adresse du compte pour récupérer le solde du portefeuille selon les tokens sur lesquels nous itérons.
+  // Nous utilisons Promise.all car nous faisons un map sur chaque token avec un await, donc nous attendons une réponse pour chaque token.
   const getBalance = async (connectedAccount) => {
     const provider = window.ethereum;
     const web3 = new Web3(provider);
-    const balanceWallet = await web3.eth.getBalance(connectedAccount);
-    return web3.utils.fromWei(balanceWallet, "ether");
+    const balancePromises = tokenList.map(async (token) => {
+      const tokenContract = new web3.eth.Contract(data, token.address);
+      try {
+        const balance = await tokenContract.methods
+          .balanceOf(connectedAccount)
+          .call();
+        const divisor = new BigNumber(10).pow(new BigNumber(token.decimals));
+        const balanceInToken = new BigNumber(balance).div(divisor);
+        return { symbol: token.symbol, balance: balanceInToken.toFixed() };
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+    const balances = await Promise.all(balancePromises);
+    return balances;
   };
 
   // récuperation des tokens ERC20
@@ -115,7 +132,6 @@ export default function MyAccount() {
         { headers }
       );
       const tokenPriceResponse = await response.json();
-      console.log(tokenPriceResponse);
       const convertedPrice =
         tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(2);
@@ -226,7 +242,14 @@ export default function MyAccount() {
                   ) : error ? (
                     <p>Erreur: {error}</p>
                   ) : balance ? (
-                    <p>{parseFloat(balance).toFixed(4)} ETH</p>
+                    balance.map((token, index) =>
+                      token.balance != 0 ? (
+                        <p key={index}>
+                          {token.balance}
+                          {token.symbol}
+                        </p>
+                      ) : null
+                    )
                   ) : null}
                 </span>
                 <div className="flex gap-3">
