@@ -274,7 +274,7 @@ export default function MyAccount() {
           </Card>
         </div>
         <div className="bg-black rounded-2xl flex-col justify-center max-h-1/3 max-w-[480px] mt-16 flex p-2 gap-3">
-          <div className="flex bg-[#1B1B1B] py-10 rounded-lg justify-between p-3 focus-within:border-white border border-transparent">
+          <div className="flex bg-[#1B1B1B] py-10 rounded-lg justify-between p-3 focus-within:border-white border border-transparent max-h-[120px]">
             <input
               type="number"
               value={current.from}
@@ -285,27 +285,48 @@ export default function MyAccount() {
             />
 
             <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
-              <Button
-                className="rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
-                onClick={() => setIsOpenFirst(!isOpenFirst)}
-              >
-                {selectedItem.length > 0 ? (
-                  <>
-                    <img
-                      className="mr-2 object-cover rounded-full"
-                      src={selectedItem[1]}
-                      alt={selectedItem[0]}
-                      width={30}
-                      height={30}
-                      loading="lazy"
-                    />
-                    <span>{selectedItem[0]}</span>
-                    <ChevronDown className="ml-2" width={50} />
-                  </>
+              <div className="flex flex-col">
+                <Button
+                  className="rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
+                  onClick={() => setIsOpenFirst(!isOpenFirst)}
+                >
+                  {selectedItem.length > 0 ? (
+                    <>
+                      <img
+                        className="mr-2 object-cover rounded-full"
+                        src={selectedItem[1]}
+                        alt={selectedItem[0]}
+                        width={30}
+                        height={30}
+                        loading="lazy"
+                      />
+                      <span>{selectedItem[0]}</span>
+                      <ChevronDown className="ml-2" width={50} />
+                    </>
+                  ) : (
+                    <ChevronDown className="ml-3" />
+                  )}
+                </Button>
+                {selectedItem[0] ? (
+                  <div className="flex justify-end mr-2">
+                    {loading ? (
+                      <p>Chargement...</p>
+                    ) : errorMessage.balance ? (
+                      <p>Erreur: {errorMessage.balance}</p>
+                    ) : balance ? (
+                      balance.map((token, index) =>
+                        token.symbol == selectedItem[0] ? (
+                          <p key={index} className="text-muted text-sm mt-3">
+                            Solde : {token.balance}
+                          </p>
+                        ) : null
+                      )
+                    ) : null}
+                  </div>
                 ) : (
-                  <ChevronDown className="ml-3" />
+                  ""
                 )}
-              </Button>
+              </div>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Coins</DialogTitle>
@@ -348,7 +369,7 @@ export default function MyAccount() {
               </DialogContent>
             </Dialog>
           </div>
-          <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent">
+          <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent max-h-[120px]">
             <input
               type="number"
               value={current.to > 0 ? current.to : tokenPrice}
@@ -358,34 +379,55 @@ export default function MyAccount() {
               className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             <Dialog open={isOpenSecond} onOpenChange={setIsOpenSecond}>
-              <Button
-                className={
-                  selectedSecondItem.length > 0
-                    ? "rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
-                    : "rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg pr-0 mt-[-0.2rem]"
-                }
-                onClick={() => setIsOpenSecond(!isOpenSecond)}
-              >
-                {selectedSecondItem.length > 0 ? (
-                  <>
-                    <img
-                      className="mr-2 object-cover rounded-full"
-                      src={selectedSecondItem[1]}
-                      alt={selectedSecondItem[0]}
-                      width={30}
-                      height={30}
-                      loading="lazy"
-                    />
-                    <span>{selectedSecondItem[0]}</span>
-                    <ChevronDown className="ml-2" width={50} />
-                  </>
+              <div className="flex flex-col">
+                <Button
+                  className={
+                    selectedSecondItem.length > 0
+                      ? "rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
+                      : "rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg pr-0 mt-[-0.2rem]"
+                  }
+                  onClick={() => setIsOpenSecond(!isOpenSecond)}
+                >
+                  {selectedSecondItem.length > 0 ? (
+                    <>
+                      <img
+                        className="mr-2 object-cover rounded-full"
+                        src={selectedSecondItem[1]}
+                        alt={selectedSecondItem[0]}
+                        width={30}
+                        height={30}
+                        loading="lazy"
+                      />
+                      <span>{selectedSecondItem[0]}</span>
+                      <ChevronDown className="ml-2" width={50} />
+                    </>
+                  ) : (
+                    <>
+                      <span>Sélectionnez le jeton</span>
+                      <ChevronDown width={50} />
+                    </>
+                  )}
+                </Button>
+                {selectedSecondItem[0] ? (
+                  <div className="flex justify-end mr-2">
+                    {loading ? (
+                      <p>Chargement...</p>
+                    ) : errorMessage.balance ? (
+                      <p>Erreur: {errorMessage.balance}</p>
+                    ) : balance ? (
+                      balance.map((token, index) =>
+                        token.symbol == selectedItem[0] ? (
+                          <p key={index} className="text-muted text-sm mt-3">
+                            Solde : {token.balance}
+                          </p>
+                        ) : null
+                      )
+                    ) : null}
+                  </div>
                 ) : (
-                  <>
-                    <span>Sélectionnez le jeton</span>
-                    <ChevronDown width={50} />
-                  </>
+                  ""
                 )}
-              </Button>
+              </div>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Coins</DialogTitle>
