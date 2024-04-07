@@ -25,6 +25,7 @@ export default function MyAccount() {
   const [loading, setLoading] = useState(false);
   const [loadingList, setLoadingList] = useState(true);
   const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState({ balance: "" });
   const [tokenList, setTokenList] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
   const [selectedSecondItem, setSelectedSecondItem] = useState([]);
@@ -87,6 +88,14 @@ export default function MyAccount() {
         return { symbol: token.symbol, balance: balanceInToken.toFixed() };
       } catch (error) {
         console.log(error.message);
+        return setErrorMessage({
+          ...errorMessage,
+          balance: (
+            <span>
+              Veuillez connecter votre portefeuille au réseau Ethereum
+            </span>
+          ),
+        });
       }
     });
     const balances = await Promise.all(balancePromises);
@@ -239,8 +248,8 @@ export default function MyAccount() {
                 <span className="text-black font-bold text-3xl">
                   {loading ? (
                     <p>Chargement...</p>
-                  ) : error ? (
-                    <p>Erreur: {error}</p>
+                  ) : errorMessage.balance ? (
+                    <p>Erreur: {errorMessage.balance}</p>
                   ) : balance ? (
                     balance.map((token, index) =>
                       token.balance != 0 ? (
