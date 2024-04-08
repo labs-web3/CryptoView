@@ -39,6 +39,9 @@ export default function MyAccount() {
   });
   const [gasFee, setGasFee] = useState([]);
   const [tokenPriceUSDT, setTokenPriceUSDT] = useState("");
+  const [estimatedPriceImpact, setEstimatedPriceImpact] = useState("");
+  const [calcPriceImpact, setCalcPriceImpact] = useState("");
+
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
@@ -134,6 +137,7 @@ export default function MyAccount() {
       sellToken: selectedItem[2],
       buyToken: selectedSecondItem[2],
       sellAmount: amount,
+      priceImpactProtectionPercentage: 0.9,
     });
     const paramsPriceAgainstUSDT = new URLSearchParams({
       sellToken: selectedItem[2],
@@ -152,20 +156,25 @@ export default function MyAccount() {
       );
       const tokenPriceResponse = await response.json();
       const tokenPriceUSDTResponse = await responseUSDT.json();
+      const convertedPrice =
+        tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const convertedPriceUSDT =
         tokenPriceUSDTResponse.buyAmount / Math.pow(10, 6);
       const valueUSDT = convertedPriceUSDT.toFixed(2);
-      const convertedPrice =
-        tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(2);
+      const priceImpact =
+        valueUSDT * (1 - parseFloat(tokenPriceResponse.estimatedPriceImpact));
+      console.log(priceImpact);
       setTokenPriceUSDT(valueUSDT);
       setTokenPrice(value);
       setGasFee(tokenPriceResponse.estimatedGas);
+      setEstimatedPriceImpact(tokenPriceResponse.estimatedPriceImpact);
+      setCalcPriceImpact(priceImpact);
     } catch (error) {
       console.log(error.message);
     }
   };
-  // console.log(tokenPriceUSDT);
+
   useEffect(() => {
     getPrice();
   }, [current, selectedItem, selectedSecondItem]);
@@ -308,7 +317,13 @@ export default function MyAccount() {
             </div>
 
             <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
-              <div className="flex flex-col justify-end">
+              <div
+                className={`flex flex-col ${
+                  selectedItem[0] == undefined
+                    ? "justify-center"
+                    : "justify-end"
+                } `}
+              >
                 <Button
                   className="rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
                   onClick={() => setIsOpenFirst(!isOpenFirst)}
@@ -333,9 +348,11 @@ export default function MyAccount() {
                 {selectedItem[0] ? (
                   <div className="flex justify-end mr-2">
                     {loading ? (
-                      <p>Chargement...</p>
+                      <p className="text-white">Chargement...</p>
                     ) : errorMessage.balance ? (
-                      <p>Erreur: {errorMessage.balance}</p>
+                      <p className="text-white">
+                        Erreur: {errorMessage.balance}
+                      </p>
                     ) : balance ? (
                       balance.map((token, index) =>
                         token.symbol == selectedItem[0] ? (
@@ -404,7 +421,13 @@ export default function MyAccount() {
                 className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
               {tokenPriceUSDT > 0 ? (
-                <p className="text-white mt-3">{tokenPriceUSDT} $</p>
+                calcPriceImpact < tokenPriceUSDT ? (
+                  <p className="text-white mt-3">
+                    {calcPriceImpact} $ (-{estimatedPriceImpact}%)
+                  </p>
+                ) : (
+                  <p className="text-white mt-3">{tokenPriceUSDT} $</p>
+                )
               ) : (
                 ""
               )}
@@ -501,7 +524,7 @@ export default function MyAccount() {
               </DialogContent>
             </Dialog>
           </div>
-          <p className="text-white">Estimated Gas: {gasFee}</p>
+          <p className="text-white px-3">Estimated Gas: {gasFee}</p>
           {connectedAccount && loadingList === false ? (
             <Button
               className="w-full py-8 font-bold text-lg bg-[#311C31] hover:bg-[#432643] text-[#FC72FF]"
