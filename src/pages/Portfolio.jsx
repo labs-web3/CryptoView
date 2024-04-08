@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import data from "../data/data.json";
 import BigNumber from "bignumber.js";
+import LineChart from "@/components/LineChart";
 
 export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
@@ -260,10 +261,264 @@ export default function MyAccount() {
   return (
     <>
       <div className="container py-16">
+        <div className="flex min-w-full justify-between">
+          <div className="bg-slate-500 min-h-[500px] min-w-[800px]">a</div>
+          <div className="bg-black rounded-2xl flex-col justify-center max-h-1/3 max-w-[480px] mt-16 flex p-2 gap-3">
+            <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent min-h-[120px]">
+              <div className="flex flex-col">
+                <p className="text-[#838383]">FROM</p>
+                <input
+                  type="number"
+                  value={current.from}
+                  name="from"
+                  onChange={handleInputChange}
+                  placeholder="0"
+                  className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                {tokenPriceUSDT > 0 ? (
+                  <p className="text-[#838383] mt-3">{tokenPriceUSDT} $</p>
+                ) : (
+                  ""
+                )}
+              </div>
+
+              <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
+                <div
+                  className={`flex flex-col ${
+                    selectedItem[0] == undefined
+                      ? "justify-center"
+                      : "justify-end"
+                  } `}
+                >
+                  <Button
+                    className="rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
+                    onClick={() => setIsOpenFirst(!isOpenFirst)}
+                  >
+                    {selectedItem.length > 0 ? (
+                      <>
+                        <img
+                          className="mr-2 object-cover rounded-full"
+                          src={selectedItem[1]}
+                          alt={selectedItem[0]}
+                          width={30}
+                          height={30}
+                          loading="lazy"
+                        />
+                        <span>{selectedItem[0]}</span>
+                        <ChevronDown className="ml-2" width={50} />
+                      </>
+                    ) : (
+                      <ChevronDown className="ml-3" />
+                    )}
+                  </Button>
+                  {selectedItem[0] ? (
+                    <div className="flex justify-end mr-2">
+                      {loading ? (
+                        <p className="text-white">Chargement...</p>
+                      ) : errorMessage.balance ? (
+                        <p className="text-white">
+                          Erreur: {errorMessage.balance}
+                        </p>
+                      ) : balance ? (
+                        balance.map((token, index) =>
+                          token.symbol == selectedItem[0] ? (
+                            <p
+                              key={index}
+                              className="text-[#838383] text-sm mt-3"
+                            >
+                              Solde : {token.balance}
+                            </p>
+                          ) : null
+                        )
+                      ) : null}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Coins</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex-1 overflow-auto h-full">
+                    <ul>
+                      {loadingList ? (
+                        <p>Loading...</p>
+                      ) : (
+                        tokenList.map((token, index) => {
+                          return (
+                            <li key={index}>
+                              <div
+                                className="flex cursor-pointer hover:bg-slate-300 py-3"
+                                onClick={() => {
+                                  handleSelectItem([
+                                    token.symbol,
+                                    token.logoURI,
+                                    token.address,
+                                    token.decimals,
+                                  ]);
+                                }}
+                              >
+                                <img
+                                  src={token.logoURI}
+                                  alt={token.symbol}
+                                  className="mr-3 rounded-full object-cover"
+                                  loading="lazy"
+                                  width={30}
+                                  height={30}
+                                />
+                                <span>{token.symbol}</span>
+                              </div>
+                            </li>
+                          );
+                        })
+                      )}
+                    </ul>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent min-h-[120px]">
+              <div className="flex flex-col">
+                <p className="text-[#838383]">TO</p>
+                <input
+                  type="number"
+                  value={current.to > 0 ? current.to : tokenPrice}
+                  name="to"
+                  onChange={handleInputChange}
+                  placeholder="0"
+                  className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                {tokenPriceUSDT > 0 ? (
+                  calcPriceImpact < tokenPriceUSDT ? (
+                    <p className="text-[#838383] mt-3">
+                      {calcPriceImpact} $ (-{estimatedPriceImpact}%)
+                    </p>
+                  ) : (
+                    <p className="text-white mt-3">{tokenPriceUSDT} $</p>
+                  )
+                ) : (
+                  ""
+                )}
+              </div>
+              <Dialog open={isOpenSecond} onOpenChange={setIsOpenSecond}>
+                <div className="flex flex-col justify-center">
+                  <Button
+                    className={
+                      selectedSecondItem.length > 0
+                        ? "rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
+                        : "rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg pr-0 mt-[-0.2rem]"
+                    }
+                    onClick={() => setIsOpenSecond(!isOpenSecond)}
+                  >
+                    {selectedSecondItem.length > 0 ? (
+                      <>
+                        <img
+                          className="mr-2 object-cover rounded-full"
+                          src={selectedSecondItem[1]}
+                          alt={selectedSecondItem[0]}
+                          width={30}
+                          height={30}
+                          loading="lazy"
+                        />
+                        <span>{selectedSecondItem[0]}</span>
+                        <ChevronDown className="ml-2" width={50} />
+                      </>
+                    ) : (
+                      <>
+                        <span>Sélectionnez le jeton</span>
+                        <ChevronDown width={50} />
+                      </>
+                    )}
+                  </Button>
+                  {selectedSecondItem[0] ? (
+                    <div className="flex justify-end mr-2">
+                      {loading ? (
+                        <p>Chargement...</p>
+                      ) : errorMessage.balance ? (
+                        <p>Erreur: {errorMessage.balance}</p>
+                      ) : balance ? (
+                        balance.map((token, index) =>
+                          token.symbol == selectedSecondItem[0] ? (
+                            <p
+                              key={index}
+                              className="text-[#838383] text-sm mt-3"
+                            >
+                              Solde : {token.balance}
+                            </p>
+                          ) : null
+                        )
+                      ) : null}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Coins</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex-1 overflow-auto h-full">
+                    <ul>
+                      {loadingList ? (
+                        <p>Loading...</p>
+                      ) : (
+                        tokenList.map((token, index) => {
+                          return (
+                            <li key={index}>
+                              <div
+                                className="flex cursor-pointer hover:bg-slate-300 py-3"
+                                onClick={() => {
+                                  handleSecondSelectItem([
+                                    token.symbol,
+                                    token.logoURI,
+                                    token.address,
+                                    token.decimals,
+                                  ]);
+                                }}
+                              >
+                                <img
+                                  src={token.logoURI}
+                                  alt={token.symbol}
+                                  className="mr-3 rounded-full object-cover"
+                                  loading="lazy"
+                                  width={30}
+                                  height={30}
+                                />
+                                <span>{token.symbol}</span>
+                              </div>
+                            </li>
+                          );
+                        })
+                      )}
+                    </ul>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <p className="text-white px-3">Estimated Gas: {gasFee}</p>
+            {connectedAccount && loadingList === false ? (
+              <Button
+                className="w-full py-8 font-bold text-lg bg-[#311C31] hover:bg-[#432643] text-[#FC72FF]"
+                onClick={() => trySwap()}
+              >
+                Swap
+              </Button>
+            ) : (
+              <Button
+                onClick={connectMetamask}
+                className="w-full py-8 font-bold text-lg bg-[#311C31] hover:bg-[#432643] text-[#FC72FF]"
+              >
+                Connecter MetaMask
+              </Button>
+            )}
+          </div>
+        </div>
+
         <div className="flex justify-between text-center">
           <Card className="bg-[#eeeeee] shadow-xl w-1/3">
             <CardHeader className="pb-3">
-              <CardDescription className="text-xl t text-[#777]">
+              <CardDescription className="text-xl text-[#838383]">
                 Balance Available
               </CardDescription>
             </CardHeader>
@@ -296,250 +551,6 @@ export default function MyAccount() {
               </div>
             </CardContent>
           </Card>
-        </div>
-        <div className="bg-black rounded-2xl flex-col justify-center max-h-1/3 max-w-[480px] mt-16 flex p-2 gap-3">
-          <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent min-h-[120px]">
-            <div className="flex flex-col">
-              <p className="text-white">FROM</p>
-              <input
-                type="number"
-                value={current.from}
-                name="from"
-                onChange={handleInputChange}
-                placeholder="0"
-                className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-              {tokenPriceUSDT > 0 ? (
-                <p className="text-white mt-3">{tokenPriceUSDT} $</p>
-              ) : (
-                ""
-              )}
-            </div>
-
-            <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
-              <div
-                className={`flex flex-col ${
-                  selectedItem[0] == undefined
-                    ? "justify-center"
-                    : "justify-end"
-                } `}
-              >
-                <Button
-                  className="rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
-                  onClick={() => setIsOpenFirst(!isOpenFirst)}
-                >
-                  {selectedItem.length > 0 ? (
-                    <>
-                      <img
-                        className="mr-2 object-cover rounded-full"
-                        src={selectedItem[1]}
-                        alt={selectedItem[0]}
-                        width={30}
-                        height={30}
-                        loading="lazy"
-                      />
-                      <span>{selectedItem[0]}</span>
-                      <ChevronDown className="ml-2" width={50} />
-                    </>
-                  ) : (
-                    <ChevronDown className="ml-3" />
-                  )}
-                </Button>
-                {selectedItem[0] ? (
-                  <div className="flex justify-end mr-2">
-                    {loading ? (
-                      <p className="text-white">Chargement...</p>
-                    ) : errorMessage.balance ? (
-                      <p className="text-white">
-                        Erreur: {errorMessage.balance}
-                      </p>
-                    ) : balance ? (
-                      balance.map((token, index) =>
-                        token.symbol == selectedItem[0] ? (
-                          <p key={index} className="text-muted text-sm mt-3">
-                            Solde : {token.balance}
-                          </p>
-                        ) : null
-                      )
-                    ) : null}
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Coins</DialogTitle>
-                </DialogHeader>
-                <div className="flex-1 overflow-auto h-full">
-                  <ul>
-                    {loadingList ? (
-                      <p>Loading...</p>
-                    ) : (
-                      tokenList.map((token, index) => {
-                        return (
-                          <li key={index}>
-                            <div
-                              className="flex cursor-pointer hover:bg-slate-300 py-3"
-                              onClick={() => {
-                                handleSelectItem([
-                                  token.symbol,
-                                  token.logoURI,
-                                  token.address,
-                                  token.decimals,
-                                ]);
-                              }}
-                            >
-                              <img
-                                src={token.logoURI}
-                                alt={token.symbol}
-                                className="mr-3 rounded-full object-cover"
-                                loading="lazy"
-                                width={30}
-                                height={30}
-                              />
-                              <span>{token.symbol}</span>
-                            </div>
-                          </li>
-                        );
-                      })
-                    )}
-                  </ul>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent min-h-[120px]">
-            <div className="flex flex-col">
-              <p className="text-white">TO</p>
-              <input
-                type="number"
-                value={current.to > 0 ? current.to : tokenPrice}
-                name="to"
-                onChange={handleInputChange}
-                placeholder="0"
-                className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-              {tokenPriceUSDT > 0 ? (
-                calcPriceImpact < tokenPriceUSDT ? (
-                  <p className="text-white mt-3">
-                    {calcPriceImpact} $ (-{estimatedPriceImpact}%)
-                  </p>
-                ) : (
-                  <p className="text-white mt-3">{tokenPriceUSDT} $</p>
-                )
-              ) : (
-                ""
-              )}
-            </div>
-            <Dialog open={isOpenSecond} onOpenChange={setIsOpenSecond}>
-              <div className="flex flex-col justify-center">
-                <Button
-                  className={
-                    selectedSecondItem.length > 0
-                      ? "rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
-                      : "rounded-full font-bold bg-[#FC72FF] hover:bg-[#fd72ffdb] text-lg pr-0 mt-[-0.2rem]"
-                  }
-                  onClick={() => setIsOpenSecond(!isOpenSecond)}
-                >
-                  {selectedSecondItem.length > 0 ? (
-                    <>
-                      <img
-                        className="mr-2 object-cover rounded-full"
-                        src={selectedSecondItem[1]}
-                        alt={selectedSecondItem[0]}
-                        width={30}
-                        height={30}
-                        loading="lazy"
-                      />
-                      <span>{selectedSecondItem[0]}</span>
-                      <ChevronDown className="ml-2" width={50} />
-                    </>
-                  ) : (
-                    <>
-                      <span>Sélectionnez le jeton</span>
-                      <ChevronDown width={50} />
-                    </>
-                  )}
-                </Button>
-                {selectedSecondItem[0] ? (
-                  <div className="flex justify-end mr-2">
-                    {loading ? (
-                      <p>Chargement...</p>
-                    ) : errorMessage.balance ? (
-                      <p>Erreur: {errorMessage.balance}</p>
-                    ) : balance ? (
-                      balance.map((token, index) =>
-                        token.symbol == selectedSecondItem[0] ? (
-                          <p key={index} className="text-muted text-sm mt-3">
-                            Solde : {token.balance}
-                          </p>
-                        ) : null
-                      )
-                    ) : null}
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Coins</DialogTitle>
-                </DialogHeader>
-                <div className="flex-1 overflow-auto h-full">
-                  <ul>
-                    {loadingList ? (
-                      <p>Loading...</p>
-                    ) : (
-                      tokenList.map((token, index) => {
-                        return (
-                          <li key={index}>
-                            <div
-                              className="flex cursor-pointer hover:bg-slate-300 py-3"
-                              onClick={() => {
-                                handleSecondSelectItem([
-                                  token.symbol,
-                                  token.logoURI,
-                                  token.address,
-                                  token.decimals,
-                                ]);
-                              }}
-                            >
-                              <img
-                                src={token.logoURI}
-                                alt={token.symbol}
-                                className="mr-3 rounded-full object-cover"
-                                loading="lazy"
-                                width={30}
-                                height={30}
-                              />
-                              <span>{token.symbol}</span>
-                            </div>
-                          </li>
-                        );
-                      })
-                    )}
-                  </ul>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <p className="text-white px-3">Estimated Gas: {gasFee}</p>
-          {connectedAccount && loadingList === false ? (
-            <Button
-              className="w-full py-8 font-bold text-lg bg-[#311C31] hover:bg-[#432643] text-[#FC72FF]"
-              onClick={() => trySwap()}
-            >
-              Swap
-            </Button>
-          ) : (
-            <Button
-              onClick={connectMetamask}
-              className="w-full py-8 font-bold text-lg bg-[#311C31] hover:bg-[#432643] text-[#FC72FF]"
-            >
-              Connecter MetaMask
-            </Button>
-          )}
         </div>
       </div>
     </>
