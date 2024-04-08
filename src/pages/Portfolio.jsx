@@ -152,7 +152,9 @@ export default function MyAccount() {
       );
       const tokenPriceResponse = await response.json();
       const tokenPriceUSDTResponse = await responseUSDT.json();
-      const valueUSDT = tokenPriceUSDTResponse.price;
+      const convertedPriceUSDT =
+        tokenPriceUSDTResponse.buyAmount / Math.pow(10, 6);
+      const valueUSDT = convertedPriceUSDT.toFixed(2);
       const convertedPrice =
         tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(2);
@@ -287,7 +289,7 @@ export default function MyAccount() {
           </Card>
         </div>
         <div className="bg-black rounded-2xl flex-col justify-center max-h-1/3 max-w-[480px] mt-16 flex p-2 gap-3">
-          <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent max-h-[120px]">
+          <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent min-h-[120px]">
             <div className="flex flex-col">
               <p className="text-white">FROM</p>
               <input
@@ -298,7 +300,11 @@ export default function MyAccount() {
                 placeholder="0"
                 className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
-              <p className="text-white mt-3">AAVE = {tokenPriceUSDT} USDT</p>
+              {tokenPriceUSDT > 0 ? (
+                <p className="text-white mt-3">{tokenPriceUSDT} $</p>
+              ) : (
+                ""
+              )}
             </div>
 
             <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
@@ -386,17 +392,25 @@ export default function MyAccount() {
               </DialogContent>
             </Dialog>
           </div>
-          <div className="flex bg-[#1B1B1B] py-10 rounded-lg p-3 focus-within:border-white border border-transparent max-h-[120px]">
-            <input
-              type="number"
-              value={current.to > 0 ? current.to : tokenPrice}
-              name="to"
-              onChange={handleInputChange}
-              placeholder="0"
-              className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
+          <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent min-h-[120px]">
+            <div className="flex flex-col">
+              <p className="text-white">TO</p>
+              <input
+                type="number"
+                value={current.to > 0 ? current.to : tokenPrice}
+                name="to"
+                onChange={handleInputChange}
+                placeholder="0"
+                className="rounded-xl w-full mr-3 max-h-[44px] text-3xl outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+              {tokenPriceUSDT > 0 ? (
+                <p className="text-white mt-3">{tokenPriceUSDT} $</p>
+              ) : (
+                ""
+              )}
+            </div>
             <Dialog open={isOpenSecond} onOpenChange={setIsOpenSecond}>
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center">
                 <Button
                   className={
                     selectedSecondItem.length > 0
