@@ -38,6 +38,7 @@ export default function MyAccount() {
     decimals: 18,
   });
   const [gasFee, setGasFee] = useState([]);
+  const [tokenPriceUSDT, setTokenPriceUSDT] = useState("");
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
     if (connectedAccount) {
@@ -134,23 +135,35 @@ export default function MyAccount() {
       buyToken: selectedSecondItem[2],
       sellAmount: amount,
     });
+    const paramsPriceAgainstUSDT = new URLSearchParams({
+      sellToken: selectedItem[2],
+      buyToken: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      sellAmount: amount,
+    });
     const headers = { "0x-api-key": "f3226fc9-8580-402d-851d-808413124d2b" };
     try {
       const response = await fetch(
         `https://api.0x.org/swap/v1/price?${params}`,
         { headers }
       );
+      const responseUSDT = await fetch(
+        `https://api.0x.org/swap/v1/price?${paramsPriceAgainstUSDT}`,
+        { headers }
+      );
       const tokenPriceResponse = await response.json();
+      const tokenPriceUSDTResponse = await responseUSDT.json();
+      const valueUSDT = tokenPriceUSDTResponse.price;
       const convertedPrice =
         tokenPriceResponse.buyAmount / Math.pow(10, selectedSecondItem[3]);
       const value = convertedPrice.toFixed(2);
+      setTokenPriceUSDT(valueUSDT);
       setTokenPrice(value);
       setGasFee(tokenPriceResponse.estimatedGas);
     } catch (error) {
       console.log(error.message);
     }
   };
-
+  // console.log(tokenPriceUSDT);
   useEffect(() => {
     getPrice();
   }, [current, selectedItem, selectedSecondItem]);
@@ -274,18 +287,22 @@ export default function MyAccount() {
           </Card>
         </div>
         <div className="bg-black rounded-2xl flex-col justify-center max-h-1/3 max-w-[480px] mt-16 flex p-2 gap-3">
-          <div className="flex bg-[#1B1B1B] py-10 rounded-lg justify-between p-3 focus-within:border-white border border-transparent max-h-[120px]">
-            <input
-              type="number"
-              value={current.from}
-              name="from"
-              onChange={handleInputChange}
-              placeholder="0"
-              className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
+          <div className="flex bg-[#1B1B1B] rounded-lg p-3 focus-within:border-white border border-transparent max-h-[120px]">
+            <div className="flex flex-col">
+              <p className="text-white">FROM</p>
+              <input
+                type="number"
+                value={current.from}
+                name="from"
+                onChange={handleInputChange}
+                placeholder="0"
+                className="rounded-xl w-full mr-3 max-h-[44px] text-3xl focus:outline-none text-white font-semibold bg-[#1B1B1B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+              <p className="text-white mt-3">AAVE = {tokenPriceUSDT} USDT</p>
+            </div>
 
             <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-end">
                 <Button
                   className="rounded-full h-min bg-[#2D2F36] hover:bg-[#41444F] text-xl font-medium p-2 mt-[-0.2rem]"
                   onClick={() => setIsOpenFirst(!isOpenFirst)}
@@ -416,7 +433,7 @@ export default function MyAccount() {
                       <p>Erreur: {errorMessage.balance}</p>
                     ) : balance ? (
                       balance.map((token, index) =>
-                        token.symbol == selectedItem[0] ? (
+                        token.symbol == selectedSecondItem[0] ? (
                           <p key={index} className="text-muted text-sm mt-3">
                             Solde : {token.balance}
                           </p>
