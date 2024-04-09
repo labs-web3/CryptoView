@@ -42,6 +42,7 @@ export default function MyAccount() {
   const [tokenPriceUSDT, setTokenPriceUSDT] = useState("");
   const [estimatedPriceImpact, setEstimatedPriceImpact] = useState("");
   const [calcPriceImpact, setCalcPriceImpact] = useState("");
+  const [accountTransaction, setAccountTransaction] = useState("");
 
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
@@ -110,9 +111,29 @@ export default function MyAccount() {
   const getAllTransactions = async () => {
     try {
       const response = await fetch(
-        "https://api.etherscan.io/api?module=account&action=balance&address=0x576AE50137674ab36290A56Ad0CAD741e0e478e7&tag=latest&apikey=STPJNTFV7Z3CMDTEIINHWIFZMXFE7J5YC9"
+        "https://api.etherscan.io/api?module=account&action=txlist&address=0x534A0076fb7c2b1f83FA21497429AD7ad3bD7587&startblock=0&endblock=99999999&page=0-150&offset=10&sort=asc&apikey=STPJNTFV7Z3CMDTEIINHWIFZMXFE7J5YC9"
       );
-      console.log(response);
+      const transac = await response.json();
+      const transactions = transac.result;
+
+      const provider = window.ethereum;
+      const web3 = new Web3(provider);
+
+      transactions.map((transaction) => {
+        if (transaction.value > 0) {
+          const timeStamp = transaction.timeStamp;
+          const from = transaction.from;
+          const to = transaction.to;
+          const value = transaction.value;
+          const valueInTokens = web3.utils.fromWei(value, "ether");
+
+          console.log(
+            `Transaction: De: ${from}, À: ${to}, Valeur: ${valueInTokens} tokens, Horodatage: ${new Date(
+              timeStamp * 1000
+            )}`
+          );
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -121,6 +142,8 @@ export default function MyAccount() {
   useEffect(() => {
     getAllTransactions();
   }, []);
+
+  // console.log(accountTransaction);
 
   // récuperation des tokens ERC20
   const fetchTokenList = async () => {
