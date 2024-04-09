@@ -107,6 +107,21 @@ export default function MyAccount() {
     return balances;
   };
 
+  const getAllTransactions = async () => {
+    try {
+      const response = await fetch(
+        "https://api.etherscan.io/api?module=account&action=balance&address=0x576AE50137674ab36290A56Ad0CAD741e0e478e7&tag=latest&apikey=STPJNTFV7Z3CMDTEIINHWIFZMXFE7J5YC9"
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllTransactions();
+  }, []);
+
   // récuperation des tokens ERC20
   const fetchTokenList = async () => {
     try {
@@ -165,7 +180,6 @@ export default function MyAccount() {
       const value = convertedPrice.toFixed(2);
       const priceImpact =
         valueUSDT * (1 - parseFloat(tokenPriceResponse.estimatedPriceImpact));
-      console.log(priceImpact);
       setTokenPriceUSDT(valueUSDT);
       setTokenPrice(value);
       setGasFee(tokenPriceResponse.estimatedGas);
@@ -395,7 +409,7 @@ export default function MyAccount() {
                       {calcPriceImpact} $ (-{estimatedPriceImpact}%)
                     </p>
                   ) : (
-                    <p className="text-white mt-3">{tokenPriceUSDT} $</p>
+                    <p className="text-[#838383] mt-3">{tokenPriceUSDT} $</p>
                   )
                 ) : (
                   ""
