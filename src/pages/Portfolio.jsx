@@ -44,8 +44,6 @@ export default function MyAccount() {
   const [estimatedPriceImpact, setEstimatedPriceImpact] = useState("");
   const [calcPriceImpact, setCalcPriceImpact] = useState("");
   const [accountTransaction, setAccountTransaction] = useState("");
-  // const [searchTextFirst, setSearchTextFirst] = useState("");
-  // const [searchTextSecond, setSearchTextSecond] = useState("");
   const [searchText, setSearchText] = useState({ first: "", second: "" });
 
   // chargement optimisé de la récupération de ma balance du wallet
@@ -153,8 +151,6 @@ export default function MyAccount() {
   useEffect(() => {
     getAllTransactions();
   }, []);
-
-  // console.log(accountTransaction);
 
   // récuperation des tokens ERC20
   const fetchTokenList = async () => {
@@ -410,11 +406,14 @@ export default function MyAccount() {
                 </div>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Coins</DialogTitle>
+                    <DialogTitle className="p-2">
+                      Sélectionnez un jeton
+                    </DialogTitle>
                     <Input
                       onChange={handleSearch}
                       value={searchText.first}
                       name="first"
+                      type="search"
                     />
                   </DialogHeader>
                   <div className="flex-1 overflow-auto h-full">
@@ -426,7 +425,7 @@ export default function MyAccount() {
                           return (
                             <li key={index}>
                               <div
-                                className="flex cursor-pointer hover:bg-slate-300 py-3"
+                                className="flex cursor-pointer hover:bg-slate-300 p-3 hover:rounded-lg"
                                 onClick={() => {
                                   handleSelectItem([
                                     token.symbol,
@@ -533,11 +532,14 @@ export default function MyAccount() {
                 </div>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Coins</DialogTitle>
+                    <DialogTitle className="p-2">
+                      Sélectionnez un jeton
+                    </DialogTitle>
                     <Input
                       onChange={handleSearch}
                       value={searchText.second}
                       name="second"
+                      type="search"
                     />
                   </DialogHeader>
                   <div className="flex-1 overflow-auto h-full">
@@ -549,7 +551,7 @@ export default function MyAccount() {
                           return (
                             <li key={index}>
                               <div
-                                className="flex cursor-pointer hover:bg-slate-300 py-3"
+                                className="flex cursor-pointer hover:bg-slate-300 hover:rounded-lg p-3"
                                 onClick={() => {
                                   handleSecondSelectItem([
                                     token.symbol,
