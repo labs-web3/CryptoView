@@ -93,13 +93,17 @@ export default function MyAccount() {
           .call();
         const divisor = new BigNumber(10).pow(new BigNumber(token.decimals));
         const balanceInToken = new BigNumber(balance).div(divisor);
-        return { symbol: token.symbol, balance: balanceInToken.toFixed() };
+        return {
+          symbol: token.symbol,
+          balance: balanceInToken.toFixed(),
+          logo: token.logoURI,
+        };
       } catch (error) {
         console.log(error.message);
         return setErrorMessage({
           ...errorMessage,
           balance: (
-            <span>
+            <span className="text-red-500">
               Veuillez connecter votre portefeuille au réseau Ethereum
             </span>
           ),
@@ -609,10 +613,7 @@ export default function MyAccount() {
                     ) : balance ? (
                       balance.map((token, index) =>
                         token.balance != 0 ? (
-                          <p key={index}>
-                            {token.balance}
-                            {token.symbol}
-                          </p>
+                          <p key={index}>${token.balance}</p>
                         ) : null
                       )
                     ) : null}
@@ -627,6 +628,36 @@ export default function MyAccount() {
                 <div className="flex text-black">Balance</div>
                 <div className="flex text-black">Value</div>
               </div>
+              <hr className="bg-black h-0.5 mt-3" />
+              {loading ? (
+                <p>Chargement...</p>
+              ) : errorMessage.balance ? (
+                <p>Erreur: {errorMessage.balance}</p>
+              ) : balance ? (
+                balance.map((token, index) =>
+                  token.balance != 0 ? (
+                    <div
+                      key={index}
+                      className="flex mt-3 items-center justify-between"
+                    >
+                      <div className="flex items-center">
+                        <img
+                          src={token.logo}
+                          alt={token.symbol}
+                          className="mr-2 rounded-full object-cover"
+                          loading="lazy"
+                          width={30}
+                          height={30}
+                        />
+                        <p className="text-black font-bold">{token.symbol}</p>
+                      </div>
+                      <p className="text-black font-bold">1</p>
+                      <p className="text-black font-bold">1</p>
+                      <p className="text-black font-bold">1</p>
+                    </div>
+                  ) : null
+                )
+              ) : null}
             </CardContent>
           </Card>
         </div>
