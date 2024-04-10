@@ -44,7 +44,9 @@ export default function MyAccount() {
   const [estimatedPriceImpact, setEstimatedPriceImpact] = useState("");
   const [calcPriceImpact, setCalcPriceImpact] = useState("");
   const [accountTransaction, setAccountTransaction] = useState("");
-  const [searchText, setSearchText] = useState("");
+  // const [searchTextFirst, setSearchTextFirst] = useState("");
+  // const [searchTextSecond, setSearchTextSecond] = useState("");
+  const [searchText, setSearchText] = useState({ first: "", second: "" });
 
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
@@ -304,15 +306,26 @@ export default function MyAccount() {
     });
   };
 
-  const handleSearch = (e) => {
-    setSearchText(e.target.value.toLowerCase());
+  const handleSearch = (event) => {
+    setSearchText({
+      ...searchText,
+      [event.target.name]: event.target.value,
+    });
   };
 
-  const filterSearch = tokenList.filter((elem) => {
-    if (searchText === "") {
+  const filterSearchFirst = tokenList.filter((elem) => {
+    if (searchText.first === "") {
       return tokenList;
     } else {
-      return elem.symbol.toLowerCase().includes(searchText);
+      return elem.symbol.toLowerCase().includes(searchText.first);
+    }
+  });
+
+  const filterSearchSecond = tokenList.filter((elem) => {
+    if (searchText.second === "") {
+      return tokenList;
+    } else {
+      return elem.symbol.toLowerCase().includes(searchText.second);
     }
   });
 
@@ -343,7 +356,8 @@ export default function MyAccount() {
               <Dialog open={isOpenFirst} onOpenChange={setIsOpenFirst}>
                 <div
                   className={`flex flex-col ${
-                    selectedItem[0] == undefined
+                    selectedItem[0] == undefined ||
+                    connectedAccount === undefined
                       ? "justify-center"
                       : "justify-end"
                   } `}
@@ -397,14 +411,18 @@ export default function MyAccount() {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Coins</DialogTitle>
-                    <Input onChange={handleSearch} />
+                    <Input
+                      onChange={handleSearch}
+                      value={searchText.first}
+                      name="first"
+                    />
                   </DialogHeader>
                   <div className="flex-1 overflow-auto h-full">
                     <ul>
                       {loadingList ? (
                         <p>Loading...</p>
                       ) : (
-                        filterSearch.map((token, index) => {
+                        filterSearchFirst.map((token, index) => {
                           return (
                             <li key={index}>
                               <div
@@ -516,14 +534,18 @@ export default function MyAccount() {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Coins</DialogTitle>
-                    <Input onChange={handleSearch} />
+                    <Input
+                      onChange={handleSearch}
+                      value={searchText.second}
+                      name="second"
+                    />
                   </DialogHeader>
                   <div className="flex-1 overflow-auto h-full">
                     <ul>
                       {loadingList ? (
                         <p>Loading...</p>
                       ) : (
-                        filterSearch.map((token, index) => {
+                        filterSearchSecond.map((token, index) => {
                           return (
                             <li key={index}>
                               <div
