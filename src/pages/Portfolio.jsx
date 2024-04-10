@@ -406,9 +406,7 @@ export default function MyAccount() {
                 </div>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="p-2">
-                      Sélectionnez un jeton
-                    </DialogTitle>
+                    <DialogTitle>Sélectionnez un jeton</DialogTitle>
                     <Input
                       onChange={handleSearch}
                       value={searchText.first}
@@ -532,9 +530,7 @@ export default function MyAccount() {
                 </div>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="p-2">
-                      Sélectionnez un jeton
-                    </DialogTitle>
+                    <DialogTitle>Sélectionnez un jeton</DialogTitle>
                     <Input
                       onChange={handleSearch}
                       value={searchText.second}
@@ -599,39 +595,37 @@ export default function MyAccount() {
           </div>
         </div>
 
-        <div className="flex justify-between text-center">
-          <Card className="bg-[#eeeeee] shadow-xl w-1/3">
+        <div className="flex justify-between text-center mt-3">
+          <Card className="bg-[#eeeeee] shadow-xl w-full">
             <CardHeader className="pb-3">
-              <CardDescription className="text-xl text-[#838383]">
-                Balance Available
+              <CardDescription className="text-xl text-start text-black font-semibold">
+                <div className="flex flex-1 justify-between">
+                  <span>Portefeuille</span>
+                  <span>
+                    {loading ? (
+                      <p>Chargement...</p>
+                    ) : errorMessage.balance ? (
+                      <p>Erreur: {errorMessage.balance}</p>
+                    ) : balance ? (
+                      balance.map((token, index) =>
+                        token.balance != 0 ? (
+                          <p key={index}>
+                            {token.balance}
+                            {token.symbol}
+                          </p>
+                        ) : null
+                      )
+                    ) : null}
+                  </span>
+                </div>
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center flex-col gap-3">
-                <span className="text-black font-bold text-3xl">
-                  {loading ? (
-                    <p>Chargement...</p>
-                  ) : errorMessage.balance ? (
-                    <p>Erreur: {errorMessage.balance}</p>
-                  ) : balance ? (
-                    balance.map((token, index) =>
-                      token.balance != 0 ? (
-                        <p key={index}>
-                          {token.balance}
-                          {token.symbol}
-                        </p>
-                      ) : null
-                    )
-                  ) : null}
-                </span>
-                <div className="flex gap-3">
-                  <Button className="bg-white text-black font-bold shadow-xl px-6">
-                    Buy
-                  </Button>
-                  <Button className="bg-white text-black font-bold shadow-xl px-6">
-                    Receive
-                  </Button>
-                </div>
+              <div className="flex items-center justify-between">
+                <div className="flex text-black">Token</div>
+                <div className="flex text-black">Price</div>
+                <div className="flex text-black">Balance</div>
+                <div className="flex text-black">Value</div>
               </div>
             </CardContent>
           </Card>
