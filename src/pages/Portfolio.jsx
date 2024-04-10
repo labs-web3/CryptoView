@@ -19,6 +19,7 @@ import {
 import data from "../data/data.json";
 import BigNumber from "bignumber.js";
 import LineChart from "@/components/LineChart";
+import { Input } from "@/components/ui/input";
 
 export default function MyAccount() {
   const [connectedAccount, setConnectedAccount] = useState();
@@ -43,6 +44,7 @@ export default function MyAccount() {
   const [estimatedPriceImpact, setEstimatedPriceImpact] = useState("");
   const [calcPriceImpact, setCalcPriceImpact] = useState("");
   const [accountTransaction, setAccountTransaction] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   // chargement optimisé de la récupération de ma balance du wallet
   useEffect(() => {
@@ -127,18 +129,25 @@ export default function MyAccount() {
           const value = transaction.value;
           const valueInTokens = web3.utils.fromWei(value, "ether");
 
-          console.log(
-            `Transaction: De: ${from}, À: ${to}, Valeur: ${valueInTokens} tokens, Horodatage: ${new Date(
-              timeStamp * 1000
-            )}`
-          );
+          const formattedDate = new Date(timeStamp) * 1000;
+          setAccountTransaction({
+            from: from,
+            timeStamp: formattedDate,
+            to: to,
+            value: valueInTokens,
+          });
+          // console.log(
+          //   `Transaction: De: ${from}, À: ${to}, Valeur: ${valueInTokens} tokens, Horodatage: ${new Date(
+          //     timeStamp * 1000
+          //   )}`
+          // );
         }
       });
     } catch (error) {
       console.log(error.message);
     }
   };
-
+  console.log(accountTransaction);
   useEffect(() => {
     getAllTransactions();
   }, []);
@@ -295,6 +304,18 @@ export default function MyAccount() {
     });
   };
 
+  const handleSearch = (e) => {
+    setSearchText(e.target.value.toLowerCase());
+  };
+
+  const filterSearch = tokenList.filter((elem) => {
+    if (searchText === "") {
+      return tokenList;
+    } else {
+      return elem.symbol.toLowerCase().includes(searchText);
+    }
+  });
+
   return (
     <>
       <div className="container py-16">
@@ -376,13 +397,14 @@ export default function MyAccount() {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Coins</DialogTitle>
+                    <Input onChange={handleSearch} />
                   </DialogHeader>
                   <div className="flex-1 overflow-auto h-full">
                     <ul>
                       {loadingList ? (
                         <p>Loading...</p>
                       ) : (
-                        tokenList.map((token, index) => {
+                        filterSearch.map((token, index) => {
                           return (
                             <li key={index}>
                               <div
@@ -494,13 +516,14 @@ export default function MyAccount() {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Coins</DialogTitle>
+                    <Input onChange={handleSearch} />
                   </DialogHeader>
                   <div className="flex-1 overflow-auto h-full">
                     <ul>
                       {loadingList ? (
                         <p>Loading...</p>
                       ) : (
-                        tokenList.map((token, index) => {
+                        filterSearch.map((token, index) => {
                           return (
                             <li key={index}>
                               <div
