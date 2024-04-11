@@ -1,6 +1,6 @@
 import { MoreVertical, ChevronRight, ChevronLeft } from "lucide-react";
 import { useContext, createContext, useState } from "react";
-import { Link } from "react-router-dom"; // Import du composant Link
+import { Link, useLocation } from "react-router-dom";
 
 const SidebarContext = createContext();
 
@@ -54,9 +54,11 @@ export default function Sidebar({ children }) {
   );
 }
 
-export function SidebarItem({ icon, text, active, alert, to }) {
-  // Utilisation de la prop 'to' au lieu de 'href'
+export function SidebarItem({ icon, text, to }) {
   const { expanded } = useContext(SidebarContext);
+  const location = useLocation();
+  const active = location.pathname === to;
+  const alert = location.pathname === to;
 
   return (
     <Link to={to}>

@@ -29,7 +29,6 @@ function App() {
             to="/"
             icon={<LayoutDashboard size={20} />}
             text="Dashboard"
-            alert
           />
           <SidebarItem icon={<BarChart3 size={20} />} text="Statistics" />
           <SidebarItem icon={<Boxes size={20} />} text="Inventory" />
