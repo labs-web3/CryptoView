@@ -56,6 +56,11 @@ export default function Sidebar({ children }) {
 
 export function SidebarItem({ icon, text, to }) {
   const { expanded } = useContext(SidebarContext);
+  // useLocation est un hook de react-router-dom qui fournit l'objet location actuel.
+  // Cet objet contient des informations sur l'URL courante. `location.pathname` est une propriété
+  // de cet objet qui contient le chemin de l'URL actuelle. Nous utilisons `location.pathname`
+  // pour déterminer si le chemin actuel correspond à la prop `to` du composant SidebarItem,
+  // permettant ainsi de savoir si l'élément doit être marqué comme actif.
   const location = useLocation();
   const active = location.pathname === to;
   const alert = location.pathname === to;
