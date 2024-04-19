@@ -8,13 +8,28 @@ import {
 } from "@/components/ui/table";
 import FetchCrypto from "@/hooks/FetchCrypto";
 import { Link } from "react-router-dom";
-import { useCryptoStore } from "@/zustand/store";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { useEffect } from "react";
 
 export default function Home() {
-  const { cryptos } = useCryptoStore();
-  const { loading } = FetchCrypto(
+  // const { cryptos } = useCryptoStore();
+  const top = FetchCrypto(
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
   );
+  const trend = FetchCrypto(
+    "https://pro-api.coingecko.com/api/v3/search/trending&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+  );
+  useEffect(() => {
+    if (top.data) {
+      console.log(top);
+    }
+  }, [top.data]);
+
+  useEffect(() => {
+    if (trend.data) {
+      console.log(trend);
+    }
+  }, [trend.data]);
 
   const formatPercentage = (value) => {
     return Intl.NumberFormat("en-US", {
@@ -61,12 +76,20 @@ export default function Home() {
   //   }
   // };
 
-  if (loading) {
+  if (top.loading) {
     return <div>Loading...</div>;
   }
-  console.log(cryptos);
+  console.log(top);
   return (
     <div className="container">
+      <div className="flex my-5">
+        <Card>
+          <CardHeader>
+            <span className="font-bold">Tendance</span>
+          </CardHeader>
+          <CardContent>dadadad</CardContent>
+        </Card>
+      </div>
       <Table className="table-auto">
         <TableHeader>
           <TableRow>
@@ -79,7 +102,7 @@ export default function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {cryptos.map((post, index) => (
+          {top.data.map((post, index) => (
             <TableRow key={index}>
               <TableCell
                 key={post.name}
