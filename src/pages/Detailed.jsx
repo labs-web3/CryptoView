@@ -8,24 +8,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCryptoStore } from "@/zustand/store";
 import LineChart from "@/components/LineChart";
 
 export default function Detailed() {
-  const { cryptos } = useCryptoStore();
   const { id } = useParams();
   const options = {
     method: "GET",
     headers: { x_cg_demo_api_key: "=CG-1t8kdBZJMA1YUmpjF5nypF6R" },
   };
-  const { loading } = FetchCrypto(
+  const getCrypto = FetchCrypto(
     `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1, ${options}`
   );
-  if (loading) {
+  if (getCrypto.loading) {
     return <p>Loading...</p>;
   }
 
-  const formattedPrices = cryptos.prices
+  const formattedPrices = getCrypto.data.prices
     .map((entry) => ({
       time: new Date(entry[0]).toLocaleTimeString([], {
         hour: "2-digit",
@@ -36,7 +34,7 @@ export default function Detailed() {
     .filter((entry, index) => index % 2 === 0);
   console.log(formattedPrices);
 
-  const lastPrice = cryptos.prices.at(0);
+  const lastPrice = getCrypto.data.prices.at(0);
   const roundedLastPrice = Math.round(lastPrice[1]);
 
   return (
