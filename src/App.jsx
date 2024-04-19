@@ -1,6 +1,7 @@
 import Home from "./pages/Home.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Detailed from "./pages/Detailed.jsx";
+import Trading from "./pages/Trading.jsx";
 import Portfolio from "./pages/Portfolio.jsx";
 import Sidebar from "./components/Sidebar";
 import { SidebarItem } from "./components/Sidebar";
@@ -13,6 +14,7 @@ import {
   BarChart3,
   LayoutDashboard,
   Settings,
+  Wallet,
 } from "lucide-react";
 
 function App() {
@@ -21,19 +23,20 @@ function App() {
       <div className="flex">
         <Sidebar>
           <SidebarItem
-            icon={<UserCircle size={20} />}
+            to="/"
+            icon={<LayoutDashboard size={20} />}
+            text="Home"
+          />
+          <SidebarItem
+            icon={<Wallet size={20} />}
             text="Portfolio"
             to="/Portfolio"
           />
           <SidebarItem
-            to="/"
-            icon={<LayoutDashboard size={20} />}
-            text="Dashboard"
+            icon={<UserCircle size={20} />}
+            text="Trading"
+            to="/Trading"
           />
-          <SidebarItem icon={<BarChart3 size={20} />} text="Statistics" />
-          <SidebarItem icon={<Boxes size={20} />} text="Inventory" />
-          <SidebarItem icon={<Package size={20} />} text="Orders" />
-          <SidebarItem icon={<Receipt size={20} />} text="Billings" />
           <hr className="my-3" />
           <SidebarItem icon={<Settings size={20} />} text="Settings" />
           <SidebarItem icon={<LifeBuoy size={20} />} text="Help" />
@@ -41,6 +44,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/Portfolio" element={<Portfolio />}></Route>
+          <Route path="/Trading" element={<Trading />}></Route>
           <Route path="/:id" element={<Detailed />}></Route>
         </Routes>
       </div>
