@@ -74,7 +74,7 @@ export default function Home() {
   //     );
   //     return arrow;
   //   }
-  // };
+  // }
 
   if (top.loading || trend.loading) {
     return <div>Loading...</div>;
@@ -86,7 +86,22 @@ export default function Home() {
           <CardHeader>
             <span className="font-bold">Tendance</span>
           </CardHeader>
-          {/* <CardContent>{trend.data.coins.item}</CardContent> */}
+          <CardContent>
+            {trend.data.coins.map((coin) => {
+              console.log(coin);
+              return (
+                <div key={coin.item.id} className="flex align-items-center">
+                  <img
+                    src={coin.item.small}
+                    alt=""
+                    width={25}
+                    style={{ marginRight: "5px" }}
+                  />
+                  <span>{coin.item.name}</span>
+                </div>
+              );
+            })}
+          </CardContent>
         </Card>
       </div>
       <Table className="table-auto">
