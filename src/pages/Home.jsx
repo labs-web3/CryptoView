@@ -40,45 +40,46 @@ export default function Home() {
     }).format(value / 100);
   };
 
-  // const arrowUpOrDown = (value) => {
-  //   if (value.toString().startsWith("-")) {
-  //     const arrow = (
-  //       <svg
-  //         xmlns="http://www.w3.org/2000/svg"
-  //         viewBox="0 0 20 20"
-  //         fill="currentColor"
-  //         className="w-5 h-5"
-  //       >
-  //         <path
-  //           fillRule="evenodd"
-  //           d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-  //           clipRule="evenodd"
-  //         />
-  //       </svg>
-  //     );
-  //     return arrow;
-  //   } else {
-  //     const arrow = (
-  //       <svg
-  //         xmlns="http://www.w3.org/2000/svg"
-  //         viewBox="0 0 20 20"
-  //         fill="currentColor"
-  //         className="w-5 h-5"
-  //       >
-  //         <path
-  //           fillRule="evenodd"
-  //           d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z"
-  //           clipRule="evenodd"
-  //         />
-  //       </svg>
-  //     );
-  //     return arrow;
-  //   }
-  // }
+  const arrowUpOrDown = (value) => {
+    if (value.toString().startsWith("-")) {
+      const arrow = (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+      return arrow;
+    } else {
+      const arrow = (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+      return arrow;
+    }
+  };
 
   if (top.loading || trend.loading) {
     return <div>Loading...</div>;
   }
+  const filteredTrend = trend.data.coins.filter((item, index) => index < 3);
   return (
     <div className="container">
       <div className="flex my-5">
@@ -87,27 +88,37 @@ export default function Home() {
             <span className="font-bold px-3 text-xl">🔥 Tendance</span>
           </CardHeader>
           <CardContent>
-            {trend.data.coins.map((coin) => {
-              console.log(coin);
+            {filteredTrend.map((coin) => {
               return (
-                <div
-                  key={coin.item.id}
-                  className="flex align-items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl"
-                >
-                  <img src={coin.item.small} alt={coin.item.name} width={25} />
-                  <span>{coin.item.name}</span>
-                  <span>{coin.item.data.price.toFixed(4)} $</span>
-                  <span
-                    className={`${
-                      coin.item.data.price_change_percentage_24h.usd
-                        .toString()
-                        .startsWith("-")
-                        ? "text-red-500"
-                        : "text-green-500"
-                    }`}
-                  >
-                    {coin.item.data.price_change_percentage_24h.usd.toFixed(1)}%
-                  </span>
+                <div key={coin.item.id}>
+                  <div className="flex align-items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
+                    <img
+                      src={coin.item.small}
+                      alt={coin.item.name}
+                      width={25}
+                    />
+                    <span>{coin.item.name}</span>
+                    <span>{coin.item.data.price.toFixed(4)} $</span>
+                    <span
+                      className={`flex ${
+                        coin.item.data.price_change_percentage_24h.usd
+                          .toString()
+                          .startsWith("-")
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }`}
+                    >
+                      {arrowUpOrDown(
+                        coin.item.data.price_change_percentage_24h.usd.toFixed(
+                          1
+                        )
+                      )}
+                      {coin.item.data.price_change_percentage_24h.usd.toFixed(
+                        1
+                      )}
+                      %
+                    </span>
+                  </div>
                 </div>
               );
             })}
@@ -153,14 +164,14 @@ export default function Home() {
                 key={post.price_change_percentage_1h_in_currency}
                 className={`${
                   post.price_change_percentage_1h_in_currency
-                    ? // .toString()
-                      // .startsWith("-")
-                      "text-red-500"
+                    .toString()
+                    .startsWith("-")
+                    ? "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {/* {arrowUpOrDown(post.price_change_percentage_1h_in_currency)} */}
+                  {arrowUpOrDown(post.price_change_percentage_1h_in_currency)}
                   {formatPercentage(
                     post.price_change_percentage_1h_in_currency
                   )}
@@ -170,14 +181,14 @@ export default function Home() {
                 key={post.price_change_percentage_24h_in_currency}
                 className={`${
                   post.price_change_percentage_24h_in_currency
-                    ? // .toString()
-                      // .startsWith("-")
-                      "text-red-500"
+                    .toString()
+                    .startsWith("-")
+                    ? "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {/* {arrowUpOrDown(post.price_change_percentage_24h_in_currency)} */}
+                  {arrowUpOrDown(post.price_change_percentage_24h_in_currency)}
                   {formatPercentage(
                     post.price_change_percentage_24h_in_currency
                   )}
@@ -187,14 +198,14 @@ export default function Home() {
                 key={post.price_change_percentage_7d_in_currency}
                 className={`${
                   post.price_change_percentage_7d_in_currency
-                    ? // .toString()
-                      // .startsWith("-")
-                      "text-red-500"
+                    .toString()
+                    .startsWith("-")
+                    ? "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {/* {arrowUpOrDown(post.price_change_percentage_7d_in_currency)} */}
+                  {arrowUpOrDown(post.price_change_percentage_7d_in_currency)}
                   {formatPercentage(
                     post.price_change_percentage_7d_in_currency
                   )}
