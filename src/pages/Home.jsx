@@ -44,32 +44,24 @@ export default function Home() {
     if (value.toString().startsWith("-")) {
       const arrow = (
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
           fill="currentColor"
-          className="w-5 h-5"
+          className="w5 h-5"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <path
-            fillRule="evenodd"
-            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-            clipRule="evenodd"
-          />
+          <path d="m16.843 10.211c.108-.141.157-.3.157-.456 0-.389-.306-.755-.749-.755h-8.501c-.445 0-.75.367-.75.755 0 .157.05.316.159.457 1.203 1.554 3.252 4.199 4.258 5.498.142.184.36.29.592.29.23 0 .449-.107.591-.291 1.002-1.299 3.044-3.945 4.243-5.498z" />
         </svg>
       );
       return arrow;
     } else {
       const arrow = (
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
           fill="currentColor"
-          className="w-5 h-5"
+          className="w5 h-5"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <path
-            fillRule="evenodd"
-            d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z"
-            clipRule="evenodd"
-          />
+          <path d="m16.843 13.789c.108.141.157.3.157.456 0 .389-.306.755-.749.755h-8.501c-.445 0-.75-.367-.75-.755 0-.157.05-.316.159-.457 1.203-1.554 3.252-4.199 4.258-5.498.142-.184.36-.29.592-.29.23 0 .449.107.591.291 1.002 1.299 3.044 3.945 4.243 5.498z" />
         </svg>
       );
       return arrow;
@@ -90,36 +82,38 @@ export default function Home() {
           <CardContent>
             {filteredTrend.map((coin) => {
               return (
-                <div key={coin.item.id}>
-                  <div className="flex align-items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
-                    <img
-                      src={coin.item.small}
-                      alt={coin.item.name}
-                      width={25}
-                    />
-                    <span>{coin.item.name}</span>
-                    <span>{coin.item.data.price.toFixed(4)} $</span>
-                    <span
-                      className={`flex ${
-                        coin.item.data.price_change_percentage_24h.usd
-                          .toString()
-                          .startsWith("-")
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {arrowUpOrDown(
-                        coin.item.data.price_change_percentage_24h.usd.toFixed(
+                <Link key={coin.item.id} to={`/${coin.item.id}`}>
+                  <div>
+                    <div className="flex align-items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
+                      <img
+                        src={coin.item.small}
+                        alt={coin.item.name}
+                        width={25}
+                      />
+                      <span>{coin.item.name}</span>
+                      <span>{coin.item.data.price.toFixed(4)} $</span>
+                      <span
+                        className={`flex ${
+                          coin.item.data.price_change_percentage_24h.usd
+                            .toString()
+                            .startsWith("-")
+                            ? "text-red-500"
+                            : "text-green-500"
+                        }`}
+                      >
+                        {arrowUpOrDown(
+                          coin.item.data.price_change_percentage_24h.usd.toFixed(
+                            1
+                          )
+                        )}
+                        {coin.item.data.price_change_percentage_24h.usd.toFixed(
                           1
-                        )
-                      )}
-                      {coin.item.data.price_change_percentage_24h.usd.toFixed(
-                        1
-                      )}
-                      %
-                    </span>
+                        )}
+                        %
+                      </span>
+                    </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </CardContent>
@@ -139,24 +133,24 @@ export default function Home() {
         <TableBody>
           {top.data.map((post, index) => (
             <TableRow key={index}>
-              <TableCell
-                key={post.name}
-                className={`${post.name === "Chiliz" ? "text-red-500" : ""}`}
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <span style={{ marginRight: "5px" }}>
-                  {post.market_cap_rank}.
-                </span>
-                <img
-                  width={25}
-                  alt={post.name}
-                  src={post.image}
-                  style={{ marginRight: "5px" }}
-                />
-                <Link to={`/${post.id}`}>
+              <Link to={`/${post.id}`}>
+                <TableCell
+                  key={post.name}
+                  className={`${post.name === "Chiliz" ? "text-red-500" : ""}`}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <span style={{ marginRight: "5px" }}>
+                    {post.market_cap_rank}.
+                  </span>
+                  <img
+                    width={25}
+                    alt={post.name}
+                    src={post.image}
+                    style={{ marginRight: "5px" }}
+                  />
                   <span>{post.name}</span>
-                </Link>
-              </TableCell>
+                </TableCell>
+              </Link>
               <TableCell key={post.current_price}>
                 ${post.current_price}
               </TableCell>
