@@ -27,3 +27,4 @@ dist-ssr
 #serverside
 server/config
 server/config.env
+.env
