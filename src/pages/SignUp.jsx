@@ -1,22 +1,17 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { InputForm } from "@/components/ui/input";
+import CustomInputField from "@/components/CustomInputField";
 
 export default function SignUp() {
   const formSchema = z.object({
     username: z.string().min(2, {
       message: "Username must be at least 2 characters.",
+    }),
+    email: z.string().email({
+      message: "Email not valid",
     }),
   });
 
@@ -24,6 +19,7 @@ export default function SignUp() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      email: "",
     },
   });
 
@@ -32,28 +28,31 @@ export default function SignUp() {
   };
 
   return (
-    <div className="container flex justify-center items-center">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <InputForm placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
+    <div className="container ">
+      <div className="flex h-full justify-center items-center">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 shadow-lg p-60 rounded-xl bg-slate-300 w-full"
+          >
+            <CustomInputField
+              control={form.control}
+              name="username"
+              label="Username"
+              placeholder="Boris"
+            />
+            <CustomInputField
+              control={form.control}
+              name="email"
+              label="Email"
+              placeholder="picardboris@gmail.com"
+            />
+            <Button className="w-full" type="submit">
+              Submit
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 }
