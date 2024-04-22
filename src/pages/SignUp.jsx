@@ -22,7 +22,7 @@ export default function SignUp() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "Boris",
-      email: "picardboris@gmail.com",
+      email: "example@example.com",
     },
   });
 
