@@ -1,4 +1,5 @@
 import express from "express";
+import workoutModel from "../models/workoutModel.js";
 
 const router = express.Router();
 
@@ -13,8 +14,14 @@ router.get("/:id", (req, res) => {
 });
 
 //POST a new workout
-router.post("/", (req, res) => {
-  res.json({ message: "POST a new workout" });
+router.post("/", async (req, res) => {
+  const { title, reps, load } = req.body;
+  try {
+    const workout = await workoutModel.create({ title, reps, load });
+    res.status(200).json(workout);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 //DELETE a workout
