@@ -7,11 +7,12 @@ import {
 } from "./ui/form";
 import { InputForm } from "./ui/input";
 
-const CustomInputField = ({ control, name, label, placeholder }) => {
+const CustomInputField = ({ control, name, label, placeholder, type }) => {
   return (
     <FormField
       control={control}
       name={name}
+      type={type}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>

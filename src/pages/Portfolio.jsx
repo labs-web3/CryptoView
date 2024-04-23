@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import WorkoutDetails from "@/components/WorkoutDetails";
+import WorkoutForm from "@/components/WorkoutForm";
 
 export default function Portfolio() {
   const [workouts, setWorkouts] = useState(null);
@@ -14,10 +16,13 @@ export default function Portfolio() {
     fetchWorkouts();
   }, []);
   return (
-    <div className="container justify-center items-center flex">
+    <div className="flex flex-col justify-center container">
+      <WorkoutForm />
       {workouts &&
         workouts.map((work) => {
-          return <li key={work._id}>{work.title}</li>;
+          return (
+            <WorkoutDetails key={work._id} workout={work}></WorkoutDetails>
+          );
         })}
     </div>
   );
