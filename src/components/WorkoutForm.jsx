@@ -27,15 +27,23 @@ export default function WorkoutForm() {
   });
 
   const onSubmit = async (data) => {
-    const workout = { title, load, reps };
-
     const response = await fetch("http://localhost:3001/api/workouts/", {
       method: "POST",
-      body: JSON.stringify(workout),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     });
+    const json = await response.json();
+
+    if (!response.ok) {
+      form.setError(json.error);
+    }
+    if (response.ok) {
+      form.setError(null);
+      form.reset();
+      console.log("new workout added", json);
+    }
   };
 
   return (
