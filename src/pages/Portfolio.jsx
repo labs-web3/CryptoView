@@ -4,7 +4,7 @@ export default function Portfolio() {
   const [workouts, setWorkouts] = useState(null);
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const response = await fetch("/api/workouts");
+      const response = await fetch("http://localhost:3001/api/workouts/");
       const json = await response.json();
 
       if (response.ok) {

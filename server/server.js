@@ -4,13 +4,23 @@ import dotenv from "dotenv";
 import process from "process";
 import workoutRoutes from "./routes/workouts.js";
 import mongoose from "mongoose";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
-// middleware
+
+// configuration cors
+const corsOptions = {
+  origin: "http://localhost:5173",
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+
+// middleware pour parser le json
 app.use(express.json());
 
+// middleware pour logger les requetes
 app.use((req, res, next) => {
   console.log(req.path, req.method);
   next();
@@ -19,7 +29,7 @@ app.use((req, res, next) => {
 // routes
 app.use("/api/workouts/", workoutRoutes);
 
-//connect to db
+//connect to db et lancement du server
 mongoose
   .connect(process.env.MONG_URI)
   .then(() => {
