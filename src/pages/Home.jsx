@@ -40,33 +40,33 @@ export default function Home() {
     }).format(value / 100);
   };
 
-  const arrowUpOrDown = (value) => {
-    if (value.toString().startsWith("-")) {
-      const arrow = (
-        <svg
-          fill="currentColor"
-          className="w5 h-5"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="m16.843 10.211c.108-.141.157-.3.157-.456 0-.389-.306-.755-.749-.755h-8.501c-.445 0-.75.367-.75.755 0 .157.05.316.159.457 1.203 1.554 3.252 4.199 4.258 5.498.142.184.36.29.592.29.23 0 .449-.107.591-.291 1.002-1.299 3.044-3.945 4.243-5.498z" />
-        </svg>
-      );
-      return arrow;
-    } else {
-      const arrow = (
-        <svg
-          fill="currentColor"
-          className="w5 h-5"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="m16.843 13.789c.108.141.157.3.157.456 0 .389-.306.755-.749.755h-8.501c-.445 0-.75-.367-.75-.755 0-.157.05-.316.159-.457 1.203-1.554 3.252-4.199 4.258-5.498.142-.184.36-.29.592-.29.23 0 .449.107.591.291 1.002 1.299 3.044 3.945 4.243 5.498z" />
-        </svg>
-      );
-      return arrow;
-    }
-  };
+  // const arrowUpOrDown = (value) => {
+  //   if (value.toString().startsWith("-")) {
+  //     const arrow = (
+  //       <svg
+  //         fill="currentColor"
+  //         className="w5 h-5"
+  //         viewBox="0 0 24 24"
+  //         xmlns="http://www.w3.org/2000/svg"
+  //       >
+  //         <path d="m16.843 10.211c.108-.141.157-.3.157-.456 0-.389-.306-.755-.749-.755h-8.501c-.445 0-.75.367-.75.755 0 .157.05.316.159.457 1.203 1.554 3.252 4.199 4.258 5.498.142.184.36.29.592.29.23 0 .449-.107.591-.291 1.002-1.299 3.044-3.945 4.243-5.498z" />
+  //       </svg>
+  //     );
+  //     return arrow;
+  //   } else {
+  //     const arrow = (
+  //       <svg
+  //         fill="currentColor"
+  //         className="w5 h-5"
+  //         viewBox="0 0 24 24"
+  //         xmlns="http://www.w3.org/2000/svg"
+  //       >
+  //         <path d="m16.843 13.789c.108.141.157.3.157.456 0 .389-.306.755-.749.755h-8.501c-.445 0-.75-.367-.75-.755 0-.157.05-.316.159-.457 1.203-1.554 3.252-4.199 4.258-5.498.142-.184.36-.29.592-.29.23 0 .449.107.591.291 1.002 1.299 3.044 3.945 4.243 5.498z" />
+  //       </svg>
+  //     );
+  //     return arrow;
+  //   }
+  // };
 
   if (top.loading || trend.loading) {
     return <div>Loading...</div>;
@@ -94,17 +94,17 @@ export default function Home() {
                     <span
                       className={`flex items-center ${
                         coin.item.data.price_change_percentage_24h.usd
-                          .toString()
-                          .startsWith("-")
-                          ? "text-red-500"
+                          ? // .toString()
+                            // .startsWith("-")
+                            "text-red-500"
                           : "text-green-500"
                       }`}
                     >
-                      {arrowUpOrDown(
+                      {/* {arrowUpOrDown(
                         coin.item.data.price_change_percentage_24h.usd.toFixed(
                           1
                         )
-                      )}
+                      )} */}
                       {coin.item.data.price_change_percentage_24h.usd.toFixed(
                         1
                       )}
@@ -156,14 +156,14 @@ export default function Home() {
                 key={post.price_change_percentage_1h_in_currency}
                 className={`${
                   post.price_change_percentage_1h_in_currency
-                    .toString()
-                    .startsWith("-")
-                    ? "text-red-500"
+                    ? // .toString()
+                      // .startsWith("-")
+                      "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_1h_in_currency)}
+                  {/* {arrowUpOrDown(post.price_change_percentage_1h_in_currency)} */}
                   {formatPercentage(
                     post.price_change_percentage_1h_in_currency
                   )}
@@ -173,14 +173,14 @@ export default function Home() {
                 key={post.price_change_percentage_24h_in_currency}
                 className={`${
                   post.price_change_percentage_24h_in_currency
-                    .toString()
-                    .startsWith("-")
-                    ? "text-red-500"
+                    ? // .toString()
+                      // .startsWith("-")
+                      "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_24h_in_currency)}
+                  {/* {arrowUpOrDown(post.price_change_percentage_24h_in_currency)} */}
                   {formatPercentage(
                     post.price_change_percentage_24h_in_currency
                   )}
@@ -190,14 +190,14 @@ export default function Home() {
                 key={post.price_change_percentage_7d_in_currency}
                 className={`${
                   post.price_change_percentage_7d_in_currency
-                    .toString()
-                    .startsWith("-")
-                    ? "text-red-500"
+                    ? // .toString()
+                      // .startsWith("-")
+                      "text-red-500"
                     : "text-green-500"
                 }`}
               >
                 <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_7d_in_currency)}
+                  {/* {arrowUpOrDown(post.price_change_percentage_7d_in_currency)} */}
                   {formatPercentage(
                     post.price_change_percentage_7d_in_currency
                   )}
