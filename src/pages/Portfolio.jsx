@@ -16,17 +16,19 @@ export default function Portfolio() {
     fetchWorkouts();
   }, []);
   return (
-    <div className="container flex flex-wrap items-center justify-center">
-      <div className="flex flex-col w-1/2">
-        {workouts &&
-          workouts.map((work) => {
-            return (
-              <WorkoutDetails key={work._id} workout={work}></WorkoutDetails>
-            );
-          })}
-      </div>
-      <div className="flex">
-        <WorkoutForm />
+    <div className="container">
+      <div className="grid grid-cols-2 gap-10 items-center h-full">
+        <div className="col-span-1">
+          {workouts &&
+            workouts.map((work) => {
+              return (
+                <WorkoutDetails key={work._id} workout={work}></WorkoutDetails>
+              );
+            })}
+        </div>
+        <div className="col-span-1">
+          <WorkoutForm />
+        </div>
       </div>
     </div>
   );
