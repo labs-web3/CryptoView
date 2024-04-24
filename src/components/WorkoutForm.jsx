@@ -47,12 +47,9 @@ export default function WorkoutForm() {
   };
 
   return (
-    <div className="container flex items-center justify-center">
+    <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 shadow-lg rounded-xl bg-slate-300 p-52"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <CustomInputField
             control={form.control}
             name="title"
@@ -79,6 +76,6 @@ export default function WorkoutForm() {
           </Button>
         </form>
       </Form>
-    </div>
+    </>
   );
 }
