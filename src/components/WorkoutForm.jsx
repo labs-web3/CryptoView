@@ -7,7 +7,7 @@ import CustomInputField from "@/components/CustomInputField";
 import useWorkouts from "@/zustand/workouts";
 
 export default function WorkoutForm() {
-  const addWorkouts = useWorkouts((state) => state.addWorkout);
+  const addWorkout = useWorkouts((state) => state.addWorkout);
   const formSchema = z.object({
     title: z
       .string()
@@ -42,7 +42,7 @@ export default function WorkoutForm() {
       form.setError(json.error);
     }
     if (response.ok) {
-      addWorkouts(json);
+      addWorkout(json);
       form.setError(null);
       form.reset();
       console.log("new workout added", json);

@@ -4,6 +4,7 @@ import WorkoutForm from "@/components/WorkoutForm";
 import useWorkouts from "@/zustand/workouts";
 
 export default function Portfolio() {
+  // Utilisez la décomposition pour obtenir workouts et setWorkouts depuis le store
   const { workouts, setWorkouts } = useWorkouts();
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -11,12 +12,12 @@ export default function Portfolio() {
       const json = await response.json();
 
       if (response.ok) {
-        setWorkouts(json);
+        setWorkouts(json); // Utilisez setWorkouts pour mettre à jour l'état
       }
     };
 
     fetchWorkouts();
-  }, [setWorkouts]);
+  }, [setWorkouts]); // Ajoutez setWorkouts comme dépendance pour assurer la mise à jour si nécessaire
   return (
     <div className="container">
       <div className="grid grid-cols-2 gap-10 items-center h-full">
