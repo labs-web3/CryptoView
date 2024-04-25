@@ -4,30 +4,44 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
+// import bcrypt from "bcrypt";
 
 export default function SignUp() {
   const formSchema = z.object({
-    username: z
-      .string()
-      .min(2, {
-        message: "Username must be at least 2 characters.",
-      })
-      .max(10, { message: "Username must be max 10 characters." }),
     email: z.string().email({
       message: "Email not valid",
+    }),
+    password: z.string({
+      message: "Password not valid",
     }),
   });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "Boris",
       email: "example@example.com",
+      password: "",
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const response = await fetch("http://localhost:3001/api/users/", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await response.json();
+    console.log(json);
+    if (!response.ok) {
+      form.setError(json.error);
+    }
+    if (response.ok) {
+      form.setError(null);
+      form.reset();
+      console.log("new workout added", json);
+    }
   };
 
   return (
@@ -39,15 +53,15 @@ export default function SignUp() {
         >
           <CustomInputField
             control={form.control}
-            name="username"
-            label="Username"
-            placeholder="Boris"
+            name="email"
+            label="email"
+            placeholder="picardboris@gmail.com"
           />
           <CustomInputField
             control={form.control}
-            name="email"
-            label="Email"
-            placeholder="picardboris@gmail.com"
+            name="password"
+            label="password"
+            placeholder=""
           />
           <Button className="w-full" type="submit">
             Submit
