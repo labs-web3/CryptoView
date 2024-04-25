@@ -1,5 +1,6 @@
 import { Button } from "./ui/button";
 import useWorkouts from "@/zustand/workouts";
+import { formatDistanceToNow } from "date-fns";
 
 export default function WorkoutDetails({ workout }) {
   const removeWorkout = useWorkouts((state) => state.removeWorkout);
@@ -24,7 +25,9 @@ export default function WorkoutDetails({ workout }) {
       <h4 className="font-bold">{workout.title}</h4>
       <p className="font-bold">Load (kg): {workout.load}</p>
       <p className="font-bold">Reps: {workout.reps}</p>
-      <p>{workout.createdAt}</p>
+      <p>
+        {formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}
+      </p>
     </div>
   );
 }
