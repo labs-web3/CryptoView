@@ -4,11 +4,10 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
-import { useWorkoutsContext } from "@/hooks/useWorkoutsContext";
+import useWorkouts from "@/zustand/workouts";
 
 export default function WorkoutForm() {
-  const { dispatch } = useWorkoutsContext();
-
+  const addWorkouts = useWorkouts((state) => state.addWorkout);
   const formSchema = z.object({
     title: z
       .string()
@@ -43,10 +42,10 @@ export default function WorkoutForm() {
       form.setError(json.error);
     }
     if (response.ok) {
+      addWorkouts(json);
       form.setError(null);
       form.reset();
       console.log("new workout added", json);
-      dispatch({ type: "CREATE_WORKOUT", payload: json });
     }
   };
 
