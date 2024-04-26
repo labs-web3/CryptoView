@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
-// import bcrypt from "bcrypt";
 
 export default function SignUp() {
   const formSchema = z.object({
