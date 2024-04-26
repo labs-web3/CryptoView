@@ -19,7 +19,7 @@ export default function SignUp() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "example@example.com",
+      email: "example@examle.com",
       password: "",
     },
   });
@@ -40,7 +40,7 @@ export default function SignUp() {
     if (response.ok) {
       form.setError(null);
       form.reset();
-      console.log("new workout added", json);
+      console.log("new user added", json);
     }
   };
 

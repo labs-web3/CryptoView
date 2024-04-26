@@ -161,7 +161,7 @@ export default function MyAccount() {
   const fetchTokenList = async () => {
     try {
       const response = await fetch(
-        "https://gateway.ipfs.io/ipns/tokens.uniswap.org"
+        "https://wispy-bird-88a7.uniswap.workers.dev/?url=http://tokens.1inch.eth.link"
       );
       const tokenListData = await response.json();
       const filteredToken = tokenListData.tokens.filter(
