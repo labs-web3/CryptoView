@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 // Login a user
-router.get("login", loginUser);
+router.post("/login", loginUser);
 
 // GET all users
 router.get("/", getUsers);

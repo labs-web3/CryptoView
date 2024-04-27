@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
+
 export default function SignIn() {
   const formSchema = z.object({
     email: z.string().email({
@@ -23,7 +24,7 @@ export default function SignIn() {
   });
 
   const onSubmit = async (data) => {
-    const response = await fetch("http://localhost:3001/api/users/", {
+    const response = await fetch("http://localhost:3001/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

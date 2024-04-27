@@ -12,7 +12,14 @@ const loginUser = async (req, res) => {
     }
 
     const passwordIsValid = await user.verifyPassword(password);
-  } catch (error) {}
+    if (!passwordIsValid) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    res.status(200).json({ message: "Logged in successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // get all users
@@ -25,7 +32,6 @@ const getUsers = async (req, res) => {
 // get a single user
 const getUser = async (req, res) => {
   const { id } = req.params;
-  const { password } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such user" });
@@ -37,12 +43,7 @@ const getUser = async (req, res) => {
     return res.status(400).json({ error: "No such user" });
   }
 
-  const passwordIsValid = await user.verifyPassword(password);
-  if (passwordIsValid) {
-    res.status(200).json({ message: "Password is valid!" });
-  } else {
-    res.status(403).json({ error: "Invalid password" });
-  }
+  res.status(200).json({ message: "User found" });
 };
 
 // create a new user
@@ -124,4 +125,4 @@ const updateUser = async (req, res) => {
   res.status(200).json(user);
 };
 
-export { createUser, getUsers, getUser, deleteUser, updateUser };
+export { loginUser, createUser, getUsers, getUser, deleteUser, updateUser };
