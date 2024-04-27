@@ -18,7 +18,7 @@ export default function SignUp() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "example@examle.com",
+      email: "example@example.com",
       password: "",
     },
   });
@@ -32,7 +32,6 @@ export default function SignUp() {
       },
     });
     const json = await response.json();
-    console.log(json);
     if (!response.ok) {
       form.setError(json.error);
     }
@@ -54,12 +53,14 @@ export default function SignUp() {
             control={form.control}
             name="email"
             label="email"
-            placeholder="picardboris@gmail.com"
+            type="email"
+            placeholder="example@example.com"
           />
           <CustomInputField
             control={form.control}
             name="password"
             label="password"
+            type="password"
             placeholder=""
           />
           <Button className="w-full" type="submit">

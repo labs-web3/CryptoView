@@ -44,9 +44,11 @@ const createUser = async (req, res) => {
       .json({ error: "Please fill in all the fields", emptyFields });
   }
 
-  // add doc to db
+  // add user to db
   try {
-    const user = await userModel.create({ email, password });
+    const user = new userModel({ email });
+    user.password = await user.createHash(password);
+    await user.save();
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
