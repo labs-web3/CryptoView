@@ -5,9 +5,13 @@ import {
   getUser,
   deleteUser,
   updateUser,
+  loginUser,
 } from "../controllers/userController.js";
 
 const router = express.Router();
+
+// Login a user
+router.get("login", loginUser);
 
 // GET all users
 router.get("/", getUsers);

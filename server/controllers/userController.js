@@ -1,6 +1,20 @@
 import userModel from "../models/userModel.js";
 import mongoose from "mongoose";
 
+// login user
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const passwordIsValid = await user.verifyPassword(password);
+  } catch (error) {}
+};
+
 // get all users
 const getUsers = async (req, res) => {
   const users = await userModel.find({}).sort({ createdAt: -1 });
@@ -11,6 +25,7 @@ const getUsers = async (req, res) => {
 // get a single user
 const getUser = async (req, res) => {
   const { id } = req.params;
+  const { password } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such user" });
@@ -22,7 +37,12 @@ const getUser = async (req, res) => {
     return res.status(400).json({ error: "No such user" });
   }
 
-  res.status(200).json(user);
+  const passwordIsValid = await user.verifyPassword(password);
+  if (passwordIsValid) {
+    res.status(200).json({ message: "Password is valid!" });
+  } else {
+    res.status(403).json({ error: "Invalid password" });
+  }
 };
 
 // create a new user
@@ -44,13 +64,23 @@ const createUser = async (req, res) => {
       .json({ error: "Please fill in all the fields", emptyFields });
   }
 
-  // add user to db
   try {
+    // Instanciation du modèle UserModel avec l'email fourni.
     const user = new userModel({ email });
+
+    // Hachage du mot de passe à l'aide de la méthode createHash et stockage du résultat dans user.password.
     user.password = await user.createHash(password);
+
+    // Sauvegarde de l'instance de l'utilisateur dans la base de données.
+    // La méthode save est asynchrone, nécessitant l'utilisation de await pour assurer que
+    // l'opération se complète avant de continuer.
     await user.save();
+
+    // Réponse avec le statut 200 et l'objet utilisateur en JSON si la sauvegarde est réussie.
     res.status(200).json(user);
   } catch (error) {
+    // En cas d'erreur lors de la création ou la sauvegarde de l'utilisateur,
+    // renvoie une réponse avec le statut 400 et le message d'erreur.
     res.status(400).json({ error: error.message });
   }
 };
