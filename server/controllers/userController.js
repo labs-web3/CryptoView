@@ -67,7 +67,9 @@ const createUser = async (req, res) => {
 
   try {
     // Instanciation du modèle UserModel avec l'email fourni.
-    const user = new userModel({ email });
+    const user = new userModel({ email, password });
+
+    await user.valid(email, password);
 
     // Hachage du mot de passe à l'aide de la méthode createHash et stockage du résultat dans user.password.
     user.password = await user.createHash(password);

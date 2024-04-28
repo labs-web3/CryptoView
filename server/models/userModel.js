@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import argon2 from "argon2";
+import validator from "validator";
 
 const { Schema } = mongoose;
 
@@ -39,6 +40,30 @@ UserSchema.methods.verifyPassword = async function (password) {
   } catch (error) {
     console.log("error verifying password : ", error);
     return false;
+  }
+};
+
+UserSchema.methods.valid = async function (email, password) {
+  try {
+    if (!email || !password) {
+      throw Error("All field must be filled");
+    }
+    if (!validator.isEmail(email)) {
+      throw Error("Email is not valid");
+    }
+    if (
+      !validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      throw Error("Password not strong enough");
+    }
+  } catch (error) {
+    console.log("isValid : ", error);
   }
 };
 

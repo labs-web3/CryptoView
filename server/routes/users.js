@@ -20,7 +20,7 @@ router.get("/", getUsers);
 router.get("/:id", getUser);
 
 //POST a new user
-router.post("/", createUser);
+router.post("/signup", createUser);
 
 //DELETE a user
 router.delete("/:id", deleteUser);

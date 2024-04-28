@@ -24,7 +24,7 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    const response = await fetch("http://localhost:3001/api/users/", {
+    const response = await fetch("http://localhost:3001/api/users/signup", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
