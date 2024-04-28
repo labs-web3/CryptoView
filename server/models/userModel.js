@@ -43,27 +43,25 @@ UserSchema.methods.verifyPassword = async function (password) {
   }
 };
 
+// La méthode valid ne contient pas de bloc try...catch car nous souhaitons que les erreurs se propagent.
+// Cela permet de bloquer l'exécution dans le contrôleur si une erreur est levée ici.
 UserSchema.methods.valid = async function (email, password) {
-  try {
-    if (!email || !password) {
-      throw Error("All field must be filled");
-    }
-    if (!validator.isEmail(email)) {
-      throw Error("Email is not valid");
-    }
-    if (
-      !validator.isStrongPassword(password, {
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-      })
-    ) {
-      throw Error("Password not strong enough");
-    }
-  } catch (error) {
-    console.log("isValid : ", error);
+  if (!email || !password) {
+    throw Error("All field must be filled");
+  }
+  if (!validator.isEmail(email)) {
+    throw Error("Email is not valid");
+  }
+  if (
+    !validator.isStrongPassword(password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    })
+  ) {
+    throw Error("Password not strong enough");
   }
 };
 
