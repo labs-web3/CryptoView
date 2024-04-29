@@ -5,6 +5,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
 import { useSignup } from "@/hooks/useSignup";
+import { ToastContainer } from "react-toastify";
 
 export default function SignUp() {
   const { signup, isLoading, error } = useSignup();
@@ -57,6 +58,7 @@ export default function SignUp() {
           <Button disabled={isLoading} className="w-full" type="submit">
             Submit
           </Button>
+          <ToastContainer />
           {error && <div>{error}</div>}
         </form>
       </Form>

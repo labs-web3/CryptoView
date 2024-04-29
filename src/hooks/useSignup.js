@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const useSignup = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
+
+  const notify = () => toast("Inscription envoyée !");
 
   const signup = async (email, password) => {
     setIsLoading(true);
@@ -22,6 +26,7 @@ export const useSignup = () => {
       setError(json.error);
     }
     if (response.ok) {
+      notify();
       // save the user to local storage
       localStorage.setItem("user", JSON.stringify(json));
       //update the auth context
