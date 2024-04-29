@@ -36,7 +36,7 @@ const createUser = async (req, res) => {
     user.password = await user.createHash(password);
 
     //create a token
-    user.token = createToken(user._id);
+    const token = createToken(user._id);
 
     // Sauvegarde de l'instance de l'utilisateur dans la base de données.
     // La méthode save est asynchrone, nécessitant l'utilisation de await pour assurer que
@@ -44,7 +44,7 @@ const createUser = async (req, res) => {
     await user.save();
 
     // Réponse avec le statut 200 et l'objet utilisateur en JSON si la sauvegarde est réussie.
-    res.status(200).json({ email: email, token: user.token });
+    res.status(200).json({ email: email, token: token });
   } catch (error) {
     // En cas d'erreur lors de la création ou la sauvegarde de l'utilisateur,
     // renvoie une réponse avec le statut 400 et le message d'erreur.
@@ -81,7 +81,10 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    res.status(200).json({ message: "Logged in successfully", user: user });
+    //create a token
+    const token = createToken(user._id);
+
+    res.status(200).json({ message: "Logged in successfully", user: token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

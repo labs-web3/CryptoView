@@ -4,8 +4,11 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
+import { useSignup } from "@/hooks/useSignup";
 
 export default function SignUp() {
+  const { signup, isLoading, error } = useSignup();
+
   const formSchema = z.object({
     email: z.string().email({
       message: "Email not valid",
@@ -24,21 +27,9 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    const response = await fetch("http://localhost:3001/api/users/signup", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json = await response.json();
-    if (!response.ok) {
-      form.setError(json.error);
-    }
-    if (response.ok) {
-      form.setError(null);
+    await signup(data.email, data.password);
+    if (!error) {
       form.reset();
-      console.log("new user added", json);
     }
   };
 
@@ -63,9 +54,10 @@ export default function SignUp() {
             type="password"
             placeholder=""
           />
-          <Button className="w-full" type="submit">
+          <Button disabled={isLoading} className="w-full" type="submit">
             Submit
           </Button>
+          {error && <div>{error}</div>}
         </form>
       </Form>
     </div>
