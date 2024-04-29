@@ -18,8 +18,14 @@ import {
   Settings,
   Wallet,
 } from "lucide-react";
+import { Button } from "./components/ui/button.jsx";
+import { useLogout } from "./hooks/useLogout.js";
 
 function App() {
+  const { logout } = useLogout();
+  const handleClick = () => {
+    logout();
+  };
   return (
     <Router>
       <div className="flex">
@@ -52,6 +58,13 @@ function App() {
           <hr className="my-3" />
           <SidebarItem icon={<Settings size={20} />} text="Settings" />
           <SidebarItem icon={<LifeBuoy size={20} />} text="Help" />
+          <hr className="my-3" />
+          <Button
+            onClick={handleClick}
+            className="w-full bg-slate-900 hover:bg-slate-400"
+          >
+            Log Out
+          </Button>
         </Sidebar>
         <Routes>
           <Route path="/" element={<Home />}></Route>
