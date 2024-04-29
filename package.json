@@ -24,6 +24,7 @@
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "localforage": "^1.10.0",
     "lucide-react": "^0.356.0",
     "match-sorter": "^6.3.4",

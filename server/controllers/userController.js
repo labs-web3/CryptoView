@@ -1,49 +1,10 @@
 import userModel from "../models/userModel.js";
 import mongoose from "mongoose";
+import process from "process";
+import jwt from "jsonwebtoken";
 
-// login user
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await userModel.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const passwordIsValid = await user.verifyPassword(password);
-    if (!passwordIsValid) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    res.status(200).json({ message: "Logged in successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// get all users
-const getUsers = async (req, res) => {
-  const users = await userModel.find({}).sort({ createdAt: -1 });
-
-  res.status(200).json(users);
-};
-
-// get a single user
-const getUser = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such user" });
-  }
-
-  const user = await userModel.findById(id);
-
-  if (!user) {
-    return res.status(400).json({ error: "No such user" });
-  }
-
-  res.status(200).json({ message: "User found" });
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
 // create a new user
@@ -74,18 +35,80 @@ const createUser = async (req, res) => {
     // Hachage du mot de passe à l'aide de la méthode createHash et stockage du résultat dans user.password.
     user.password = await user.createHash(password);
 
+    //create a token
+    user.token = createToken(user._id);
+
     // Sauvegarde de l'instance de l'utilisateur dans la base de données.
     // La méthode save est asynchrone, nécessitant l'utilisation de await pour assurer que
     // l'opération se complète avant de continuer.
     await user.save();
 
     // Réponse avec le statut 200 et l'objet utilisateur en JSON si la sauvegarde est réussie.
-    res.status(200).json(user);
+    res.status(200).json({ email: email, token: user.token });
   } catch (error) {
     // En cas d'erreur lors de la création ou la sauvegarde de l'utilisateur,
     // renvoie une réponse avec le statut 400 et le message d'erreur.
     res.status(400).json({ error: error.message });
   }
+};
+
+// login user
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  let emptyFields = [];
+
+  if (!email) {
+    emptyFields.push("email");
+  }
+  if (!password) {
+    emptyFields.push("password");
+  }
+
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all the fields", emptyFields });
+  }
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const passwordIsValid = await user.verifyPassword(password);
+    if (!passwordIsValid) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    res.status(200).json({ message: "Logged in successfully", user: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// get all users
+const getUsers = async (req, res) => {
+  const users = await userModel.find({}).sort({ createdAt: -1 });
+
+  res.status(200).json(users);
+};
+
+// get a single user
+const getUser = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such user" });
+  }
+
+  const user = await userModel.findById(id);
+
+  if (!user) {
+    return res.status(400).json({ error: "No such user" });
+  }
+
+  res.status(200).json({ message: "User found" });
 };
 
 // delete a user
