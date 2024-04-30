@@ -76,15 +76,23 @@ const loginUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const passwordIsValid = await user.verifyPassword(password);
-    if (!passwordIsValid) {
+    try {
+      const passwordIsValid = await user.verifyPassword(password);
+      if (!passwordIsValid) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+    } catch (error) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
     //create a token
     const token = createToken(user._id);
 
-    res.status(200).json({ message: "Logged in successfully", user: token });
+    res.status(200).json({
+      message: "Logged in successfully",
+      email: user.email,
+      user: token,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -34,13 +34,11 @@ UserSchema.methods.createHash = async function (password) {
 };
 
 UserSchema.methods.verifyPassword = async function (password) {
-  try {
-    const isCorrect = await argon2.verify(this.password, password);
-    return isCorrect;
-  } catch (error) {
-    console.log("error verifying password : ", error);
-    return false;
+  const isCorrect = await argon2.verify(this.password, password);
+  if (!isCorrect) {
+    throw Error("error verifying password : ");
   }
+  return isCorrect;
 };
 
 // La méthode valid ne contient pas de bloc try...catch car nous souhaitons que les erreurs se propagent.

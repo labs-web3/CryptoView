@@ -20,9 +20,11 @@ import {
 } from "lucide-react";
 import { Button } from "./components/ui/button.jsx";
 import { useLogout } from "./hooks/useLogout.js";
+import { useAuthContext } from "./hooks/useAuthContext.js";
 
 function App() {
   const { logout } = useLogout();
+  const { user } = useAuthContext();
   const handleClick = () => {
     logout();
   };
@@ -45,26 +47,35 @@ function App() {
             text="Trading"
             to="/Trading"
           />
-          <SidebarItem
-            icon={<UserCircle size={20} />}
-            text="Se Connecter"
-            to="/SignIn"
-          />
-          <SidebarItem
-            icon={<UserCircle size={20} />}
-            text="S'inscrire"
-            to="/SignUp"
-          />
+          {!user && (
+            <>
+              <SidebarItem
+                icon={<UserCircle size={20} />}
+                text="Se Connecter"
+                to="/SignIn"
+              />
+              <SidebarItem
+                icon={<UserCircle size={20} />}
+                text="S'inscrire"
+                to="/SignUp"
+              />
+            </>
+          )}
           <hr className="my-3" />
           <SidebarItem icon={<Settings size={20} />} text="Settings" />
           <SidebarItem icon={<LifeBuoy size={20} />} text="Help" />
           <hr className="my-3" />
-          <Button
-            onClick={handleClick}
-            className="w-full bg-slate-900 hover:bg-slate-400"
-          >
-            Log Out
-          </Button>
+          {user && (
+            <>
+              <span className="flex justify-center my-3">{user.email}</span>
+              <Button
+                onClick={handleClick}
+                className="w-full bg-slate-900 hover:bg-slate-400"
+              >
+                Log Out
+              </Button>
+            </>
+          )}
         </Sidebar>
         <Routes>
           <Route path="/" element={<Home />}></Route>
