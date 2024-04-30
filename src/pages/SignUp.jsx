@@ -59,7 +59,7 @@ export default function SignUp() {
             Submit
           </Button>
           <ToastContainer />
-          {error && <div>{error}</div>}
+          {error && <div className="text-red-500 font-semibold">{error}</div>}
         </form>
       </Form>
     </div>

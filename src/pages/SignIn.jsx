@@ -4,8 +4,12 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
+import { useSignin } from "@/hooks/useLogin";
+import { ToastContainer } from "react-toastify";
 
 export default function SignIn() {
+  const { signin, isLoading, error } = useSignin();
+
   const formSchema = z.object({
     email: z.string().email({
       message: "Email not valid",
@@ -24,25 +28,9 @@ export default function SignIn() {
   });
 
   const onSubmit = async (data) => {
-    const response = await fetch("http://localhost:3001/api/users/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
-    });
-    const json = await response.json();
-    if (!response.ok) {
-      form.setError(json.error);
-      return;
-    }
-    if (response.ok) {
-      form.setError(null);
+    await signin(data.email, data.password);
+    if (!error) {
       form.reset();
-      console.log("logged in!", json);
     }
   };
 
@@ -67,9 +55,11 @@ export default function SignIn() {
             type="password"
             placeholder=""
           />
-          <Button className="w-full" type="submit">
+          <Button disabled={isLoading} className="w-full" type="submit">
             Submit
           </Button>
+          <ToastContainer />
+          {error && <div className="text-red-500 font-semibold">{error}</div>}
         </form>
       </Form>
     </div>
