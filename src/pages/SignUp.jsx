@@ -35,7 +35,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="container flex items-center justify-center">
+    <div className="container flex items-center justify-center h-screen">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -60,6 +60,8 @@ export default function SignUp() {
           </Button>
           <ToastContainer />
           {error && <div className="text-red-500 font-semibold">{error}</div>}
+          <h2>Already an account ?</h2>
+          <a href="./SignIn.jsx">Sign In</a>
         </form>
       </Form>
     </div>

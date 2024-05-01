@@ -29,11 +29,16 @@ export default function WorkoutForm() {
   });
 
   const onSubmit = async (data) => {
+    // if (!user) {
+    //   form.setError("You must be logged in !");
+    //   return;
+    // }
     const response = await fetch("http://localhost:3001/api/workouts/", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
+        // Authorization: `Bearer ${user.token}`,
       },
     });
     const json = await response.json();
