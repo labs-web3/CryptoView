@@ -39,7 +39,7 @@ export default function SignUp() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 shadow-lg rounded-xl bg-slate-300 p-52"
+          className="space-y-8 shadow-lg rounded-xl bg-slate-300 p-10 w-96"
         >
           <CustomInputField
             control={form.control}
@@ -61,7 +61,7 @@ export default function SignUp() {
           <ToastContainer />
           {error && <div className="text-red-500 font-semibold">{error}</div>}
           <h2>Already an account ?</h2>
-          <a href="./SignIn.jsx">Sign In</a>
+          <a href="./SignIn">Sign In</a>
         </form>
       </Form>
     </div>
