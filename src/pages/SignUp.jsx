@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/button";
 import CustomInputField from "@/components/CustomInputField";
 import { useSignup } from "@/hooks/useSignup";
 import { ToastContainer } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 export default function SignUp() {
   const { signup, isLoading, error } = useSignup();
+  const [showPassword, setShowPassword] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email({
@@ -48,14 +51,26 @@ export default function SignUp() {
             type="email"
             placeholder="example@example.com"
           />
-          <CustomInputField
-            control={form.control}
-            name="password"
-            label="password"
-            type="password"
-            placeholder=""
-          />
-          <Button disabled={isLoading} className="w-full" type="submit">
+          <div className=" w-full relative">
+            <CustomInputField
+              control={form.control}
+              name="password"
+              label="password"
+              type={showPassword ? "text" : "password"}
+              placeholder=""
+            />
+            <div
+              className="absolute inset-y-10 right-0  items-center px-2"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </div>
+          </div>
+          <Button
+            disabled={isLoading}
+            className="w-full rounded-full bg-black hover:bg-slate-500"
+            type="submit"
+          >
             Submit
           </Button>
           <ToastContainer />

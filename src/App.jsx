@@ -14,11 +14,7 @@ import Sidebar from "./components/Sidebar";
 import { SidebarItem } from "./components/Sidebar";
 import {
   LifeBuoy,
-  Receipt,
-  Boxes,
-  Package,
   UserCircle,
-  BarChart3,
   LayoutDashboard,
   Settings,
   Wallet,
