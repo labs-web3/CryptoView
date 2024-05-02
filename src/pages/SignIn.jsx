@@ -39,44 +39,62 @@ export default function SignIn() {
 
   return (
     <div className="container flex items-center justify-center h-screen">
+      <ToastContainer />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 shadow-lg rounded-xl bg-slate-300 p-10 w-96"
+          className="space-y-6 shadow-lg rounded-xl bg-slate-300 p-10"
         >
-          <CustomInputField
-            control={form.control}
-            name="email"
-            label="email"
-            type="email"
-            placeholder="example@example.com"
-          />
-          <div className=" w-full relative">
+          <div className="flex justify-center">
+            <img
+              src="/public/assets/cryptoview.png"
+              alt="CryptoView Logo"
+              width={200}
+              height={200}
+            />
+          </div>
+          <h1 className="font-bold text-5xl text-center">
+            Welcome to CryptoView
+          </h1>
+          <div className="py-8 space-y-6">
             <CustomInputField
               control={form.control}
-              name="password"
-              label="password"
-              type={showPassword ? "text" : "password"}
-              placeholder=""
+              name="email"
+              label="email"
+              type="email"
+              placeholder="example@example.com"
             />
-            <div
-              className="absolute inset-y-10 right-0  items-center px-2"
-              onClick={() => setShowPassword(!showPassword)}
+            <div className=" w-full relative">
+              <CustomInputField
+                control={form.control}
+                name="password"
+                label="password"
+                type={showPassword ? "text" : "password"}
+                placeholder=""
+              />
+              <div
+                className="absolute inset-y-10 right-0  items-center px-2"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff /> : <Eye />}
+              </div>
+            </div>
+            <Button
+              disabled={isLoading}
+              className="w-full rounded-full bg-black hover:bg-slate-500"
+              type="submit"
+              size="lg"
             >
-              {showPassword ? <EyeOff /> : <Eye />}
+              Submit
+            </Button>
+            {error && <div className="text-red-500 font-semibold">{error}</div>}
+            <div className="flex space-x-2">
+              <h2>Don't have an account ? </h2>
+              <a href="./SignUp" className="text-blue-600 font-bold">
+                Sign Up
+              </a>
             </div>
           </div>
-          <Button
-            disabled={isLoading}
-            className="w-full rounded-full bg-black hover:bg-slate-500"
-            type="submit"
-          >
-            Submit
-          </Button>
-          <ToastContainer />
-          {error && <div className="text-red-500 font-semibold">{error}</div>}
-          <h2>No account ?</h2>
-          <a href="./SignUp">Sign Up</a>
         </form>
       </Form>
     </div>
