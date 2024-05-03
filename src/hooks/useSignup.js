@@ -29,10 +29,11 @@ export const useSignup = () => {
       notify();
       // save the user to local storage
       localStorage.setItem("user", JSON.stringify(json));
-      //update the auth context
-      dispatch({ type: "LOGIN", payload: json });
-
-      setIsLoading(false);
+      setTimeout(() => {
+        //update the auth context
+        dispatch({ type: "LOGIN", payload: json });
+        setIsLoading(false);
+      }, 3000);
     }
   };
 

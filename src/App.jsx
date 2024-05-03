@@ -69,10 +69,9 @@ function App() {
             <hr className="my-3" />
             {user && (
               <>
-                <span className="flex justify-center my-3">{user.email}</span>
                 <Button
                   onClick={handleClick}
-                  className="w-full bg-slate-900 hover:bg-slate-400"
+                  className="w-full bg-slate-900 hover:bg-slate-700 rounded"
                 >
                   Log Out
                 </Button>

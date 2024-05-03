@@ -1,20 +1,22 @@
 import { MoreVertical, ChevronRight, ChevronLeft } from "lucide-react";
 import { useContext, createContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
   const [expanded, setExpanded] = useState(true);
+  const { user } = useAuthContext();
 
   return (
     <aside className="h-screen sticky top-0">
       <nav className="h-full flex flex-col bg-white border-r shadow-lg">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img
-            src="https://img.logoipsum.com/260.svg"
-            className={`overflow-hidden transition-all ${
-              expanded ? "w-32" : "w-0"
+            src="/public/assets/cryptoview.png"
+            className={`overflow-hidden transition-all bg-black rounded-3xl ${
+              expanded ? "w-24" : "w-0"
             }`}
             alt="logo"
           />
@@ -31,22 +33,23 @@ export default function Sidebar({ children }) {
         </SidebarContext.Provider>
 
         <div className="border-t flex p-3">
-          <img
+          {/* <img
             src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
             alt=""
             className="w-10 h-10 rounded-md"
-          />
+          /> */}
           <div
             className={`
-              flex justify-between items-center
+              flex justify-center items-center
               overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
           `}
           >
             <div className="leading-4">
-              <h4 className="font-semibold">John Doe</h4>
-              <span className="text-xs text-gray-600">johndoe@gmail.com</span>
+              <span className="text-sm text-gray-700 font-semibold">
+                {user.email}
+              </span>
             </div>
-            <MoreVertical size={20} />
+            {/* <MoreVertical size={20} /> */}
           </div>
         </div>
       </nav>

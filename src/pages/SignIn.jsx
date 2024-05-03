@@ -25,7 +25,7 @@ export default function SignIn() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "example@example.com",
+      email: "",
       password: "",
     },
   });
