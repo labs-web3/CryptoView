@@ -73,16 +73,16 @@ const loginUser = async (req, res) => {
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     try {
       const passwordIsValid = await user.verifyPassword(password);
       if (!passwordIsValid) {
-        return res.status(401).json({ message: "Invalid password" });
+        return res.status(401).json({ error: "Invalid password" });
       }
     } catch (error) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ error: "Invalid password" });
     }
 
     //create a token
@@ -94,7 +94,7 @@ const loginUser = async (req, res) => {
       user: token,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -119,7 +119,7 @@ const getUser = async (req, res) => {
     return res.status(400).json({ error: "No such user" });
   }
 
-  res.status(200).json({ message: "User found" });
+  res.status(200).json({ error: "User found" });
 };
 
 // delete a user
