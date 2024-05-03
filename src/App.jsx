@@ -49,23 +49,6 @@ function App() {
               text="Trading"
               to="/Trading"
             />
-            {!user && (
-              <>
-                <SidebarItem
-                  icon={<UserCircle size={20} />}
-                  text="Se Connecter"
-                  to="/SignIn"
-                />
-                <SidebarItem
-                  icon={<UserCircle size={20} />}
-                  text="S'inscrire"
-                  to="/SignUp"
-                />
-              </>
-            )}
-            <hr className="my-3" />
-            <SidebarItem icon={<Settings size={20} />} text="Settings" />
-            <SidebarItem icon={<LifeBuoy size={20} />} text="Help" />
             <hr className="my-3" />
             {user && (
               <>
