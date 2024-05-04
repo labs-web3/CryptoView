@@ -10,6 +10,7 @@ import FetchCrypto from "@/hooks/FetchCrypto";
 import { Link } from "react-router-dom";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
+import Pagination from "@/components/Pagination";
 
 export default function Home() {
   const top = FetchCrypto(
@@ -117,6 +118,7 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
+      <Pagination />
       <Table className="table-auto">
         <TableHeader>
           <TableRow>
