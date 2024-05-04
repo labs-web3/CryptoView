@@ -11,10 +11,14 @@ import { Link } from "react-router-dom";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import Pagination from "@/components/Pagination";
+import { useState } from "react";
 
 export default function Home() {
+  const [numbers, setNumbers] = useState(1);
+
+  console.log(numbers);
   const top = FetchCrypto(
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+    `https://api.coingecko.com/api/v3/coins/markets?page=${numbers}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
@@ -118,7 +122,12 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-      <Pagination />
+      <Pagination
+        prev={() => setNumbers(numbers - 1)}
+        after={() => setNumbers(numbers + 1)}
+        nb={numbers}
+        onClick={() => setNumbers(numbers + 1)}
+      />
       <Table className="table-auto">
         <TableHeader>
           <TableRow>
