@@ -12,20 +12,12 @@ import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Sidebar from "./components/Sidebar";
 import { SidebarItem } from "./components/Sidebar";
-import {
-  LifeBuoy,
-  UserCircle,
-  LayoutDashboard,
-  Settings,
-  Wallet,
-} from "lucide-react";
+import { UserCircle, LayoutDashboard, Wallet } from "lucide-react";
 import { Button } from "./components/ui/button.jsx";
 import { useLogout } from "./hooks/useLogout.js";
 import { useAuthContext } from "./hooks/useAuthContext.js";
-import { useState } from "react";
 
 function App() {
-  const [nb, setNb] = useState(1);
   const { logout } = useLogout();
   const { user } = useAuthContext();
   const handleClick = () => {
@@ -68,6 +60,10 @@ function App() {
           <Route
             path="/"
             element={user ? <Home /> : <Navigate to="/SignIn" />}
+          ></Route>
+          <Route
+            path="/page/:pageNumber"
+            element={!user ? <Navigate to="/SignIn" /> : <Home />}
           ></Route>
           <Route
             path="/Portfolio"

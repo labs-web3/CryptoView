@@ -7,18 +7,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import FetchCrypto from "@/hooks/FetchCrypto";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import Pagination from "@/components/Pagination";
-import { useState } from "react";
 
 export default function Home() {
-  const [numbers, setNumbers] = useState(1);
+  const { pageNumber = 1 } = useParams();
+  const navigate = useNavigate();
 
-  console.log(numbers);
+  const goToPage = (number) => {
+    navigate(`/page/${number}`);
+  };
+
+  console.log(pageNumber);
   const top = FetchCrypto(
-    `https://api.coingecko.com/api/v3/coins/markets?page=${numbers}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
+    `https://api.coingecko.com/api/v3/coins/markets?page=${pageNumber}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
@@ -108,10 +112,10 @@ export default function Home() {
         </Card>
       </div>
       <Pagination
-        prev={() => setNumbers(numbers - 1)}
-        after={() => setNumbers(numbers + 1)}
-        nb={numbers}
-        onClick={() => setNumbers(numbers + 1)}
+        prev={() => goToPage(parseInt(pageNumber) - 1)}
+        after={() => goToPage(parseInt(pageNumber) + 1)}
+        nb={pageNumber}
+        // onClick={() => setNumbers(numbers + 1)}
       />
       <Table className="table-auto">
         <TableHeader>

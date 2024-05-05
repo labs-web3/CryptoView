@@ -30,7 +30,7 @@ export default function Pagination({ nb, onClick, prev, after }) {
         variant="text"
         className="flex items-center gap-2 rounded-full"
         onClick={after}
-        disabled={nb === 2}
+        disabled={nb === 10}
       >
         Next
         <ArrowRight strokeWidth={2} className="h-4 w-4" />
