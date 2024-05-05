@@ -20,9 +20,11 @@ import { useAuthContext } from "./hooks/useAuthContext.js";
 function App() {
   const { logout } = useLogout();
   const { user } = useAuthContext();
+
   const handleClick = () => {
     logout();
   };
+
   return (
     <Router>
       <div className="flex">
@@ -63,7 +65,7 @@ function App() {
           ></Route>
           <Route
             path="/page/:pageNumber"
-            element={!user ? <Navigate to="/SignIn" /> : <Home />}
+            element={user ? <Home /> : <Navigate to="/SignIn" />}
           ></Route>
           <Route
             path="/Portfolio"

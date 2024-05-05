@@ -16,11 +16,12 @@ export default function Home() {
   const { pageNumber = 1 } = useParams();
   const navigate = useNavigate();
 
-  const goToPage = (number) => {
-    navigate(`/page/${number}`);
-  };
+  const setPage = (num) => navigate(`/page/${num}`);
 
-  console.log(pageNumber);
+  const totalCoins = 14038;
+  const coinPerPage = 100;
+  const totalPages = Math.ceil(totalCoins / coinPerPage);
+
   const top = FetchCrypto(
     `https://api.coingecko.com/api/v3/coins/markets?page=${pageNumber}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
@@ -54,7 +55,7 @@ export default function Home() {
     return (
       <svg fill="currentColor" className="w-5 h-5" viewBox="0 0 24 24">
         <path
-          d={direction === "up" ? "M7 10l5 5 5-5H7z" : "M7 14l5-5 5 5H7z"}
+          d={direction === "up" ? "M7 14l5-5 5 5H7z" : " M7 10l5 5 5-5H7z"}
         />
       </svg>
     );
@@ -112,10 +113,9 @@ export default function Home() {
         </Card>
       </div>
       <Pagination
-        prev={() => goToPage(parseInt(pageNumber) - 1)}
-        after={() => goToPage(parseInt(pageNumber) + 1)}
-        nb={pageNumber}
-        // onClick={() => setNumbers(numbers + 1)}
+        totalPages={totalPages}
+        currentPage={parseInt(pageNumber, 10)}
+        setCurrentPage={setPage}
       />
       <Table className="table-auto">
         <TableHeader>
