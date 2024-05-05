@@ -3,7 +3,7 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
 export default function Pagination({ nb, onClick, prev, after }) {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(nb);
 
   const getItemProps = (index) => ({
     variant: active === index ? "ghost" : "null",

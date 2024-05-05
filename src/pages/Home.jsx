@@ -46,37 +46,20 @@ export default function Home() {
   };
 
   const arrowUpOrDown = (value) => {
-    if (value.toString().startsWith("-")) {
-      const arrow = (
-        <svg
-          fill="currentColor"
-          className="w5 h-5"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="m16.843 10.211c.108-.141.157-.3.157-.456 0-.389-.306-.755-.749-.755h-8.501c-.445 0-.75.367-.75.755 0 .157.05.316.159.457 1.203 1.554 3.252 4.199 4.258 5.498.142.184.36.29.592.29.23 0 .449-.107.591-.291 1.002-1.299 3.044-3.945 4.243-5.498z" />
-        </svg>
-      );
-      return arrow;
-    } else {
-      const arrow = (
-        <svg
-          fill="currentColor"
-          className="w5 h-5"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="m16.843 13.789c.108.141.157.3.157.456 0 .389-.306.755-.749.755h-8.501c-.445 0-.75-.367-.75-.755 0-.157.05-.316.159-.457 1.203-1.554 3.252-4.199 4.258-5.498.142-.184.36-.29.592-.29.23 0 .449.107.591.291 1.002 1.299 3.044 3.945 4.243 5.498z" />
-        </svg>
-      );
-      return arrow;
-    }
+    const direction = value.toString().startsWith("-") ? "down" : "up";
+    return (
+      <svg fill="currentColor" className="w-5 h-5" viewBox="0 0 24 24">
+        <path
+          d={direction === "up" ? "M7 10l5 5 5-5H7z" : "M7 14l5-5 5 5H7z"}
+        />
+      </svg>
+    );
   };
 
   if (top.loading || trend.loading) {
     return <div>Loading...</div>;
   }
-  const filteredTrend = trend.data.coins.filter((item, index) => index < 3);
+
   return (
     <div className="container">
       <div className="flex my-5">
@@ -85,7 +68,9 @@ export default function Home() {
             <span className="font-bold px-3 text-xl">🔥 Tendance</span>
           </CardHeader>
           <CardContent>
-            {filteredTrend.map((coin) => {
+            {/* utilisation de slice a la place de filter plus optimisé */}
+            {/* filter parcourt tout le tableau alors que slice s'arrete a 3 dans ce cas */}
+            {trend.data.coins.slice(0, 3).map((coin) => {
               return (
                 <Link key={coin.item.id} to={`/${coin.item.id}`}>
                   <div className="flex items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">

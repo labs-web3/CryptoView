@@ -22,8 +22,10 @@ import {
 import { Button } from "./components/ui/button.jsx";
 import { useLogout } from "./hooks/useLogout.js";
 import { useAuthContext } from "./hooks/useAuthContext.js";
+import { useState } from "react";
 
 function App() {
+  const [nb, setNb] = useState(1);
   const { logout } = useLogout();
   const { user } = useAuthContext();
   const handleClick = () => {
