@@ -12,6 +12,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
+import Categories from "@/components/Categories";
 
 export default function Home() {
   const { pageNumber = 1 } = useParams();
@@ -140,9 +141,15 @@ export default function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {location.pathname === "/categories" && (
+          {location.pathname === "/categories" ? (
             <>
-              {categories.data.map((post, index) => (
+              {categories.data.map((post, index) => {
+                return <Categories post={post} key={index} />;
+              })}
+            </>
+          ) : (
+            <>
+              {top.data.map((post, index) => (
                 <TableRow key={index}>
                   <Link to={`/${post.id}`}>
                     <TableCell
@@ -155,6 +162,12 @@ export default function Home() {
                       <span style={{ marginRight: "5px" }}>
                         {post.market_cap_rank}.
                       </span>
+                      <img
+                        width={25}
+                        alt={post.name}
+                        src={post.image}
+                        style={{ marginRight: "5px" }}
+                      />
                       <span>{post.name}</span>
                     </TableCell>
                   </Link>
@@ -223,93 +236,18 @@ export default function Home() {
               ))}
             </>
           )}
-          {top.data.map((post, index) => (
-            <TableRow key={index}>
-              <Link to={`/${post.id}`}>
-                <TableCell
-                  key={post.name}
-                  className={`${post.name === "Chiliz" ? "text-red-500" : ""}`}
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  <span style={{ marginRight: "5px" }}>
-                    {post.market_cap_rank}.
-                  </span>
-                  <img
-                    width={25}
-                    alt={post.name}
-                    src={post.image}
-                    style={{ marginRight: "5px" }}
-                  />
-                  <span>{post.name}</span>
-                </TableCell>
-              </Link>
-              <TableCell key={post.current_price}>
-                ${post.current_price}
-              </TableCell>
-              <TableCell
-                key={post.price_change_percentage_1h_in_currency}
-                className={`${
-                  post.price_change_percentage_1h_in_currency
-                    ?.toString()
-                    .startsWith("-")
-                    ? "text-red-500"
-                    : "text-green-500"
-                }`}
-              >
-                <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_1h_in_currency)}
-                  {formatPercentage(
-                    post.price_change_percentage_1h_in_currency
-                  )}
-                </span>
-              </TableCell>
-              <TableCell
-                key={post.price_change_percentage_24h_in_currency}
-                className={`${
-                  post.price_change_percentage_24h_in_currency
-                    ?.toString()
-                    .startsWith("-")
-                    ? "text-red-500"
-                    : "text-green-500"
-                }`}
-              >
-                <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_24h_in_currency)}
-                  {formatPercentage(
-                    post.price_change_percentage_24h_in_currency
-                  )}
-                </span>
-              </TableCell>
-              <TableCell
-                key={post.price_change_percentage_7d_in_currency}
-                className={`${
-                  post.price_change_percentage_7d_in_currency
-                    ?.toString()
-                    .startsWith("-")
-                    ? "text-red-500"
-                    : "text-green-500"
-                }`}
-              >
-                <span style={{ display: "flex" }}>
-                  {arrowUpOrDown(post.price_change_percentage_7d_in_currency)}
-                  {formatPercentage(
-                    post.price_change_percentage_7d_in_currency
-                  )}
-                </span>
-              </TableCell>
-              <TableCell key={post.ath}>${post.ath}</TableCell>
-            </TableRow>
-          ))}
         </TableBody>
       </Table>
       <div className="flex justify-center my-5">
-        <Pagination
-          totalPages={totalPages}
-          currentPage={parseInt(pageNumber, 10)}
-          setCurrentPage={setPage}
-          pagesCount={totalPages}
-          pagesCutCount={5}
-        />
+        {location.pathname !== "/categories" && (
+          <Pagination
+            totalPages={totalPages}
+            currentPage={parseInt(pageNumber, 10)}
+            setCurrentPage={setPage}
+            pagesCount={totalPages}
+            pagesCutCount={5}
+          />
+        )}
       </div>
     </div>
   );
