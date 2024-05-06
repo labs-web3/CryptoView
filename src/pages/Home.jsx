@@ -11,6 +11,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import Pagination from "@/components/Pagination";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const { pageNumber = 1 } = useParams();
@@ -29,6 +30,10 @@ export default function Home() {
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
   );
 
+  const categories = FetchCrypto(
+    "https://api.coingecko.com/api/v3/coins/categories?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+  );
+
   useEffect(() => {
     if (top.data) {
       console.log(top);
@@ -40,6 +45,16 @@ export default function Home() {
       console.log(trend);
     }
   }, [trend.data]);
+
+  useEffect(() => {
+    if (categories.data) {
+      console.log(categories);
+    }
+  }, [categories.data]);
+
+  const handleCategories = () => {
+    navigate("/categories");
+  };
 
   const formatPercentage = (value) => {
     return Intl.NumberFormat("en-US", {
@@ -112,6 +127,7 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
+      <Button onClick={handleCategories}>Catégories</Button>
       <Table className="table-auto">
         <TableHeader>
           <TableRow>
@@ -124,6 +140,89 @@ export default function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
+          {location.pathname === "/categories" && (
+            <>
+              {categories.data.map((post, index) => (
+                <TableRow key={index}>
+                  <Link to={`/${post.id}`}>
+                    <TableCell
+                      key={post.name}
+                      className={`${
+                        post.name === "Chiliz" ? "text-red-500" : ""
+                      }`}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <span style={{ marginRight: "5px" }}>
+                        {post.market_cap_rank}.
+                      </span>
+                      <span>{post.name}</span>
+                    </TableCell>
+                  </Link>
+                  <TableCell key={post.current_price}>
+                    ${post.current_price}
+                  </TableCell>
+                  <TableCell
+                    key={post.price_change_percentage_1h_in_currency}
+                    className={`${
+                      post.price_change_percentage_1h_in_currency
+                        ?.toString()
+                        .startsWith("-")
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    <span style={{ display: "flex" }}>
+                      {arrowUpOrDown(
+                        post.price_change_percentage_1h_in_currency
+                      )}
+                      {formatPercentage(
+                        post.price_change_percentage_1h_in_currency
+                      )}
+                    </span>
+                  </TableCell>
+                  <TableCell
+                    key={post.price_change_percentage_24h_in_currency}
+                    className={`${
+                      post.price_change_percentage_24h_in_currency
+                        ?.toString()
+                        .startsWith("-")
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    <span style={{ display: "flex" }}>
+                      {arrowUpOrDown(
+                        post.price_change_percentage_24h_in_currency
+                      )}
+                      {formatPercentage(
+                        post.price_change_percentage_24h_in_currency
+                      )}
+                    </span>
+                  </TableCell>
+                  <TableCell
+                    key={post.price_change_percentage_7d_in_currency}
+                    className={`${
+                      post.price_change_percentage_7d_in_currency
+                        ?.toString()
+                        .startsWith("-")
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    <span style={{ display: "flex" }}>
+                      {arrowUpOrDown(
+                        post.price_change_percentage_7d_in_currency
+                      )}
+                      {formatPercentage(
+                        post.price_change_percentage_7d_in_currency
+                      )}
+                    </span>
+                  </TableCell>
+                  <TableCell key={post.ath}>${post.ath}</TableCell>
+                </TableRow>
+              ))}
+            </>
+          )}
           {top.data.map((post, index) => (
             <TableRow key={index}>
               <Link to={`/${post.id}`}>

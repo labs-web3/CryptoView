@@ -68,6 +68,10 @@ function App() {
             element={user ? <Home /> : <Navigate to="/SignIn" />}
           ></Route>
           <Route
+            path="/categories"
+            element={user ? <Home /> : <Navigate to="/SignIn" />}
+          ></Route>
+          <Route
             path="/Portfolio"
             element={user ? <Portfolio /> : <Navigate to="/SignIn" />}
           ></Route>
