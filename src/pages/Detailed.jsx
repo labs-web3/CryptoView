@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import LineChart from "@/components/LineChart";
+import { useEffect } from "react";
 
 export default function Detailed() {
   const { id } = useParams();
@@ -19,24 +20,27 @@ export default function Detailed() {
   const getCrypto = FetchCrypto(
     `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1, ${options}`
   );
+
+  useEffect(() => {
+    if (getCrypto.data) {
+      console.log(getCrypto);
+    }
+  }, [getCrypto.data]);
+
   if (getCrypto.loading) {
     return <p>Loading...</p>;
   }
 
-  const formattedPrices = getCrypto.data.prices
-    .map((entry) => ({
-      time: new Date(entry[0]).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      value: entry[1],
-    }))
-    .filter((entry, index) => index % 2 === 0);
-  console.log(formattedPrices);
-
-  const lastPrice = getCrypto.data.prices.at(0);
+  console.log(getCrypto);
+  const formattedPrices = getCrypto.data.prices.map((entry) => ({
+    time: new Date(entry[0]).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    value: entry[1],
+  }));
+  const lastPrice = getCrypto.data.prices.pop();
   const roundedLastPrice = Math.round(lastPrice[1]);
-
   return (
     <>
       <div className="container py-10">

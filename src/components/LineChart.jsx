@@ -5,14 +5,20 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
+  Tooltip,
 } from "chart.js";
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
-ChartJS.defaults.scale.border.display = false;
+
+// Assurez-vous de bien enregistrer Tooltip également
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip
+);
 
 export default function LineChart({ data }) {
-  const hourlyLabels = data
-    .filter((entry, index) => index % 2 === 0)
-    .map((entry) => entry.time);
+  const hourlyLabels = data.map((entry) => entry.time);
 
   const chartData = {
     labels: hourlyLabels,
@@ -40,7 +46,15 @@ export default function LineChart({ data }) {
         },
       },
     },
+    plugins: {
+      tooltip: {
+        enabled: true,
+        mode: "index",
+        intersect: false,
+      },
+    },
   };
+
   return (
     <>
       <Line data={chartData} options={chartOptions} />

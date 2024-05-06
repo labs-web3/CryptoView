@@ -120,7 +120,7 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-      <div className="flex">
+      <div className="flex mb-3">
         <Button
           onClick={handleCategories}
           className={`bg-transparent text-dark hover:bg-slate-200 ${
