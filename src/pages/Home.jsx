@@ -51,7 +51,7 @@ export default function Home() {
   };
 
   const arrowUpOrDown = (value) => {
-    const direction = value.toString().startsWith("-") ? "down" : "up";
+    const direction = value?.toString().startsWith("-") ? "down" : "up";
     return (
       <svg fill="currentColor" className="w-5 h-5" viewBox="0 0 24 24">
         <path
@@ -112,13 +112,6 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-      <Pagination
-        totalPages={totalPages}
-        currentPage={parseInt(pageNumber, 10)}
-        setCurrentPage={setPage}
-        pagesCount={totalPages}
-        pagesCutCount={5}
-      />
       <Table className="table-auto">
         <TableHeader>
           <TableRow>
@@ -158,7 +151,7 @@ export default function Home() {
                 key={post.price_change_percentage_1h_in_currency}
                 className={`${
                   post.price_change_percentage_1h_in_currency
-                    .toString()
+                    ?.toString()
                     .startsWith("-")
                     ? "text-red-500"
                     : "text-green-500"
@@ -175,7 +168,7 @@ export default function Home() {
                 key={post.price_change_percentage_24h_in_currency}
                 className={`${
                   post.price_change_percentage_24h_in_currency
-                    .toString()
+                    ?.toString()
                     .startsWith("-")
                     ? "text-red-500"
                     : "text-green-500"
@@ -192,7 +185,7 @@ export default function Home() {
                 key={post.price_change_percentage_7d_in_currency}
                 className={`${
                   post.price_change_percentage_7d_in_currency
-                    .toString()
+                    ?.toString()
                     .startsWith("-")
                     ? "text-red-500"
                     : "text-green-500"
@@ -210,6 +203,15 @@ export default function Home() {
           ))}
         </TableBody>
       </Table>
+      <div className="flex justify-center my-5">
+        <Pagination
+          totalPages={totalPages}
+          currentPage={parseInt(pageNumber, 10)}
+          setCurrentPage={setPage}
+          pagesCount={totalPages}
+          pagesCutCount={5}
+        />
+      </div>
     </div>
   );
 }

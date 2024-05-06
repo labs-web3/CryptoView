@@ -30,7 +30,7 @@ export default function Pagination({
       {currentPage > 1 && (
         <Button
           onClick={() => setCurrentPage(currentPage - 1)}
-          className="flex items-center gap-2 rounded-full"
+          className="flex items-center gap-2 rounded-full bg-black hover:bg-slate-300 hover:text-black"
         >
           Previous
         </Button>
@@ -40,7 +40,7 @@ export default function Pagination({
           key={start + index}
           onClick={() => setCurrentPage(start + index)}
           disabled={currentPage === start + index}
-          className="rounded-full"
+          className="rounded-full bg-black hover:bg-slate-300 hover:text-black"
         >
           {start + index}
         </Button>
@@ -53,7 +53,7 @@ export default function Pagination({
       {currentPage < totalPages && end < totalPages && (
         <Button
           onClick={() => setCurrentPage(totalPages)}
-          className="flex items-center gap-2 rounded-full"
+          className="flex items-center gap-2 rounded-full bg-black hover:bg-slate-300 hover:text-black"
         >
           {totalPages}
         </Button>
@@ -61,7 +61,7 @@ export default function Pagination({
       {currentPage < totalPages && (
         <Button
           onClick={() => setCurrentPage(currentPage + 1)}
-          className="flex items-center gap-2 rounded-full"
+          className="flex items-center gap-2 rounded-full bg-black hover:bg-slate-300 hover:text-black"
         >
           Next
         </Button>
