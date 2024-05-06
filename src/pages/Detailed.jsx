@@ -40,11 +40,12 @@ export default function Detailed() {
     value: entry[1],
   }));
   const lastPrice = getCrypto.data.prices.pop();
-  const roundedLastPrice = Math.round(lastPrice[1]);
   return (
     <>
       <div className="container py-10">
-        <h1>{roundedLastPrice}</h1>
+        <h1>
+          {lastPrice[1] > 1 ? lastPrice[1].toFixed(0) : lastPrice[1].toFixed(5)}
+        </h1>
         <div className="flex justify-center h-1/2">
           <LineChart data={formattedPrices} />
         </div>

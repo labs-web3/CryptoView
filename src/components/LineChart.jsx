@@ -33,7 +33,7 @@ export default function LineChart({ data }) {
     labels: hourlyLabels,
     datasets: [
       {
-        label: "Valeur Crypto",
+        label: "Cours",
         data: data.map((entry) => entry.value.toFixed(5)),
         borderColor: "rgba(75,192,192,1)",
         tension: 0.1,
