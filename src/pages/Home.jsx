@@ -116,6 +116,8 @@ export default function Home() {
         totalPages={totalPages}
         currentPage={parseInt(pageNumber, 10)}
         setCurrentPage={setPage}
+        pagesCount={totalPages}
+        pagesCutCount={5}
       />
       <Table className="table-auto">
         <TableHeader>
