@@ -19,12 +19,14 @@ import { useAuthContext } from "./hooks/useAuthContext.js";
 
 function App() {
   const { logout } = useLogout();
-  const { user } = useAuthContext();
+  const { user, loading } = useAuthContext();
 
   const handleClick = () => {
     logout();
   };
-
+  if (loading) {
+    return <div>Loading...</div>; // Affiche un chargement ou autre jusqu'à ce que l'état soit prêt
+  }
   return (
     <Router>
       <div className="flex">

@@ -9,13 +9,18 @@ export const authReducer = (state, action) => {
       return { user: action.payload };
     case "LOGOUT":
       return { user: null };
+    case "AUTH_READY":
+      return { ...state, loading: false };
     default:
       return null;
   }
 };
 
 export const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, { user: null });
+  const [state, dispatch] = useReducer(authReducer, {
+    user: null,
+    loading: true,
+  });
 
   //check if user is already connected
   useEffect(() => {
@@ -24,6 +29,7 @@ export const AuthContextProvider = ({ children }) => {
     if (user) {
       dispatch({ type: "LOGIN", payload: user });
     }
+    dispatch({ type: "AUTH_READY" });
   }, []);
 
   console.log("AuthContext state :", state);
