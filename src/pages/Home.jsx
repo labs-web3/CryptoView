@@ -120,34 +120,60 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-      <Button onClick={handleCategories}>Catégories</Button>
-      <Table className="table-auto">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="font-bold">Name </TableHead>
-            <TableHead className="font-bold">Price </TableHead>
-            <TableHead className="font-bold">1 h </TableHead>
-            <TableHead className="font-bold">24 h </TableHead>
-            <TableHead className="font-bold">7 j </TableHead>
-            <TableHead className="font-bold">ATH </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {location.pathname === "/categories" ? (
-            <>
+      <div className="flex">
+        <Button
+          onClick={handleCategories}
+          className={`bg-transparent text-dark hover:bg-slate-200 ${
+            location.pathname === "/categories"
+              ? "bg-slate-200 cursor-auto"
+              : ""
+          }`}
+        >
+          Catégories
+        </Button>
+      </div>
+      {location.pathname === "/categories" ? (
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="font-bold">Name </TableHead>
+                <TableHead className="font-bold">Top 3 Coins </TableHead>
+                <TableHead className="font-bold">24 h</TableHead>
+                <TableHead className="font-bold">Volume sur 24 h</TableHead>
+                <TableHead className="font-bold">
+                  Capitalisation boursière
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {categories.data.map((post, index) => {
-                return <Categories post={post} key={index} />;
+                return <Categories post={post} key={index} index={index} />;
               })}
-            </>
-          ) : (
-            <>
+            </TableBody>
+          </Table>
+        </>
+      ) : (
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="font-bold">Name </TableHead>
+                <TableHead className="font-bold">Price </TableHead>
+                <TableHead className="font-bold">1 h </TableHead>
+                <TableHead className="font-bold">24 h </TableHead>
+                <TableHead className="font-bold">7 j </TableHead>
+                <TableHead className="font-bold">ATH </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {top.data.map((post, index) => {
                 return <CoinsList post={post} key={index} />;
               })}
-            </>
-          )}
-        </TableBody>
-      </Table>
+            </TableBody>
+          </Table>
+        </>
+      )}
       <div className="flex justify-center my-5">
         {location.pathname !== "/categories" && (
           <Pagination

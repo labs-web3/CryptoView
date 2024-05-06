@@ -36,16 +36,12 @@ const PriceChangeCell = ({ value }) => {
   );
 };
 
-export default function Categories({ post }) {
+export default function Categories({ post, index }) {
   return (
     <TableRow>
       <Link to={`/${post.id}`}>
-        <TableCell
-          className={`${
-            post.name === "Chiliz" ? "text-red-500" : ""
-          } flex items-center`}
-        >
-          <span className="mr-2">{post.market_cap_rank}.</span>
+        <TableCell className="flex items-center">
+          <span className="mr-2">{index + 1}.</span>
           <span>{post.name}</span>
         </TableCell>
       </Link>
@@ -57,10 +53,9 @@ export default function Categories({ post }) {
           style={{ marginRight: "5px" }}
         />
       </TableCell>
-      <PriceChangeCell value={post.price_change_percentage_1h_in_currency} />
-      <PriceChangeCell value={post.price_change_percentage_24h_in_currency} />
-      <PriceChangeCell value={post.price_change_percentage_7d_in_currency} />
-      <TableCell>${post.ath}</TableCell>
+      <PriceChangeCell value={post.market_cap_change_24h} />
+      <TableCell> {post.volume_24h} $US</TableCell>
+      <TableCell> {post.market_cap} $US</TableCell>
     </TableRow>
   );
 }
