@@ -11,15 +11,26 @@ const verticalLinePlugin = {
       const ctx = chart.ctx;
       const tooltipElement = chart.tooltip.getActiveElements()[0];
       const x = tooltipElement.element.x;
-      const yAxis = chart.scales.y;
+      const y = tooltipElement.element.y;
 
+      // Sauvegarder le contexte pour restaurer après modifications
       ctx.save();
+
+      // Dessiner la ligne verticale
       ctx.beginPath();
-      ctx.moveTo(x, yAxis.top);
-      ctx.lineTo(x, yAxis.bottom);
+      ctx.moveTo(x, chart.scales.y.top);
+      ctx.lineTo(x, chart.scales.y.bottom);
       ctx.lineWidth = 1;
       ctx.strokeStyle = "rgba(128,128,128)";
       ctx.stroke();
+
+      // Dessiner un cercle
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = "red";
+      ctx.fill();
+
+      // Restaurer le contexte
       ctx.restore();
     }
   },
