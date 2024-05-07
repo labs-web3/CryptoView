@@ -48,7 +48,7 @@ export default function LineChart({ data }) {
         label: "Cours",
         data: dataValue,
         borderColor: "rgba(220,58,51)",
-        tension: 0,
+        tension: 0.1,
         pointRadius: 0,
         fill: {
           target: "origin",

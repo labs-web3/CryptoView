@@ -29,16 +29,52 @@ export default function Detailed() {
   );
 
   useEffect(() => {
-    if (getCrypto.data) {
-      console.log(getCrypto);
+    if (!getCrypto.loading) {
+      console.log(getCrypto.data);
     }
   }, [getCrypto.data, days]);
 
   useEffect(() => {
-    if (getCryptoId) {
-      console.log(getCryptoId);
+    if (!getCryptoId.loading) {
+      console.log(getCryptoId.data);
     }
-  }, [getCryptoId.data]);
+  }, [getCryptoId.data, days]);
+
+  const formattedPrices = getCrypto.data?.prices?.map((entry) => ({
+    time: new Date(entry[0]).toLocaleTimeString([], {
+      month: "long",
+      day: "numeric",
+    }),
+    value: entry[1],
+  }));
+
+  const lastPrice = getCrypto.data?.prices?.pop();
+
+  const arrowUpOrDown = (value) => {
+    const direction = value?.toString().startsWith("-") ? "down" : "up";
+    return (
+      <div className="flex items-center">
+        <svg
+          fill="currentColor"
+          className={`w-7 h-7 ${
+            direction === "down" ? "text-red-500" : "text-green-500"
+          }`}
+          viewBox="0 0 24 24"
+        >
+          <path
+            d={direction === "up" ? "M7 14l5-5 5 5H7z" : "M7 10l5 5 5-5H7z"}
+          />
+        </svg>
+        <span
+          className={`font-semibold ${
+            direction === "down" ? "text-red-500" : "text-green-500"
+          }`}
+        >
+          {value}
+        </span>
+      </div>
+    );
+  };
 
   const handleDays = () => {
     setDays("days=1");
@@ -60,26 +96,23 @@ export default function Detailed() {
     return <p>Refresh to get data</p>;
   }
 
-  console.log(getCrypto);
-  const formattedPrices = getCrypto.data?.prices?.map((entry) => ({
-    time: new Date(entry[0]).toLocaleTimeString([], {
-      month: "long",
-      day: "numeric",
-    }),
-    value: entry[1],
-  }));
-  const lastPrice = getCrypto.data.prices.pop();
   return (
     <>
       <div className="container py-10">
         <div className="grid grid-cols-4">
-          <div className="col-span-1 ">
+          <div className="col-span-1">
             <h1>
               {lastPrice[1] > 1
                 ? lastPrice[1].toFixed(0)
                 : lastPrice[1].toFixed(5)}
+              <span className="mx-2">
+                {arrowUpOrDown(
+                  getCryptoId.data.market_data.price_change_percentage_24h.toFixed(
+                    1
+                  )
+                )}
+              </span>
             </h1>
-            <h1>azdadad</h1>
           </div>
           <div className="col-span-3">
             <div className="flex justify-end">
