@@ -40,12 +40,13 @@ ChartJS.register(verticalLinePlugin);
 
 export default function LineChart({ data }) {
   const hourlyLabels = data.map((entry) => entry.time);
+  const dataValue = data.map((entry) => entry.value.toFixed(5));
   const chartData = {
     labels: hourlyLabels,
     datasets: [
       {
         label: "Cours",
-        data: data.map((entry) => entry.value.toFixed(5)),
+        data: dataValue,
         borderColor: "rgba(220,58,51)",
         tension: 0,
         pointRadius: 0,

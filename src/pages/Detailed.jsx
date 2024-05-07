@@ -34,8 +34,8 @@ export default function Detailed() {
   console.log(getCrypto);
   const formattedPrices = getCrypto.data.prices.map((entry) => ({
     time: new Date(entry[0]).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
+      month: "long",
+      day: "numeric",
     }),
     value: entry[1],
   }));
