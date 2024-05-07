@@ -18,7 +18,7 @@ const verticalLinePlugin = {
       ctx.moveTo(x, yAxis.top);
       ctx.lineTo(x, yAxis.bottom);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "rgba(0, 0, 255, 0.4)";
+      ctx.strokeStyle = "rgba(128,128,128)";
       ctx.stroke();
       ctx.restore();
     }
@@ -35,9 +35,13 @@ export default function LineChart({ data }) {
       {
         label: "Cours",
         data: data.map((entry) => entry.value.toFixed(5)),
-        borderColor: "rgba(75,192,192,1)",
-        tension: 0.1,
-        fill: false,
+        borderColor: "rgba(220,58,51)",
+        tension: 0,
+        pointRadius: 0,
+        fill: {
+          target: "origin",
+          above: "rgb(220,58,51,0.4)",
+        },
       },
     ],
   };
