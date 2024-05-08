@@ -9,11 +9,11 @@ import {
 import FetchCrypto from "@/hooks/FetchCrypto";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { useEffect } from "react";
 import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import Categories from "@/components/Categories";
 import CoinsList from "@/components/CoinsList";
+import { Input } from "@/components/ui/input";
 
 export default function Home() {
   const { pageNumber = 1 } = useParams();
@@ -36,26 +36,12 @@ export default function Home() {
     "https://api.coingecko.com/api/v3/coins/categories?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
   );
 
-  useEffect(() => {
-    if (top.data) {
-      console.log(top);
-    }
-  }, [top.data]);
-
-  useEffect(() => {
-    if (trend.data) {
-      console.log(trend);
-    }
-  }, [trend.data]);
-
-  useEffect(() => {
-    if (categories.data) {
-      console.log(categories);
-    }
-  }, [categories.data]);
-
   const handleCategories = () => {
     navigate("/categories");
+  };
+
+  const handleRefresh = () => {
+    window.location.reload();
   };
 
   const arrowUpOrDown = (value) => {
@@ -71,6 +57,22 @@ export default function Home() {
 
   if (top.loading || trend.loading) {
     return <div>Loading...</div>;
+  }
+
+  if (top.error || trend.error) {
+    return (
+      <div className="container">
+        <div className="flex justify-center h-full items-center flex-col space-y-4">
+          <h1 className="text-red-500 text-7xl font-bold">An error occured</h1>
+          <Button
+            onClick={handleRefresh}
+            className="bg-black text-white font-bold w-1/4 hover:bg-gray-600"
+          >
+            Refresh
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -120,7 +122,7 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-      <div className="flex mb-3">
+      <div className="flex mb-3 justify-between">
         <Button
           onClick={handleCategories}
           className={`bg-transparent text-dark hover:bg-slate-200 ${
@@ -131,6 +133,7 @@ export default function Home() {
         >
           Catégories
         </Button>
+        <Input type="search" placeholder="Rechercher un token" />
       </div>
       {location.pathname === "/categories" ? (
         <>

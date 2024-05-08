@@ -108,7 +108,7 @@ export default function Detailed() {
 
   return (
     <>
-      <div className="p-10">
+      <div className="container p-10">
         <div className="grid grid-cols-4 gap-4">
           <div className="col-span-1 border-r-2 space-y-3">
             <div className="flex space-x-2">

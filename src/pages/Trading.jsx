@@ -415,6 +415,7 @@ export default function MyAccount() {
                     <Input
                       onChange={handleSearch}
                       value={searchText.first}
+                      placeholder="Rechercher un token par son symbol"
                       name="first"
                       type="search"
                     />
@@ -541,6 +542,7 @@ export default function MyAccount() {
                       value={searchText.second}
                       name="second"
                       type="search"
+                      placeholder="Rechercher un token par son symbol"
                     />
                   </DialogHeader>
                   <div className="flex-1 overflow-auto h-full">
