@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import LineChart from "@/components/LineChart";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Detailed() {
   const [days, setDays] = useState("days=1");
@@ -41,9 +41,11 @@ export default function Detailed() {
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
     return (
-      <div className="flex items-center justify-start">
+      <div className="flex items-center justify-start px-3">
         <h1 className="font-bold text-4xl">
-          {lastPrice[1] > 1 ? lastPrice[1].toFixed(2) : lastPrice[1].toFixed(5)}{" "}
+          {lastPrice[1] > 1
+            ? lastPrice[1]?.toFixed(2)
+            : lastPrice[1].toFixed(5)}
           $US
         </h1>
         <svg
@@ -90,7 +92,7 @@ export default function Detailed() {
 
   return (
     <>
-      <div className="container py-10">
+      <div className="p-10">
         <div className="grid grid-cols-4 gap-4">
           <div className="col-span-1 border-r-2">
             {arrowUpOrDown(
