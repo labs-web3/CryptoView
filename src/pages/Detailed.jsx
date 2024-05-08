@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import LineChart from "@/components/LineChart";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function Detailed() {
   const [days, setDays] = useState("days=1");
@@ -27,27 +28,26 @@ export default function Detailed() {
     `https://api.coingecko.com/api/v3/coins/${id}`,
     options
   );
+  console.log(getCrypto.data.prices);
+  const formattedPrices =
+    getCrypto.data.prices?.map((entry) => ({
+      time: new Date(entry[0]).toLocaleTimeString([], {
+        month: "long",
+        day: "numeric",
+      }),
+      value: entry[1],
+    })) || [];
 
-  const formattedPrices = getCrypto.data?.prices?.map((entry) => ({
-    time: new Date(entry[0]).toLocaleTimeString([], {
-      month: "long",
-      day: "numeric",
-    }),
-    value: entry[1],
-  }));
-
-  const lastPrice = getCrypto.data?.prices?.pop();
+  const lastPrice = getCrypto.data.prices?.pop();
 
   const arrowUpOrDown = (value) => {
-    const direction = value?.toString().startsWith("-") ? "down" : "up";
+    const direction = value.toString().startsWith("-") ? "down" : "up";
     return (
-      <div className="flex items-center justify-start px-3">
-        <h1 className="font-bold text-4xl">
-          {lastPrice[1] > 1
-            ? lastPrice[1]?.toFixed(2)
-            : lastPrice[1].toFixed(5)}
+      <div className="flex items-center">
+        <span className="font-bold text-4xl">
+          {lastPrice[1] > 1 ? lastPrice[1].toFixed(2) : lastPrice[1].toFixed(5)}
           $US
-        </h1>
+        </span>
         <svg
           fill="currentColor"
           className={`w-7 h-7 ${
@@ -82,19 +82,42 @@ export default function Detailed() {
     setDays("days=30");
   };
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   if (getCrypto.loading || getCryptoId.loading) {
     return <p>Loading...</p>;
   }
 
-  if (getCrypto.data == [] || getCryptoId == []) {
-    return <p>Refresh to get data</p>;
+  if (getCrypto.error || getCryptoId.error) {
+    return (
+      <div className="container">
+        <div className="flex justify-center h-full items-center flex-col space-y-4">
+          <h1 className="text-red-500 text-7xl font-bold">An error occured</h1>
+          <Button
+            onClick={handleRefresh}
+            className="bg-black text-white font-bold w-1/4 hover:bg-gray-600"
+          >
+            Refresh
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
       <div className="p-10">
         <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-1 border-r-2">
+          <div className="col-span-1 border-r-2 space-y-3">
+            <div className="flex space-x-2">
+              <img src={getCryptoId.data.image.thumb} alt="" />
+              <h1 className="text-xl font-bold">{getCryptoId.data.name}</h1>
+              <button className="bg-gray-300 px-2 rounded cursor-auto">
+                #{getCryptoId.data.market_cap_rank}
+              </button>
+            </div>
             {arrowUpOrDown(
               getCryptoId.data.market_data.price_change_percentage_24h.toFixed(
                 1
