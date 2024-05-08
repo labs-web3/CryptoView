@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Popover } from "react-tiny-popover";
 import { Search } from "lucide-react";
+import { SkeletonCard } from "@/components/SkeletonCard";
 
 export default function Home() {
   const { pageNumber = 1 } = useParams();
@@ -77,9 +78,9 @@ export default function Home() {
     }
   });
 
-  if (top.loading || trend.loading || categories.loading || query.loading) {
-    return <div>Loading...</div>;
-  }
+  // if (top.loading || trend.loading || categories.loading || query.loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (top.error || trend.error || categories.loading || query.loading) {
     return (
@@ -100,49 +101,53 @@ export default function Home() {
   return (
     <div className="container">
       <div className="flex my-5">
-        <Card>
-          <CardHeader>
-            <span className="font-bold px-3 text-xl">🔥 Tendance</span>
-          </CardHeader>
-          <CardContent>
-            {/* utilisation de slice a la place de filter plus optimisé */}
-            {/* filter parcourt tout le tableau alors que slice s'arrete a 3 dans ce cas */}
-            {trend.data.coins.slice(0, 3).map((coin) => {
-              return (
-                <Link key={coin.item.id} to={`/${coin.item.id}`}>
-                  <div className="flex items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
-                    <img
-                      src={coin.item.small}
-                      alt={coin.item.name}
-                      width={25}
-                    />
-                    <span>{coin.item.name}</span>
-                    <span>{coin.item.data.price.toFixed(4)} $</span>
-                    <span
-                      className={`flex items-center ${
-                        coin.item.data.price_change_percentage_24h.usd
-                          .toString()
-                          .startsWith("-")
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {arrowUpOrDown(
-                        coin.item.data.price_change_percentage_24h.usd.toFixed(
+        {trend.loading ? (
+          <SkeletonCard />
+        ) : (
+          <Card>
+            <CardHeader>
+              <span className="font-bold px-3 text-xl">🔥 Tendance</span>
+            </CardHeader>
+            <CardContent>
+              {/* utilisation de slice a la place de filter plus optimisé */}
+              {/* filter parcourt tout le tableau alors que slice s'arrete a 3 dans ce cas */}
+              {trend.data.coins.slice(0, 3).map((coin) => {
+                return (
+                  <Link key={coin.item.id} to={`/${coin.item.id}`}>
+                    <div className="flex items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
+                      <img
+                        src={coin.item.small}
+                        alt={coin.item.name}
+                        width={25}
+                      />
+                      <span>{coin.item.name}</span>
+                      <span>{coin.item.data.price.toFixed(4)} $</span>
+                      <span
+                        className={`flex items-center ${
+                          coin.item.data.price_change_percentage_24h.usd
+                            .toString()
+                            .startsWith("-")
+                            ? "text-red-500"
+                            : "text-green-500"
+                        }`}
+                      >
+                        {arrowUpOrDown(
+                          coin.item.data.price_change_percentage_24h.usd.toFixed(
+                            1
+                          )
+                        )}
+                        {coin.item.data.price_change_percentage_24h.usd.toFixed(
                           1
-                        )
-                      )}
-                      {coin.item.data.price_change_percentage_24h.usd.toFixed(
-                        1
-                      )}
-                      %
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </CardContent>
-        </Card>
+                        )}
+                        %
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </CardContent>
+          </Card>
+        )}
       </div>
       <div className="flex mb-3 justify-between">
         <Button
