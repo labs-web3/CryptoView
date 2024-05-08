@@ -15,11 +15,14 @@ import Categories from "@/components/Categories";
 import CoinsList from "@/components/CoinsList";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { Popover } from "react-tiny-popover";
+import { Search } from "lucide-react";
 
 export default function Home() {
   const { pageNumber = 1 } = useParams();
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState([]);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const setPage = (num) => navigate(`/page/${num}`);
 
@@ -36,6 +39,10 @@ export default function Home() {
 
   const categories = FetchCrypto(
     "https://api.coingecko.com/api/v3/coins/categories?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+  );
+
+  const query = FetchCrypto(
+    `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
 
   const handleCategories = () => {
@@ -61,11 +68,12 @@ export default function Home() {
     setSearchText(e.target.value);
   };
 
-  const filterSearch = top.data.filter((elem) => {
+  const filterSearch = query.data?.coins?.filter((elem) => {
+    console.log(elem);
     if (searchText === "") {
       return true;
     } else {
-      return elem.name.toLowerCase().includes(searchText.toLowerCase());
+      return elem.name.toLowerCase().includes(searchText);
     }
   });
 
@@ -147,12 +155,32 @@ export default function Home() {
         >
           Catégories
         </Button>
-        <Input
-          type="search"
-          placeholder="Rechercher un token"
-          onChange={handleSearch}
-          value={searchText}
-        />
+        <Popover
+          isOpen={isPopoverOpen}
+          positions={"bottom"}
+          padding={10}
+          content={
+            <div className="w-full bg-white">
+              <Input
+                type="search"
+                placeholder="Rechercher un token"
+                onChange={handleSearch}
+                value={searchText}
+              />
+              {filterSearch.map((data) => {
+                return <li key={data.name}>{data.name}</li>;
+              })}
+            </div>
+          }
+        >
+          <div
+            className="bg-gray-300 rounded flex items-center px-3 w-1/4 space-x-2 hover:bg-gray-400 transition "
+            onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+          >
+            <Search className="size-5" />
+            <span className="font-semibold">Rechercher</span>
+          </div>
+        </Popover>
       </div>
       {location.pathname === "/categories" ? (
         <>
@@ -189,7 +217,7 @@ export default function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filterSearch.map((post, index) => {
+              {top.data.map((post, index) => {
                 return <CoinsList post={post} key={index} />;
               })}
             </TableBody>
