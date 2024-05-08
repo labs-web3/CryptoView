@@ -31,7 +31,7 @@ export default function Home() {
   const totalPages = Math.ceil(totalCoins / coinPerPage);
 
   const top = FetchCrypto(
-    `https://api.coingecko.com/api/v3/coins/markets?page=${pageNumber}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
+    `https://api.coingecko.com/api/v3/coins/markets?page=${pageNumber}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&sparkline=true&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
@@ -44,7 +44,7 @@ export default function Home() {
   const query = FetchCrypto(
     `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
-
+  console.log(top.data);
   const handleCategories = () => {
     navigate("/categories");
   };
@@ -77,11 +77,11 @@ export default function Home() {
     }
   });
 
-  if (top.loading || trend.loading) {
+  if (top.loading || trend.loading || categories.loading || query.loading) {
     return <div>Loading...</div>;
   }
 
-  if (top.error || trend.error) {
+  if (top.error || trend.error || categories.loading || query.loading) {
     return (
       <div className="container">
         <div className="flex justify-center h-full items-center flex-col space-y-4">
@@ -159,8 +159,9 @@ export default function Home() {
           isOpen={isPopoverOpen}
           positions={"bottom"}
           padding={10}
+          onClickOutside={() => setIsPopoverOpen(false)}
           content={
-            <div className="w-full bg-white">
+            <div className="w-full bg-white ">
               <Input
                 type="search"
                 placeholder="Rechercher un token"
@@ -168,7 +169,25 @@ export default function Home() {
                 value={searchText}
               />
               {filterSearch.map((data) => {
-                return <li key={data.name}>{data.name}</li>;
+                if (data.market_cap_rank == null) {
+                  return;
+                }
+                return (
+                  <Link
+                    to={`/${data.id}`}
+                    className="hover:bg-gray-200 flex p-3"
+                    key={data.id}
+                  >
+                    <span className="mr-2">{data.market_cap_rank}.</span>
+                    <img
+                      width={25}
+                      alt={data.name}
+                      src={data.thumb}
+                      style={{ marginRight: "5px" }}
+                    />
+                    <span>{data.name}</span>
+                  </Link>
+                );
               })}
             </div>
           }
