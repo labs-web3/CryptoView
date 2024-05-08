@@ -14,10 +14,12 @@ import { Button } from "@/components/ui/button";
 import Categories from "@/components/Categories";
 import CoinsList from "@/components/CoinsList";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export default function Home() {
   const { pageNumber = 1 } = useParams();
   const navigate = useNavigate();
+  const [searchText, setSearchText] = useState([]);
 
   const setPage = (num) => navigate(`/page/${num}`);
 
@@ -54,6 +56,18 @@ export default function Home() {
       </svg>
     );
   };
+
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const filterSearch = top.data.filter((elem) => {
+    if (searchText === "") {
+      return true;
+    } else {
+      return elem.name.toLowerCase().includes(searchText.toLowerCase());
+    }
+  });
 
   if (top.loading || trend.loading) {
     return <div>Loading...</div>;
@@ -133,7 +147,12 @@ export default function Home() {
         >
           Catégories
         </Button>
-        <Input type="search" placeholder="Rechercher un token" />
+        <Input
+          type="search"
+          placeholder="Rechercher un token"
+          onChange={handleSearch}
+          value={searchText}
+        />
       </div>
       {location.pathname === "/categories" ? (
         <>
@@ -170,7 +189,7 @@ export default function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {top.data.map((post, index) => {
+              {filterSearch.map((post, index) => {
                 return <CoinsList post={post} key={index} />;
               })}
             </TableBody>
