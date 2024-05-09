@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import data from "../data/data.json";
 import BigNumber from "bignumber.js";
-import LineChart from "@/components/LineChart";
+// import LineChart from "@/components/LineChart";
 import { Input } from "@/components/ui/input";
 
 export default function MyAccount() {
@@ -161,7 +161,7 @@ export default function MyAccount() {
   const fetchTokenList = async () => {
     try {
       const response = await fetch(
-        "https://wispy-bird-88a7.uniswap.workers.dev/?url=http://tokens.1inch.eth.link"
+        "https://tokens.coingecko.com/uniswap/all.json"
       );
       const tokenListData = await response.json();
       const filteredToken = tokenListData.tokens.filter(
@@ -427,7 +427,7 @@ export default function MyAccount() {
                       ) : (
                         filterSearchFirst.map((token, index) => {
                           return (
-                            <li key={index}>
+                            <li key={index} height={20} width={20}>
                               <div
                                 className="flex cursor-pointer hover:bg-slate-300 p-3 hover:rounded-lg"
                                 onClick={() => {

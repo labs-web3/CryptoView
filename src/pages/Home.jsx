@@ -22,7 +22,7 @@ import { SkeletonCard } from "@/components/SkeletonCard";
 export default function Home() {
   const { pageNumber = 1 } = useParams();
   const navigate = useNavigate();
-  const [searchText, setSearchText] = useState([]);
+  const [searchText, setSearchText] = useState();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const setPage = (num) => navigate(`/page/${num}`);
@@ -77,6 +77,10 @@ export default function Home() {
       return elem.name.toLowerCase().includes(searchText);
     }
   });
+
+  // const handleHoverStats = () => {
+  //   return <div className="col-span-1">123</div>;
+  // };
 
   // if (top.loading || trend.loading || categories.loading || query.loading) {
   //   return <div>Loading...</div>;
@@ -168,49 +172,62 @@ export default function Home() {
           transform={{ top: -50, left: -140 }}
           transformMode="relative"
           content={
-            <div className="min-w-[1200px] container rounded bg-gray-300">
+            <div className="md:min-w-[1200px] container rounded bg-gray-300">
               <Input
                 type="search"
                 placeholder="Rechercher un token"
                 onChange={handleSearch}
                 value={searchText}
               />
-              {trend.data.coins?.map((coin) => {
-                return (
-                  <>
-                    <Link key={coin.item.id} to={`/${coin.item.id}`}>
-                      <div className="flex items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
-                        <img
-                          src={coin.item.small}
-                          alt={coin.item.name}
-                          width={25}
-                        />
-                        <span>{coin.item.name}</span>
-                        <span>{coin.item.data.price.toFixed(4)} $</span>
-                        <span
-                          className={`flex items-center ${
-                            coin.item.data.price_change_percentage_24h.usd
-                              .toString()
-                              .startsWith("-")
-                              ? "text-red-500"
-                              : "text-green-500"
-                          }`}
-                        >
-                          {arrowUpOrDown(
-                            coin.item.data.price_change_percentage_24h.usd.toFixed(
+              {searchText ? (
+                ""
+              ) : (
+                <div className="grid grid-cols-2">
+                  <div className="col-span-1">
+                    {/* Ici nous mappons tous les coins à part */}
+                    {trend.data.coins?.map((coin) => (
+                      <Link
+                        key={coin.item.id}
+                        to={`/${coin.item.id}`}
+                        className="block hover:bg-slate-600 p-3 rounded-xl"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <img
+                            src={coin.item.small}
+                            alt={coin.item.name}
+                            width={25}
+                          />
+                          <span>{coin.item.name}</span>
+                          <span>{coin.item.symbol}</span>
+                          <span>{coin.item.data.price.toFixed(4)} $</span>
+                          <span
+                            className={`flex items-center ${
+                              coin.item.data.price_change_percentage_24h.usd
+                                .toString()
+                                .startsWith("-")
+                                ? "text-red-500"
+                                : "text-green-500"
+                            }`}
+                          >
+                            {arrowUpOrDown(
+                              coin.item.data.price_change_percentage_24h.usd.toFixed(
+                                1
+                              )
+                            )}
+                            {coin.item.data.price_change_percentage_24h.usd.toFixed(
                               1
-                            )
-                          )}
-                          {coin.item.data.price_change_percentage_24h.usd.toFixed(
-                            1
-                          )}
-                          %
-                        </span>
-                      </div>
-                    </Link>
-                  </>
-                );
-              })}
+                            )}
+                            %
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="col-span-1">
+                    <div>dadad</div>
+                  </div>
+                </div>
+              )}
               {filterSearch?.map((data) => {
                 if (data.market_cap_rank == null) {
                   return;
