@@ -175,6 +175,42 @@ export default function Home() {
                 onChange={handleSearch}
                 value={searchText}
               />
+              {trend.data.coins?.map((coin) => {
+                return (
+                  <>
+                    <Link key={coin.item.id} to={`/${coin.item.id}`}>
+                      <div className="flex items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
+                        <img
+                          src={coin.item.small}
+                          alt={coin.item.name}
+                          width={25}
+                        />
+                        <span>{coin.item.name}</span>
+                        <span>{coin.item.data.price.toFixed(4)} $</span>
+                        <span
+                          className={`flex items-center ${
+                            coin.item.data.price_change_percentage_24h.usd
+                              .toString()
+                              .startsWith("-")
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {arrowUpOrDown(
+                            coin.item.data.price_change_percentage_24h.usd.toFixed(
+                              1
+                            )
+                          )}
+                          {coin.item.data.price_change_percentage_24h.usd.toFixed(
+                            1
+                          )}
+                          %
+                        </span>
+                      </div>
+                    </Link>
+                  </>
+                );
+              })}
               {filterSearch?.map((data) => {
                 if (data.market_cap_rank == null) {
                   return;
