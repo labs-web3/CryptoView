@@ -24,6 +24,15 @@ export default function Home() {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [valueHover, setValueHover] = useState({
+    symbol: "",
+    rank: "",
+    price: "",
+    percent: "",
+    marketCap: "",
+    volume: "",
+    sparkline: "",
+  });
 
   const setPage = (num) => navigate(`/page/${num}`);
 
@@ -78,9 +87,24 @@ export default function Home() {
     }
   });
 
-  // const handleHoverStats = () => {
-  //   return <div className="col-span-1">123</div>;
-  // };
+  const handleHoverStats = async (e) => {
+    const targetId = e.target.id;
+    const valueId = trend.data.coins.filter(
+      (filter) => filter.item.id === targetId
+    );
+    console.log(valueId);
+    await valueId.map((item) => {
+      return setValueHover({
+        symbol: item.item.symbol,
+        rank: item.item.market_cap_rank,
+        price: item.item.data.price,
+        percent: item.item.data.price_change_percentage_24h.usd,
+        marketCap: item.item.data.market_cap,
+        volume: item.item.data.total_volume,
+        sparkline: item.item.data.sparkline,
+      });
+    });
+  };
 
   // if (top.loading || trend.loading || categories.loading || query.loading) {
   //   return <div>Loading...</div>;
@@ -101,7 +125,7 @@ export default function Home() {
       </div>
     );
   }
-
+  console.log(valueHover.id);
   return (
     <div className="container">
       <div className="flex my-5">
@@ -183,13 +207,14 @@ export default function Home() {
                 ""
               ) : (
                 <div className="grid grid-cols-2">
-                  <div className="col-span-1">
-                    {/* Ici nous mappons tous les coins à part */}
+                  <div className="col-span-1 py-3">
                     {trend.data.coins?.map((coin) => (
                       <Link
+                        id={coin.item.id}
                         key={coin.item.id}
                         to={`/${coin.item.id}`}
                         className="block hover:bg-slate-600 p-3 rounded-xl"
+                        onMouseOver={handleHoverStats}
                       >
                         <div className="flex items-center space-x-3">
                           <img
@@ -223,8 +248,34 @@ export default function Home() {
                       </Link>
                     ))}
                   </div>
-                  <div className="col-span-1">
-                    <div>dadad</div>
+                  <div className="col-span-1 py-3">
+                    <span className="font-semibold">
+                      Satistiques {valueHover.symbol}
+                    </span>
+                    <div className="flex justify-between">
+                      <span>Rang</span>
+                      <span>{valueHover.rank}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Cours</span>
+                      <span>{valueHover.price}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>24h%</span>
+                      <span>{valueHover.percent}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Capitalisation boursière</span>
+                      <span>{valueHover.marketCap}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Volume sur 24 h</span>
+                      <span>{valueHover.volume}</span>
+                    </div>
+                    <div className="flex">
+                      <span>7 derniers jours</span>
+                      <img src={valueHover.sparkline}></img>
+                    </div>
                   </div>
                 </div>
               )}
