@@ -45,7 +45,7 @@ export default function Home() {
   const query = FetchCrypto(
     `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
-  console.log(top.data);
+
   const handleCategories = () => {
     navigate("/categories");
   };
@@ -82,7 +82,7 @@ export default function Home() {
   //   return <div>Loading...</div>;
   // }
 
-  if (top.error || trend.error || categories.loading || query.loading) {
+  if (top.error || trend.error || categories.error || query.error) {
     return (
       <div className="container">
         <div className="flex justify-center h-full items-center flex-col space-y-4">
@@ -165,15 +165,17 @@ export default function Home() {
           positions={"bottom"}
           padding={10}
           onClickOutside={() => setIsPopoverOpen(false)}
+          transform={{ top: -50, left: -140 }}
+          transformMode="relative"
           content={
-            <div className="w-full bg-white ">
+            <div className="min-w-[1200px] container rounded bg-gray-300">
               <Input
                 type="search"
                 placeholder="Rechercher un token"
                 onChange={handleSearch}
                 value={searchText}
               />
-              {filterSearch.map((data) => {
+              {filterSearch?.map((data) => {
                 if (data.market_cap_rank == null) {
                   return;
                 }
