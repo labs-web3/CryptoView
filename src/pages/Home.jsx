@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -24,15 +23,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [valueHover, setValueHover] = useState({
-    symbol: "",
-    rank: "",
-    price: "",
-    percent: "",
-    marketCap: "",
-    volume: "",
-    sparkline: "",
-  });
+  const [valueHover, setValueHover] = useState({});
 
   const setPage = (num) => navigate(`/page/${num}`);
 
@@ -94,7 +85,6 @@ export default function Home() {
     const valueId = trend.data.coins.filter(
       (filter) => filter.item.id === targetId
     );
-    console.log(valueId);
     await valueId.map((item) => {
       return setValueHover({
         symbol: item.item.symbol,
@@ -127,14 +117,14 @@ export default function Home() {
       </div>
     );
   }
-  console.log(valueHover.id);
+
   return (
     <div className="container">
       <div className="flex my-5">
         {trend.loading ? (
           <SkeletonCard />
         ) : (
-          <Card>
+          <Card className="w-1/3">
             <CardHeader>
               <span className="font-bold px-3 text-xl">🔥 Tendance</span>
             </CardHeader>
@@ -151,26 +141,28 @@ export default function Home() {
                         width={25}
                       />
                       <span>{coin.item.name}</span>
-                      <span>{coin.item.data.price.toFixed(4)} $</span>
-                      <span
-                        className={`flex items-center ${
-                          coin.item.data.price_change_percentage_24h.usd
-                            .toString()
-                            .startsWith("-")
-                            ? "text-red-500"
-                            : "text-green-500"
-                        }`}
-                      >
-                        {arrowUpOrDown(
-                          coin.item.data.price_change_percentage_24h.usd.toFixed(
+                      <div className="flex flex-grow justify-end">
+                        <span>{coin.item.data.price.toFixed(4)} $</span>
+                        <span
+                          className={`flex items-center ${
+                            coin.item.data.price_change_percentage_24h.usd
+                              .toString()
+                              .startsWith("-")
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {arrowUpOrDown(
+                            coin.item.data.price_change_percentage_24h.usd.toFixed(
+                              1
+                            )
+                          )}
+                          {coin.item.data.price_change_percentage_24h.usd.toFixed(
                             1
-                          )
-                        )}
-                        {coin.item.data.price_change_percentage_24h.usd.toFixed(
-                          1
-                        )}
-                        %
-                      </span>
+                          )}
+                          %
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 );
@@ -215,18 +207,21 @@ export default function Home() {
                         id={coin.item.id}
                         key={coin.item.id}
                         to={`/${coin.item.id}`}
-                        className="block hover:bg-slate-600 p-3 rounded-xl"
+                        className="block hover:bg-gray-200 p-3 rounded-xl"
                         onMouseOver={handleHoverStats}
                       >
-                        <div className="flex items-center space-x-3 min">
+                        <div className="flex items-center space-x-2">
                           <img
                             src={coin.item.small}
                             alt={coin.item.name}
                             width={25}
                           />
-                          <span>{coin.item.name}</span>
-                          <span>{coin.item.symbol}</span>
-                          <span>{coin.item.data.price.toFixed(4)} $</span>
+                          <span className="font-semibold">
+                            {coin.item.name}
+                          </span>
+                          <span className="text-gray-500">
+                            {coin.item.symbol}
+                          </span>
                           <div className="flex justify-end flex-grow">
                             <span
                               className={`flex items-center ${
@@ -258,24 +253,44 @@ export default function Home() {
                     </span>
                     <div className="flex justify-between">
                       <span>Rang</span>
-                      <span>{valueHover.rank}</span>
+                      <span className="font-semibold">{valueHover.rank}</span>
                     </div>
+                    <hr className="border border-gray-500" />
                     <div className="flex justify-between">
                       <span>Cours</span>
-                      <span>{valueHover.price}</span>
+                      <span className="font-semibold">
+                        {valueHover.price.toFixed(6)} $US
+                      </span>
                     </div>
+                    <hr className="border border-gray-500" />
                     <div className="flex justify-between">
                       <span>24h%</span>
-                      <span>{valueHover.percent}</span>
+                      <span
+                        className={`flex items-center font-semibold ${
+                          valueHover.percent.toString().startsWith("-")
+                            ? "text-red-500"
+                            : "text-green-500"
+                        }`}
+                      >
+                        {arrowUpOrDown(valueHover.percent.toFixed(1))}
+                        {valueHover.percent.toFixed(1)}%
+                      </span>
                     </div>
+                    <hr className="border border-gray-500" />
                     <div className="flex justify-between">
                       <span>Capitalisation boursière</span>
-                      <span>{valueHover.marketCap}</span>
+                      <span className="font-semibold">
+                        {valueHover.marketCap} $US
+                      </span>
                     </div>
+                    <hr className="border border-gray-500" />
                     <div className="flex justify-between">
                       <span>Volume sur 24 h</span>
-                      <span>{valueHover.volume}</span>
+                      <span className="font-semibold">
+                        {valueHover.volume} $US
+                      </span>
                     </div>
+                    <hr className="border border-gray-500" />
                     <div className="flex flex-col space-y-5">
                       <span>7 derniers jours</span>
                       <div className="flex justify-center">
