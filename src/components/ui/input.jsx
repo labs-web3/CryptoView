@@ -24,7 +24,27 @@ const Input = React.forwardRef(
 );
 Input.displayName = "Input";
 
-export { Input };
+const InputHome = React.forwardRef(
+  ({ className, type, placeholder, ...props }, ref) => {
+    return (
+      <div className="flex items-center  rounded-lg p-3 text-sm ">
+        <Search className="size-5" />
+        <input
+          {...props}
+          type={type}
+          placeholder={placeholder}
+          ref={ref}
+          className={cn(
+            "size-full ml-2 border-none bg-transparent focus:outline-none ",
+            className
+          )}
+        />
+      </div>
+    );
+  }
+);
+
+InputHome.displayName = "InputHome";
 
 const InputForm = React.forwardRef(({ className, type, ...props }, ref) => {
   return (
@@ -41,4 +61,4 @@ const InputForm = React.forwardRef(({ className, type, ...props }, ref) => {
 });
 InputForm.displayName = "InputForm";
 
-export { InputForm };
+export { InputForm, Input, InputHome };

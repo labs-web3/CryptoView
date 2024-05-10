@@ -12,7 +12,7 @@ import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import Categories from "@/components/Categories";
 import CoinsList from "@/components/CoinsList";
-import { Input } from "@/components/ui/input";
+import { InputHome } from "@/components/ui/input";
 import { useState } from "react";
 import { Popover } from "react-tiny-popover";
 import { Search } from "lucide-react";
@@ -134,15 +134,15 @@ export default function Home() {
               {trend.data.coins.slice(0, 3).map((coin) => {
                 return (
                   <Link key={coin.item.id} to={`/${coin.item.id}`}>
-                    <div className="flex items-center space-x-3 hover:bg-slate-600 p-3 rounded-xl">
+                    <div className="flex items-center space-x-3 hover:bg-gray-500 p-3 rounded-xl font-semibold">
                       <img
                         src={coin.item.small}
                         alt={coin.item.name}
                         width={25}
                       />
                       <span>{coin.item.name}</span>
-                      <div className="flex flex-grow justify-end">
-                        <span>{coin.item.data.price.toFixed(4)} $</span>
+                      <div className="flex flex-grow justify-end font-semibold">
+                        <span>{coin.item.data.price.toFixed(4)} $US</span>
                         <span
                           className={`flex items-center ${
                             coin.item.data.price_change_percentage_24h.usd
@@ -174,7 +174,7 @@ export default function Home() {
       <div className="flex mb-3 justify-between">
         <Button
           onClick={handleCategories}
-          className={`bg-transparent text-dark hover:bg-slate-200 ${
+          className={`bg-transparent text-dark hover:bg-gray-200 ${
             location.pathname === "/categories"
               ? "bg-slate-200 cursor-auto"
               : ""
@@ -190,8 +190,8 @@ export default function Home() {
           transform={{ top: -50, left: -140 }}
           transformMode="relative"
           content={
-            <div className="md:min-w-[1200px] container rounded bg-gray-300">
-              <Input
+            <div className="md:w-[1000px] lg:w-[1000px] container rounded bg-white border px-3">
+              <InputHome
                 type="search"
                 placeholder="Rechercher un token"
                 onChange={handleSearch}
@@ -202,6 +202,12 @@ export default function Home() {
               ) : (
                 <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-1 py-3">
+                    <div className="p-3 pt-0 flex flex-grow items-center justify-between">
+                      <span className="w-full text-gray-500">
+                        Tendance Recherche 🔥
+                      </span>
+                      <hr className="border w-full" />
+                    </div>
                     {trend.data.coins?.map((coin) => (
                       <Link
                         id={coin.item.id}
@@ -255,49 +261,49 @@ export default function Home() {
                       <span>Rang</span>
                       <span className="font-semibold">{valueHover.rank}</span>
                     </div>
-                    <hr className="border border-gray-500" />
+                    <hr className="border" />
                     <div className="flex justify-between">
                       <span>Cours</span>
                       <span className="font-semibold">
-                        {valueHover.price.toFixed(6)} $US
+                        {valueHover.price?.toFixed(6)} $US
                       </span>
                     </div>
-                    <hr className="border border-gray-500" />
+                    <hr className="border" />
                     <div className="flex justify-between">
                       <span>24h%</span>
                       <span
                         className={`flex items-center font-semibold ${
-                          valueHover.percent.toString().startsWith("-")
+                          valueHover.percent?.toString().startsWith("-")
                             ? "text-red-500"
                             : "text-green-500"
                         }`}
                       >
-                        {arrowUpOrDown(valueHover.percent.toFixed(1))}
-                        {valueHover.percent.toFixed(1)}%
+                        {arrowUpOrDown(valueHover.percent?.toFixed(1))}
+                        {valueHover.percent?.toFixed(1)}%
                       </span>
                     </div>
-                    <hr className="border border-gray-500" />
+                    <hr className="border" />
                     <div className="flex justify-between">
                       <span>Capitalisation boursière</span>
                       <span className="font-semibold">
-                        {valueHover.marketCap} $US
+                        {valueHover?.marketCap} $US
                       </span>
                     </div>
-                    <hr className="border border-gray-500" />
+                    <hr className="border" />
                     <div className="flex justify-between">
                       <span>Volume sur 24 h</span>
                       <span className="font-semibold">
-                        {valueHover.volume} $US
+                        {valueHover?.volume} $US
                       </span>
                     </div>
-                    <hr className="border border-gray-500" />
+                    <hr className="border" />
                     <div className="flex flex-col space-y-5">
                       <span>7 derniers jours</span>
                       <div className="flex justify-center">
                         <img
                           loading="lazy"
                           alt="graphique sparkline"
-                          src={valueHover.sparkline}
+                          src={valueHover?.sparkline}
                           width={300}
                           height={300}
                         ></img>
@@ -306,30 +312,33 @@ export default function Home() {
                   </div>
                 </div>
               )}
-              {filterSearch?.map((data) => {
-                if (data.market_cap_rank == null) {
-                  return;
-                }
-                return (
-                  <Link
-                    to={`/${data.id}`}
-                    className="hover:bg-gray-200 flex p-3"
-                    key={data.id}
-                  >
-                    <span className="mr-2">{data.market_cap_rank}.</span>
-                    <img
-                      width={25}
-                      alt={data.name}
-                      src={data.thumb}
-                      style={{ marginRight: "5px" }}
-                    />
-                    <div className="flex space-x-2">
-                      <span>{data.name}</span>
-                      <span>{data.symbol}</span>
+              <div className="py-3 grid grid-cols-2">
+                {filterSearch?.map((data) => {
+                  if (data.market_cap_rank == null) {
+                    return;
+                  }
+                  return (
+                    <div className="col-span-1" key={data.id}>
+                      <Link
+                        to={`/${data.id}`}
+                        className="block hover:bg-gray-200 p-3 rounded-xl"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <span className="mr-2">{data.market_cap_rank}.</span>
+                          <img
+                            width={25}
+                            alt={data.name}
+                            src={data.thumb}
+                            style={{ marginRight: "5px" }}
+                          />
+                          <span className="font-semibold">{data.name}</span>
+                          <span className="text-gray-500">{data.symbol}</span>
+                        </div>
+                      </Link>
                     </div>
-                  </Link>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           }
         >
