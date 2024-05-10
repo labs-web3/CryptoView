@@ -206,7 +206,7 @@ export default function Home() {
               {searchText ? (
                 ""
               ) : (
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-1 py-3">
                     {trend.data.coins?.map((coin) => (
                       <Link
@@ -216,7 +216,7 @@ export default function Home() {
                         className="block hover:bg-slate-600 p-3 rounded-xl"
                         onMouseOver={handleHoverStats}
                       >
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-3 min">
                           <img
                             src={coin.item.small}
                             alt={coin.item.name}
@@ -225,30 +225,32 @@ export default function Home() {
                           <span>{coin.item.name}</span>
                           <span>{coin.item.symbol}</span>
                           <span>{coin.item.data.price.toFixed(4)} $</span>
-                          <span
-                            className={`flex items-center ${
-                              coin.item.data.price_change_percentage_24h.usd
-                                .toString()
-                                .startsWith("-")
-                                ? "text-red-500"
-                                : "text-green-500"
-                            }`}
-                          >
-                            {arrowUpOrDown(
-                              coin.item.data.price_change_percentage_24h.usd.toFixed(
+                          <div className="flex justify-end flex-grow">
+                            <span
+                              className={`flex items-center ${
+                                coin.item.data.price_change_percentage_24h.usd
+                                  .toString()
+                                  .startsWith("-")
+                                  ? "text-red-500"
+                                  : "text-green-500"
+                              }`}
+                            >
+                              {arrowUpOrDown(
+                                coin.item.data.price_change_percentage_24h.usd.toFixed(
+                                  1
+                                )
+                              )}
+                              {coin.item.data.price_change_percentage_24h.usd.toFixed(
                                 1
-                              )
-                            )}
-                            {coin.item.data.price_change_percentage_24h.usd.toFixed(
-                              1
-                            )}
-                            %
-                          </span>
+                              )}
+                              %
+                            </span>
+                          </div>
                         </div>
                       </Link>
                     ))}
                   </div>
-                  <div className="col-span-1 py-3">
+                  <div className="col-span-1 py-3 space-y-4">
                     <span className="font-semibold">
                       Satistiques {valueHover.symbol}
                     </span>
@@ -272,9 +274,17 @@ export default function Home() {
                       <span>Volume sur 24 h</span>
                       <span>{valueHover.volume}</span>
                     </div>
-                    <div className="flex">
+                    <div className="flex flex-col space-y-5">
                       <span>7 derniers jours</span>
-                      <img src={valueHover.sparkline}></img>
+                      <div className="flex justify-center">
+                        <img
+                          loading="lazy"
+                          alt="graphique sparkline"
+                          src={valueHover.sparkline}
+                          width={300}
+                          height={300}
+                        ></img>
+                      </div>
                     </div>
                   </div>
                 </div>
