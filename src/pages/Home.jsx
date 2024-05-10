@@ -79,11 +79,13 @@ export default function Home() {
   };
 
   const filterSearch = query.data?.coins?.filter((elem) => {
-    console.log(elem);
     if (searchText === "") {
       return true;
     } else {
-      return elem.name.toLowerCase().includes(searchText);
+      return (
+        elem.name.toLowerCase().includes(searchText) ||
+        elem.symbol.toLowerCase().includes(searchText)
+      );
     }
   });
 
@@ -306,7 +308,10 @@ export default function Home() {
                       src={data.thumb}
                       style={{ marginRight: "5px" }}
                     />
-                    <span>{data.name}</span>
+                    <div className="flex space-x-2">
+                      <span>{data.name}</span>
+                      <span>{data.symbol}</span>
+                    </div>
                   </Link>
                 );
               })}
