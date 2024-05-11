@@ -50,6 +50,10 @@ export default function Home() {
     navigate("/categories");
   };
 
+  const handleCrypto = () => {
+    navigate("/");
+  };
+
   const handleRefresh = () => {
     window.location.reload();
   };
@@ -171,7 +175,15 @@ export default function Home() {
           </Card>
         )}
       </div>
-      <div className="flex mb-3 justify-between">
+      <div className="flex mb-3">
+        <Button
+          onClick={handleCrypto}
+          className={`bg-transparent text-dark hover:bg-gray-200 ${
+            location.pathname === "/" ? "bg-slate-200 cursor-auto" : ""
+          }`}
+        >
+          Crypto
+        </Button>
         <Button
           onClick={handleCategories}
           className={`bg-transparent text-dark hover:bg-gray-200 ${
@@ -182,174 +194,178 @@ export default function Home() {
         >
           Catégories
         </Button>
-        <Popover
-          isOpen={isPopoverOpen}
-          positions={"bottom"}
-          padding={10}
-          onClickOutside={() => setIsPopoverOpen(false)}
-          transform={{ top: -50, left: -140 }}
-          transformMode="relative"
-          content={
-            <div className="md:w-[1000px] lg:w-[1000px] container rounded bg-white border px-3">
-              <InputHome
-                type="search"
-                placeholder="Rechercher un token"
-                onChange={handleSearch}
-                value={searchText}
-              />
-              {searchText ? (
-                ""
-              ) : (
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="col-span-1 py-3">
-                    <div className="p-3 pt-0 flex flex-grow items-center justify-between">
-                      <span className="w-full text-gray-500">
-                        Tendance Recherche 🔥
-                      </span>
-                      <hr className="border w-full" />
-                    </div>
-                    {trend.data.coins?.map((coin) => (
-                      <Link
-                        id={coin.item.id}
-                        key={coin.item.id}
-                        to={`/${coin.item.id}`}
-                        className="block hover:bg-gray-200 p-3 rounded-xl"
-                        onMouseOver={handleHoverStats}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <img
-                            src={coin.item.small}
-                            alt={coin.item.name}
-                            width={25}
-                          />
-                          <span className="font-semibold">
-                            {coin.item.name}
-                          </span>
-                          <span className="text-gray-500">
-                            {coin.item.symbol}
-                          </span>
-                          <div className="flex justify-end flex-grow">
-                            <span
-                              className={`flex items-center ${
-                                coin.item.data.price_change_percentage_24h.usd
-                                  .toString()
-                                  .startsWith("-")
-                                  ? "text-red-500"
-                                  : "text-green-500"
-                              }`}
-                            >
-                              {arrowUpOrDown(
-                                coin.item.data.price_change_percentage_24h.usd.toFixed(
-                                  1
-                                )
-                              )}
-                              {coin.item.data.price_change_percentage_24h.usd.toFixed(
-                                1
-                              )}
-                              %
+        <div className="flex justify-end flex-grow">
+          <Popover
+            isOpen={isPopoverOpen}
+            positions={"bottom"}
+            padding={10}
+            onClickOutside={() => setIsPopoverOpen(false)}
+            transform={{ top: -50, left: -140 }}
+            transformMode="relative"
+            content={
+              <div className="md:w-[1000px] lg:w-[1000px] container rounded bg-white border px-3">
+                <InputHome
+                  type="search"
+                  placeholder="Rechercher un token"
+                  onChange={handleSearch}
+                  value={searchText}
+                />
+                {searchText ? (
+                  ""
+                ) : (
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="col-span-1 py-3">
+                      <div className="p-3 pt-0 flex flex-grow items-center justify-between">
+                        <span className="w-full text-gray-500">
+                          Tendance Recherche 🔥
+                        </span>
+                        <hr className="border w-full" />
+                      </div>
+                      {trend.data.coins?.map((coin) => (
+                        <Link
+                          id={coin.item.id}
+                          key={coin.item.id}
+                          to={`/${coin.item.id}`}
+                          className="block hover:bg-gray-200 p-3 rounded-xl"
+                          onMouseOver={handleHoverStats}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <img
+                              src={coin.item.small}
+                              alt={coin.item.name}
+                              width={25}
+                            />
+                            <span className="font-semibold">
+                              {coin.item.name}
                             </span>
+                            <span className="text-gray-500">
+                              {coin.item.symbol}
+                            </span>
+                            <div className="flex justify-end flex-grow">
+                              <span
+                                className={`flex items-center ${
+                                  coin.item.data.price_change_percentage_24h.usd
+                                    .toString()
+                                    .startsWith("-")
+                                    ? "text-red-500"
+                                    : "text-green-500"
+                                }`}
+                              >
+                                {arrowUpOrDown(
+                                  coin.item.data.price_change_percentage_24h.usd.toFixed(
+                                    1
+                                  )
+                                )}
+                                {coin.item.data.price_change_percentage_24h.usd.toFixed(
+                                  1
+                                )}
+                                %
+                              </span>
+                            </div>
                           </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="col-span-1 py-3 space-y-4">
+                      <span className="font-semibold">
+                        Satistiques {valueHover.symbol}
+                      </span>
+                      <div className="flex justify-between">
+                        <span>Rang</span>
+                        <span className="font-semibold">{valueHover.rank}</span>
+                      </div>
+                      <hr className="border" />
+                      <div className="flex justify-between">
+                        <span>Cours</span>
+                        <span className="font-semibold">
+                          {valueHover.price?.toFixed(6)} $US
+                        </span>
+                      </div>
+                      <hr className="border" />
+                      <div className="flex justify-between">
+                        <span>24h%</span>
+                        <span
+                          className={`flex items-center font-semibold ${
+                            valueHover.percent?.toString().startsWith("-")
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {arrowUpOrDown(valueHover.percent?.toFixed(1))}
+                          {valueHover.percent?.toFixed(1)}%
+                        </span>
+                      </div>
+                      <hr className="border" />
+                      <div className="flex justify-between">
+                        <span>Capitalisation boursière</span>
+                        <span className="font-semibold">
+                          {valueHover?.marketCap} $US
+                        </span>
+                      </div>
+                      <hr className="border" />
+                      <div className="flex justify-between">
+                        <span>Volume sur 24 h</span>
+                        <span className="font-semibold">
+                          {valueHover?.volume} $US
+                        </span>
+                      </div>
+                      <hr className="border" />
+                      <div className="flex flex-col space-y-5">
+                        <span>7 derniers jours</span>
+                        <div className="flex justify-center">
+                          <img
+                            loading="lazy"
+                            alt="graphique sparkline"
+                            src={valueHover?.sparkline}
+                            width={300}
+                            height={300}
+                          ></img>
                         </div>
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="col-span-1 py-3 space-y-4">
-                    <span className="font-semibold">
-                      Satistiques {valueHover.symbol}
-                    </span>
-                    <div className="flex justify-between">
-                      <span>Rang</span>
-                      <span className="font-semibold">{valueHover.rank}</span>
-                    </div>
-                    <hr className="border" />
-                    <div className="flex justify-between">
-                      <span>Cours</span>
-                      <span className="font-semibold">
-                        {valueHover.price?.toFixed(6)} $US
-                      </span>
-                    </div>
-                    <hr className="border" />
-                    <div className="flex justify-between">
-                      <span>24h%</span>
-                      <span
-                        className={`flex items-center font-semibold ${
-                          valueHover.percent?.toString().startsWith("-")
-                            ? "text-red-500"
-                            : "text-green-500"
-                        }`}
-                      >
-                        {arrowUpOrDown(valueHover.percent?.toFixed(1))}
-                        {valueHover.percent?.toFixed(1)}%
-                      </span>
-                    </div>
-                    <hr className="border" />
-                    <div className="flex justify-between">
-                      <span>Capitalisation boursière</span>
-                      <span className="font-semibold">
-                        {valueHover?.marketCap} $US
-                      </span>
-                    </div>
-                    <hr className="border" />
-                    <div className="flex justify-between">
-                      <span>Volume sur 24 h</span>
-                      <span className="font-semibold">
-                        {valueHover?.volume} $US
-                      </span>
-                    </div>
-                    <hr className="border" />
-                    <div className="flex flex-col space-y-5">
-                      <span>7 derniers jours</span>
-                      <div className="flex justify-center">
-                        <img
-                          loading="lazy"
-                          alt="graphique sparkline"
-                          src={valueHover?.sparkline}
-                          width={300}
-                          height={300}
-                        ></img>
                       </div>
                     </div>
                   </div>
+                )}
+                <div className="py-3 grid grid-cols-2">
+                  {filterSearch?.map((data) => {
+                    if (data.market_cap_rank == null) {
+                      return;
+                    }
+                    return (
+                      <div className="col-span-1" key={data.id}>
+                        <Link
+                          to={`/${data.id}`}
+                          className="block hover:bg-gray-200 p-3 rounded-xl"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <span className="mr-2">
+                              {data.market_cap_rank}.
+                            </span>
+                            <img
+                              width={25}
+                              alt={data.name}
+                              src={data.thumb}
+                              style={{ marginRight: "5px" }}
+                            />
+                            <span className="font-semibold">{data.name}</span>
+                            <span className="text-gray-500">{data.symbol}</span>
+                          </div>
+                        </Link>
+                      </div>
+                    );
+                  })}
                 </div>
-              )}
-              <div className="py-3 grid grid-cols-2">
-                {filterSearch?.map((data) => {
-                  if (data.market_cap_rank == null) {
-                    return;
-                  }
-                  return (
-                    <div className="col-span-1" key={data.id}>
-                      <Link
-                        to={`/${data.id}`}
-                        className="block hover:bg-gray-200 p-3 rounded-xl"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <span className="mr-2">{data.market_cap_rank}.</span>
-                          <img
-                            width={25}
-                            alt={data.name}
-                            src={data.thumb}
-                            style={{ marginRight: "5px" }}
-                          />
-                          <span className="font-semibold">{data.name}</span>
-                          <span className="text-gray-500">{data.symbol}</span>
-                        </div>
-                      </Link>
-                    </div>
-                  );
-                })}
               </div>
-            </div>
-          }
-        >
-          <div
-            className="bg-gray-300 rounded flex items-center px-3 w-1/4 space-x-2 hover:bg-gray-400 transition "
-            onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+            }
           >
-            <Search className="size-5" />
-            <span className="font-semibold">Rechercher</span>
-          </div>
-        </Popover>
+            <div
+              className="bg-gray-300 rounded flex items-center px-3 w-1/4 space-x-2 hover:bg-gray-400 transition "
+              onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+            >
+              <Search className="size-5" />
+              <span className="font-semibold">Rechercher</span>
+            </div>
+          </Popover>
+        </div>
       </div>
       {location.pathname === "/categories" ? (
         <>

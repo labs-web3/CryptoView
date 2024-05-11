@@ -7,7 +7,7 @@ export default function Portfolio() {
         <h1 className="font-bold text-4xl">My Portfolio</h1>
         <Button>Add a coin</Button>
       </div>
-      <div className="grid grid-cols-4 my-5 ">
+      <div className="grid grid-cols-4 my-5 gap-1">
         <Card className="col-span-1 p-4 space-y-2">
           <CardTitle className="font-bold">$1,500</CardTitle>
           <CardDescription>Current Balance</CardDescription>

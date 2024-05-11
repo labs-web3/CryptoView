@@ -28,7 +28,7 @@ export default function Detailed() {
     `https://api.coingecko.com/api/v3/coins/${id}`,
     options
   );
-  console.log(getCrypto.data.prices);
+  console.log(getCryptoId.data);
   const formattedPrices =
     getCrypto.data.prices?.map((entry) => ({
       time: new Date(entry[0]).toLocaleTimeString([], {
@@ -159,6 +159,9 @@ export default function Detailed() {
             <LineChart data={formattedPrices} />
           </div>
         </div>
+        <span
+          dangerouslySetInnerHTML={{ __html: getCryptoId.data.description.en }}
+        ></span>
       </div>
     </>
   );
