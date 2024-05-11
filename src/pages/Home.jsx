@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Popover } from "react-tiny-popover";
 import { Search } from "lucide-react";
 import { SkeletonCard } from "@/components/SkeletonCard";
+import { Label } from "@/components/ui/label";
 
 export default function Home() {
   const { pageNumber = 1 } = useParams();
@@ -204,7 +205,11 @@ export default function Home() {
             transformMode="relative"
             content={
               <div className="md:w-[1000px] lg:w-[1000px] container rounded bg-white border px-3">
+                <Label htmlFor="search" className="sr-only">
+                  search
+                </Label>
                 <InputHome
+                  id="search"
                   type="search"
                   placeholder="Rechercher un token"
                   onChange={handleSearch}
