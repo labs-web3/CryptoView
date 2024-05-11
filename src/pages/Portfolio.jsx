@@ -1,37 +1,32 @@
-import { useEffect } from "react";
-import WorkoutDetails from "@/components/WorkoutDetails";
-import WorkoutForm from "@/components/WorkoutForm";
-import useWorkouts from "@/zustand/workouts";
-
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 export default function Portfolio() {
-  // Utilisez la décomposition pour obtenir workouts et setWorkouts depuis le store
-  const { workouts, setWorkouts } = useWorkouts();
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      const response = await fetch("http://localhost:3001/api/workouts/");
-      const json = await response.json();
-
-      if (response.ok) {
-        setWorkouts(json); // Utilisez setWorkouts pour mettre à jour l'état
-      }
-    };
-
-    fetchWorkouts();
-  }, [setWorkouts]); // Ajoutez setWorkouts comme dépendance pour assurer la mise à jour si nécessaire
   return (
-    <div className="container">
-      <div className="grid grid-cols-2 gap-10 items-center h-full">
-        <div className="col-span-1">
-          {workouts &&
-            workouts.map((work) => {
-              return (
-                <WorkoutDetails key={work._id} workout={work}></WorkoutDetails>
-              );
-            })}
-        </div>
-        <div className="col-span-1">
-          <WorkoutForm />
-        </div>
+    <div className="container my-5">
+      <div className="flex justify-between">
+        <h1 className="font-bold text-4xl">My Portfolio</h1>
+        <Button>Add a coin</Button>
+      </div>
+      <div className="grid grid-cols-4 my-5 ">
+        <Card className="col-span-1 p-4 space-y-2">
+          <CardTitle className="font-bold">$1,500</CardTitle>
+          <CardDescription>Current Balance</CardDescription>
+        </Card>
+        <Card className="col-span-1 p-4 space-y-2">
+          <CardTitle className="text-red-500 font-bold">-$76 </CardTitle>
+          <CardDescription>24h Portfolio Change</CardDescription>
+        </Card>
+        <Card className="col-span-1 p-4 space-y-2">
+          <CardTitle className="font-bold text-red-500">-$150</CardTitle>
+          <CardDescription>Total Profit / Loss</CardDescription>
+        </Card>
+        <Card className="col-span-1 p-4 space-y-2">
+          <CardTitle className="font-bold">Cosmos</CardTitle>
+          <CardDescription>
+            Top Gainer (24h){" "}
+            <span className="font-bold text-red-500">-$20</span>
+          </CardDescription>
+        </Card>
       </div>
     </div>
   );

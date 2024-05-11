@@ -379,7 +379,7 @@ export default function Home() {
               <TableRow>
                 <TableHead className="font-bold">Name </TableHead>
                 <TableHead className="font-bold">Price </TableHead>
-                <TableHead className="font-bold">1 h </TableHead>
+                <TableHead className="font-bold">1 h</TableHead>
                 <TableHead className="font-bold">24 h </TableHead>
                 <TableHead className="font-bold">7 j </TableHead>
                 <TableHead className="font-bold">ATH </TableHead>

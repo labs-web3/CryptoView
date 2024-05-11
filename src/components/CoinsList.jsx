@@ -52,7 +52,10 @@ export default function CoinsList({ post }) {
             src={post.image}
             style={{ marginRight: "5px" }}
           />
-          <span>{post.name}</span>
+          <div className="space-x-3">
+            <span className="font-semibold">{post.name}</span>
+            <span className="uppercase text-gray-500">{post.symbol}</span>
+          </div>
         </TableCell>
       </Link>
       <TableCell>${post.current_price}</TableCell>
