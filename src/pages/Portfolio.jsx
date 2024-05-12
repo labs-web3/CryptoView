@@ -14,35 +14,57 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FetchCrypto from "@/hooks/FetchCrypto";
 import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 export default function Portfolio() {
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
   );
   console.log(trend);
+  const arrowUpOrDown = (value) => {
+    const direction = value?.toString().startsWith("-") ? "down" : "up";
+    return (
+      <svg fill="currentColor" className="w-5 h-5" viewBox="0 0 24 24">
+        <path
+          d={direction === "up" ? "M7 14l5-5 5 5H7z" : " M7 10l5 5 5-5H7z"}
+        />
+      </svg>
+    );
+  };
   return (
     <div className="container my-5">
       <div className="flex justify-between">
         <h1 className="font-bold text-4xl">My Portfolio</h1>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline">Share</Button>
+            <Button variant="outline">
+              <Plus className="mr-2" />
+              Add coin
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="space-y-3">
-                <span>Share link</span>
+                <span>Add coin</span>
                 <Label htmlFor="link" className="sr-only">
                   Link
                 </Label>
-                <Input id="link" />
+                <Input id="link" placeholder="Rechercher un token" />
               </DialogTitle>
               <div className="flex-1 overflow-y-auto max-h-80">
                 <DialogDescription>
-                  <span>Trending Coins</span>
+                  <span className="p-3">Trending Coins</span>
                   {trend.data.coins?.map((post) => {
                     return (
                       <Link
-                        className="block hover:bg-gray-200 p-3 rounded-xl"
+                        className="block hover:bg-gray-200 p-3 rounded-xl text-black"
                         key={post.item.id}
                       >
                         <div className="flex items-center space-x-2">
@@ -58,6 +80,27 @@ export default function Portfolio() {
                           <span className="text-gray-500">
                             {post.item.symbol}
                           </span>
+                          <div className="flex justify-end flex-grow">
+                            <span
+                              className={`flex items-center ${
+                                post.item.data.price_change_percentage_24h.usd
+                                  .toString()
+                                  .startsWith("-")
+                                  ? "text-red-500"
+                                  : "text-green-500"
+                              }`}
+                            >
+                              {arrowUpOrDown(
+                                post.item.data.price_change_percentage_24h.usd.toFixed(
+                                  1
+                                )
+                              )}
+                              {post.item.data.price_change_percentage_24h.usd.toFixed(
+                                1
+                              )}
+                              %
+                            </span>
+                          </div>
                         </div>
                       </Link>
                     );
@@ -96,6 +139,30 @@ export default function Portfolio() {
           </CardDescription>
         </Card>
       </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>#</TableHead>
+            <TableHead>Coin</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>1h</TableHead>
+            <TableHead>24h</TableHead>
+            <TableHead>7d</TableHead>
+            <TableHead>Market Cap</TableHead>
+            <TableHead>Holdings</TableHead>
+            <TableHead>PNL</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium"></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell className="text-right"></TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </div>
   );
 }
