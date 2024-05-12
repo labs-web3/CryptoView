@@ -1,7 +1,5 @@
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
-
 import {
   Dialog,
   DialogClose,
@@ -14,7 +12,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import FetchCrypto from "@/hooks/FetchCrypto";
+import { Link } from "react-router-dom";
 export default function Portfolio() {
+  const trend = FetchCrypto(
+    "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+  );
+  console.log(trend);
   return (
     <div className="container my-5">
       <div className="flex justify-between">
@@ -23,29 +27,44 @@ export default function Portfolio() {
           <DialogTrigger asChild>
             <Button variant="outline">Share</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle>Share link</DialogTitle>
-              <DialogDescription>
-                Anyone who has this link will be able to view this.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex items-center space-x-2">
-              <div className="grid flex-1 gap-2">
+              <DialogTitle className="space-y-3">
+                <span>Share link</span>
                 <Label htmlFor="link" className="sr-only">
                   Link
                 </Label>
-                <Input
-                  id="link"
-                  defaultValue="https://ui.shadcn.com/docs/installation"
-                  readOnly
-                />
+                <Input id="link" />
+              </DialogTitle>
+              <div className="flex-1 overflow-y-auto max-h-80">
+                <DialogDescription>
+                  <span>Trending Coins</span>
+                  {trend.data.coins?.map((post) => {
+                    return (
+                      <Link
+                        className="block hover:bg-gray-200 p-3 rounded-xl"
+                        key={post.item.id}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <img
+                            width={25}
+                            alt={post.item.name}
+                            src={post.item.thumb}
+                            style={{ marginRight: "5px" }}
+                          />
+                          <span className="font-semibold">
+                            {post.item.name}
+                          </span>
+                          <span className="text-gray-500">
+                            {post.item.symbol}
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </DialogDescription>
               </div>
-              <Button type="submit" size="sm" className="px-3">
-                <span className="sr-only">Copy</span>
-                <Copy className="h-4 w-4" />
-              </Button>
-            </div>
+            </DialogHeader>
             <DialogFooter className="sm:justify-start">
               <DialogClose asChild>
                 <Button type="button" variant="secondary">
