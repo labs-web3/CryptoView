@@ -24,9 +24,9 @@ import {
 } from "@/components/ui/table";
 import { useState, useEffect } from "react";
 export default function Portfolio() {
-  const [selectCoins, setSelectedCoins] = useState({ id: "the-open-network" });
+  const [selectCoins, setSelectedCoins] = useState({ id: "" });
   const [isOpen, setIsOpen] = useState();
-  const [tableCoin, setTableCoin] = useState({ id: "" });
+  const [tableCoin, setTableCoin] = useState({});
 
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
@@ -39,26 +39,36 @@ export default function Portfolio() {
     headers: { x_cg_demo_api_key: "=CG-1t8kdBZJMA1YUmpjF5nypF6R" },
   };
 
-  useEffect(() => {
-    if (selectCoins.id) {
-      const getCryptoId = FetchCrypto(
-        `https://api.coingecko.com/api/v3/coins/${selectCoins.id}`,
-        options
-      );
-      if (!getCryptoId.loading) {
-        console.log(selectCoins.id);
-        setTableCoin({ id: getCryptoId.data.id });
-      }
-    }
-  }, [selectCoins.id]);
-
   const handleSelectedCoins = (e) => {
-    // setSelectedCoins({ id: e.target.id });
+    setSelectedCoins({ id: e.target.id });
     setIsOpen(false);
   };
 
-  console.log(selectCoins);
-  console.log(tableCoin);
+  useEffect(() => {
+    const updateTableCoin = async () => {
+      try {
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/coins/${selectCoins.id}`,
+          options
+        );
+        const data = await response.json();
+        setTableCoin({
+          id: data.id,
+          rank: data.market_cap_rank,
+          img: data.image.thumb,
+          name: data.name,
+          symbol: data.symbol,
+          price: data.market_data.current_price.usd,
+          change24: data.market_data.price_change_percentage_24h,
+          change7D: data.market_data.price_change_percentage_7d,
+          cap: data.market_data.market_cap.usd,
+        });
+      } catch (error) {
+        console.error("Error fetching crypto ID:", error);
+      }
+    };
+    updateTableCoin();
+  }, [selectCoins.id]);
 
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
@@ -180,7 +190,6 @@ export default function Portfolio() {
             <TableHead>#</TableHead>
             <TableHead>Coin</TableHead>
             <TableHead>Price</TableHead>
-            <TableHead>1h</TableHead>
             <TableHead>24h</TableHead>
             <TableHead>7d</TableHead>
             <TableHead>Market Cap</TableHead>
@@ -191,9 +200,25 @@ export default function Portfolio() {
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell className="font-medium"></TableCell>
-            <TableCell>{tableCoin.id}</TableCell>
-            <TableCell className="text-right"></TableCell>
+            <TableCell>{tableCoin.rank}</TableCell>
+            <TableCell>
+              <div className="flex gap-3 items-center">
+                <img src={tableCoin.img} alt={tableCoin.name} />
+                <span>{tableCoin.name}</span>
+                <span className="uppercase text-gray-500">
+                  {tableCoin.symbol}
+                </span>
+              </div>
+            </TableCell>
+            <TableCell>{tableCoin.price} $US</TableCell>
+            <TableCell>{tableCoin.change24}</TableCell>
+            <TableCell>{tableCoin.change7D}</TableCell>
+            <TableCell>{tableCoin.cap} $US</TableCell>
+            <TableCell>x</TableCell>
+            <TableCell>x</TableCell>
+            <TableCell>
+              <Plus />
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
