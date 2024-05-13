@@ -211,8 +211,30 @@ export default function Portfolio() {
               </div>
             </TableCell>
             <TableCell>{tableCoin.price} $US</TableCell>
-            <TableCell>{tableCoin.change24}</TableCell>
-            <TableCell>{tableCoin.change7D}</TableCell>
+            <TableCell>
+              <span
+                className={`flex items-center font-semibold ${
+                  tableCoin.change24.toString().startsWith("-")
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                {arrowUpOrDown(tableCoin.change24.toFixed(1))}
+                {tableCoin.change24.toFixed(1)}%
+              </span>
+            </TableCell>
+            <TableCell>
+              <span
+                className={`flex items-center font-semibold ${
+                  tableCoin.change7D.toString().startsWith("-")
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                {arrowUpOrDown(tableCoin.change7D.toFixed(1))}
+                {tableCoin.change7D.toFixed(1)}%
+              </span>
+            </TableCell>
             <TableCell>{tableCoin.cap} $US</TableCell>
             <TableCell>x</TableCell>
             <TableCell>x</TableCell>
