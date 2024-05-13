@@ -22,10 +22,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 export default function Portfolio() {
-  const [selectCoins, setSelectedCoins] = useState({ id: "" });
+  const [selectCoins, setSelectedCoins] = useState({ id: "the-open-network" });
   const [isOpen, setIsOpen] = useState();
+  const [tableCoin, setTableCoin] = useState({ id: "" });
 
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
@@ -33,12 +34,32 @@ export default function Portfolio() {
 
   console.log(trend);
 
+  const options = {
+    method: "GET",
+    headers: { x_cg_demo_api_key: "=CG-1t8kdBZJMA1YUmpjF5nypF6R" },
+  };
+
+  useEffect(() => {
+    if (selectCoins.id) {
+      const getCryptoId = FetchCrypto(
+        `https://api.coingecko.com/api/v3/coins/${selectCoins.id}`,
+        options
+      );
+      if (!getCryptoId.loading) {
+        console.log(selectCoins.id);
+        setTableCoin({ id: getCryptoId.data.id });
+      }
+    }
+  }, [selectCoins.id]);
+
   const handleSelectedCoins = (e) => {
-    console.log(e);
-    setSelectedCoins({ id: e.target.id });
+    // setSelectedCoins({ id: e.target.id });
     setIsOpen(false);
   };
+
   console.log(selectCoins);
+  console.log(tableCoin);
+
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
     return (
@@ -171,8 +192,7 @@ export default function Portfolio() {
         <TableBody>
           <TableRow>
             <TableCell className="font-medium"></TableCell>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
+            <TableCell>{tableCoin.id}</TableCell>
             <TableCell className="text-right"></TableCell>
           </TableRow>
         </TableBody>
