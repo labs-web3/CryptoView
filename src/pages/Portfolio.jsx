@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FetchCrypto from "@/hooks/FetchCrypto";
-import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import {
   Table,
@@ -23,11 +22,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useState } from "react";
 export default function Portfolio() {
+  const [selectCoins, setSelectedCoins] = useState({ id: "" });
+  const [isOpen, setIsOpen] = useState();
+
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
   );
+
   console.log(trend);
+
+  const handleSelectedCoins = (e) => {
+    console.log(e);
+    setSelectedCoins({ id: e.target.id });
+    setIsOpen(false);
+  };
+  console.log(selectCoins);
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
     return (
@@ -42,7 +53,7 @@ export default function Portfolio() {
     <div className="container my-5">
       <div className="flex justify-between">
         <h1 className="font-bold text-4xl">My Portfolio</h1>
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button variant="outline">
               <Plus className="mr-2" />
@@ -63,46 +74,49 @@ export default function Portfolio() {
                   <span className="p-3">Trending Coins</span>
                   {trend.data.coins?.map((post) => {
                     return (
-                      <Link
-                        className="block hover:bg-gray-200 p-3 rounded-xl text-black"
-                        key={post.item.id}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <img
-                            width={25}
-                            alt={post.item.name}
-                            src={post.item.thumb}
-                            style={{ marginRight: "5px" }}
-                          />
-                          <span className="font-semibold">
-                            {post.item.name}
-                          </span>
-                          <span className="text-gray-500">
-                            {post.item.symbol}
-                          </span>
-                          <div className="flex justify-end flex-grow">
-                            <span
-                              className={`flex items-center ${
-                                post.item.data.price_change_percentage_24h.usd
-                                  .toString()
-                                  .startsWith("-")
-                                  ? "text-red-500"
-                                  : "text-green-500"
-                              }`}
-                            >
-                              {arrowUpOrDown(
-                                post.item.data.price_change_percentage_24h.usd.toFixed(
-                                  1
-                                )
-                              )}
-                              {post.item.data.price_change_percentage_24h.usd.toFixed(
-                                1
-                              )}
-                              %
+                      <ul key={post.item.id}>
+                        <li
+                          id={post.item.id}
+                          className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
+                          onClick={(e) => handleSelectedCoins(e)}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <img
+                              width={25}
+                              alt={post.item.name}
+                              src={post.item.thumb}
+                              style={{ marginRight: "5px" }}
+                            />
+                            <span className="font-semibold">
+                              {post.item.name}
                             </span>
+                            <span className="text-gray-500">
+                              {post.item.symbol}
+                            </span>
+                            <div className="flex justify-end flex-grow">
+                              <span
+                                className={`flex items-center ${
+                                  post.item.data.price_change_percentage_24h.usd
+                                    .toString()
+                                    .startsWith("-")
+                                    ? "text-red-500"
+                                    : "text-green-500"
+                                }`}
+                              >
+                                {arrowUpOrDown(
+                                  post.item.data.price_change_percentage_24h.usd.toFixed(
+                                    1
+                                  )
+                                )}
+                                {post.item.data.price_change_percentage_24h.usd.toFixed(
+                                  1
+                                )}
+                                %
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
+                        </li>
+                      </ul>
                     );
                   })}
                 </DialogDescription>
