@@ -148,7 +148,29 @@ export default function Portfolio() {
                 {searchText ? "" : <span className="p-3">Trending Coins</span>}
                 <ul>
                   {searchText
-                    ? ""
+                    ? filterSearch?.map((post) => {
+                        return (
+                          <li
+                            id={post.id}
+                            key={post.id}
+                            className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
+                            onClick={(e) => handleSelectedCoins(e)}
+                          >
+                            <div className="flex items-center space-x-2">
+                              <img
+                                width={25}
+                                alt={post.name}
+                                src={post.thumb}
+                                style={{ marginRight: "5px" }}
+                              />
+                              <span className="font-semibold">{post.name}</span>
+                              <span className="text-gray-500">
+                                {post.symbol}
+                              </span>
+                            </div>
+                          </li>
+                        );
+                      })
                     : trend.data.coins?.map((post) => {
                         return (
                           <li
@@ -196,27 +218,6 @@ export default function Portfolio() {
                         );
                       })}
                 </ul>
-                {filterSearch?.map((post) => {
-                  return (
-                    <li
-                      id={post.id}
-                      key={post.id}
-                      className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
-                      onClick={(e) => handleSelectedCoins(e)}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <img
-                          width={25}
-                          alt={post.name}
-                          src={post.thumb}
-                          style={{ marginRight: "5px" }}
-                        />
-                        <span className="font-semibold">{post.name}</span>
-                        <span className="text-gray-500">{post.symbol}</span>
-                      </div>
-                    </li>
-                  );
-                })}
               </div>
             </DialogHeader>
             <DialogFooter className="sm:justify-start">
