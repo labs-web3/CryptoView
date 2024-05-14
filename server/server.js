@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import process from "process";
 import workoutRoutes from "./routes/workouts.js";
 import usersRoutes from "./routes/users.js";
+import userPortfolio from "./routes/userPortfolio.js";
 import mongoose from "mongoose";
 import cors from "cors";
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 // routes
 app.use("/api/workouts/", workoutRoutes);
+app.use("/api/portfolio/", userPortfolio);
 app.use("/api/users/", usersRoutes);
 
 //connect to db et lancement du server
