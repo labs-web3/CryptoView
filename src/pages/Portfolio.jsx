@@ -42,6 +42,26 @@ export default function Portfolio() {
     `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
 
+  const createPortfolio = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/api/portfolio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(),
+      });
+      if (response.ok) {
+        console.log("Portfolio created successfully!");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const options = {
     method: "GET",
     headers: { x_cg_demo_api_key: "=CG-1t8kdBZJMA1YUmpjF5nypF6R" },
@@ -99,6 +119,7 @@ export default function Portfolio() {
                 cap: data.market_data.market_cap.usd,
               },
             ]);
+            createPortfolio();
           }
         } catch (error) {
           console.error("Error fetching crypto ID:", error);
