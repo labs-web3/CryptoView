@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -23,10 +22,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Portfolio() {
   const [selectCoins, setSelectedCoins] = useState([{ id: "" }]);
   const [isOpen, setIsOpen] = useState();
   const [tableCoin, setTableCoin] = useState([]);
+
+  const notify = () =>
+    toast.error("Coin already added !", { position: "bottom-right" });
 
   const trend = FetchCrypto(
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
@@ -57,6 +62,9 @@ export default function Portfolio() {
           // Vérifiez si l'élément à ajouter existe déjà dans tableCoin
           const isDuplicate = tableCoin.some((coin) => coin.id === data.id);
           // Si ce n'est pas un doublon, j'ajoute à tableCoin
+          if (isDuplicate) {
+            return notify();
+          }
           if (!isDuplicate) {
             setTableCoin((prevState) => [
               ...prevState,
@@ -93,6 +101,7 @@ export default function Portfolio() {
   };
   return (
     <div className="container my-5">
+      <ToastContainer />
       <div className="flex justify-between">
         <h1 className="font-bold text-4xl">My Portfolio</h1>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
