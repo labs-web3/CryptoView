@@ -40,7 +40,7 @@ export default function Portfolio() {
   };
 
   const handleSelectedCoins = async (e) => {
-    let id = await e.target.id;
+    let id = await e.currentTarget.id;
     setSelectedCoins({ id: id });
     setIsOpen(false);
   };
@@ -112,56 +112,55 @@ export default function Portfolio() {
                 <Input id="link" placeholder="Rechercher un token" />
               </DialogTitle>
               <div className="flex-1 overflow-y-auto max-h-80">
-                <DialogDescription>
-                  <span className="p-3">Trending Coins</span>
+                <span className="p-3">Trending Coins</span>
+                <ul>
                   {trend.data.coins?.map((post) => {
                     return (
-                      <ul key={post.item.id}>
-                        <li
-                          id={post.item.id}
-                          className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
-                          onClick={(e) => handleSelectedCoins(e)}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <img
-                              width={25}
-                              alt={post.item.name}
-                              src={post.item.thumb}
-                              style={{ marginRight: "5px" }}
-                            />
-                            <span className="font-semibold">
-                              {post.item.name}
-                            </span>
-                            <span className="text-gray-500">
-                              {post.item.symbol}
-                            </span>
-                            <div className="flex justify-end flex-grow">
-                              <span
-                                className={`flex items-center ${
-                                  post.item.data.price_change_percentage_24h.usd
-                                    .toString()
-                                    .startsWith("-")
-                                    ? "text-red-500"
-                                    : "text-green-500"
-                                }`}
-                              >
-                                {arrowUpOrDown(
-                                  post.item.data.price_change_percentage_24h.usd.toFixed(
-                                    1
-                                  )
-                                )}
-                                {post.item.data.price_change_percentage_24h.usd.toFixed(
+                      <li
+                        id={post.item.id}
+                        key={post.item.id}
+                        className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
+                        onClick={(e) => handleSelectedCoins(e)}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <img
+                            width={25}
+                            alt={post.item.name}
+                            src={post.item.thumb}
+                            style={{ marginRight: "5px" }}
+                          />
+                          <span className="font-semibold">
+                            {post.item.name}
+                          </span>
+                          <span className="text-gray-500">
+                            {post.item.symbol}
+                          </span>
+                          <div className="flex justify-end flex-grow">
+                            <span
+                              className={`flex items-center font-semibold ${
+                                post.item.data.price_change_percentage_24h.usd
+                                  .toString()
+                                  .startsWith("-")
+                                  ? "text-red-500"
+                                  : "text-green-500"
+                              }`}
+                            >
+                              {arrowUpOrDown(
+                                post.item.data.price_change_percentage_24h.usd.toFixed(
                                   1
-                                )}
-                                %
-                              </span>
-                            </div>
+                                )
+                              )}
+                              {post.item.data.price_change_percentage_24h.usd.toFixed(
+                                1
+                              )}
+                              %
+                            </span>
                           </div>
-                        </li>
-                      </ul>
+                        </div>
+                      </li>
                     );
                   })}
-                </DialogDescription>
+                </ul>
               </div>
             </DialogHeader>
             <DialogFooter className="sm:justify-start">
