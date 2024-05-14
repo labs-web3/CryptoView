@@ -29,6 +29,7 @@ export default function Portfolio() {
   const [selectCoins, setSelectedCoins] = useState([{ id: "" }]);
   const [isOpen, setIsOpen] = useState();
   const [tableCoin, setTableCoin] = useState([]);
+  const [searchText, setSearchText] = useState();
 
   const notify = () =>
     toast.error("Coin already added !", { position: "bottom-right" });
@@ -37,12 +38,30 @@ export default function Portfolio() {
     "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
   );
 
-  console.log(trend);
+  const query = FetchCrypto(
+    `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
+  );
 
   const options = {
     method: "GET",
     headers: { x_cg_demo_api_key: "=CG-1t8kdBZJMA1YUmpjF5nypF6R" },
   };
+
+  const handleSearch = (e) => {
+    const search = e.target.value;
+    setSearchText(search);
+  };
+
+  const filterSearch = query.data?.coins?.filter((elem) => {
+    if (searchText === "") {
+      return true;
+    } else {
+      return (
+        elem.name.toLowerCase().includes(searchText) ||
+        elem.symbol.toLowerCase().includes(searchText)
+      );
+    }
+  });
 
   const handleSelectedCoins = async (e) => {
     let id = await e.currentTarget.id;
@@ -118,58 +137,86 @@ export default function Portfolio() {
                 <Label htmlFor="link" className="sr-only">
                   Link
                 </Label>
-                <Input id="link" placeholder="Rechercher un token" />
+                <Input
+                  id="link"
+                  placeholder="Rechercher un token"
+                  onChange={handleSearch}
+                  value={searchText}
+                />
               </DialogTitle>
               <div className="flex-1 overflow-y-auto max-h-80">
-                <span className="p-3">Trending Coins</span>
+                {searchText ? "" : <span className="p-3">Trending Coins</span>}
                 <ul>
-                  {trend.data.coins?.map((post) => {
-                    return (
-                      <li
-                        id={post.item.id}
-                        key={post.item.id}
-                        className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
-                        onClick={(e) => handleSelectedCoins(e)}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <img
-                            width={25}
-                            alt={post.item.name}
-                            src={post.item.thumb}
-                            style={{ marginRight: "5px" }}
-                          />
-                          <span className="font-semibold">
-                            {post.item.name}
-                          </span>
-                          <span className="text-gray-500">
-                            {post.item.symbol}
-                          </span>
-                          <div className="flex justify-end flex-grow">
-                            <span
-                              className={`flex items-center font-semibold ${
-                                post.item.data.price_change_percentage_24h.usd
-                                  .toString()
-                                  .startsWith("-")
-                                  ? "text-red-500"
-                                  : "text-green-500"
-                              }`}
-                            >
-                              {arrowUpOrDown(
-                                post.item.data.price_change_percentage_24h.usd.toFixed(
-                                  1
-                                )
-                              )}
-                              {post.item.data.price_change_percentage_24h.usd.toFixed(
-                                1
-                              )}
-                              %
-                            </span>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
+                  {searchText
+                    ? ""
+                    : trend.data.coins?.map((post) => {
+                        return (
+                          <li
+                            id={post.item.id}
+                            key={post.item.id}
+                            className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
+                            onClick={(e) => handleSelectedCoins(e)}
+                          >
+                            <div className="flex items-center space-x-2">
+                              <img
+                                width={25}
+                                alt={post.item.name}
+                                src={post.item.thumb}
+                                style={{ marginRight: "5px" }}
+                              />
+                              <span className="font-semibold">
+                                {post.item.name}
+                              </span>
+                              <span className="text-gray-500">
+                                {post.item.symbol}
+                              </span>
+                              <div className="flex justify-end flex-grow">
+                                <span
+                                  className={`flex items-center font-semibold ${
+                                    post.item.data.price_change_percentage_24h.usd
+                                      .toString()
+                                      .startsWith("-")
+                                      ? "text-red-500"
+                                      : "text-green-500"
+                                  }`}
+                                >
+                                  {arrowUpOrDown(
+                                    post.item.data.price_change_percentage_24h.usd.toFixed(
+                                      1
+                                    )
+                                  )}
+                                  {post.item.data.price_change_percentage_24h.usd.toFixed(
+                                    1
+                                  )}
+                                  %
+                                </span>
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })}
                 </ul>
+                {filterSearch?.map((post) => {
+                  return (
+                    <li
+                      id={post.id}
+                      key={post.id}
+                      className="block hover:bg-gray-200 p-3 rounded-xl text-black cursor-pointer"
+                      onClick={(e) => handleSelectedCoins(e)}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <img
+                          width={25}
+                          alt={post.name}
+                          src={post.thumb}
+                          style={{ marginRight: "5px" }}
+                        />
+                        <span className="font-semibold">{post.name}</span>
+                        <span className="text-gray-500">{post.symbol}</span>
+                      </div>
+                    </li>
+                  );
+                })}
               </div>
             </DialogHeader>
             <DialogFooter className="sm:justify-start">
