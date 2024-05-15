@@ -1,26 +1,25 @@
 import PortfolioSchema from "../models/userPortfolioModel.js";
 import mongoose from "mongoose";
 
-// create a new line
 const createPortfolio = async (req, res) => {
   const { id } = req.body;
 
-  let emptyFields = [];
+  const user_id = req.user_id;
 
-  if (!id) {
-    emptyFields.push("id");
+  if (!user_id) {
+    return res.status(400).json({ error: "User ID is required" });
   }
 
-  if (emptyFields.length > 0) {
+  if (!id) {
     return res
       .status(400)
-      .json({ error: "Please fill in all the fields", emptyFields });
+      .json({ error: "Please provide an ID for the portfolio" });
   }
 
   try {
-    const user_id = req.user._id;
-    const workout = await PortfolioSchema.create({ id, user_id });
-    res.status(200).json(workout);
+    // Créer le portfolio avec les informations fournies
+    const portfolio = await PortfolioSchema.create({ id, user_id });
+    res.status(200).json(portfolio);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

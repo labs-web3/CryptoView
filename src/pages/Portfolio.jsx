@@ -24,12 +24,17 @@ import {
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 export default function Portfolio() {
   const [selectCoins, setSelectedCoins] = useState([{ id: "" }]);
   const [isOpen, setIsOpen] = useState();
   const [tableCoin, setTableCoin] = useState([]);
   const [searchText, setSearchText] = useState();
+
+  const { user } = useAuthContext();
+
+  console.log(user);
 
   const notify = () =>
     toast.error("Coin already added !", { position: "bottom-right" });
@@ -42,25 +47,28 @@ export default function Portfolio() {
     `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
   );
 
-  const createPortfolio = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/api/portfolio", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(),
-      });
-      if (response.ok) {
-        console.log("Portfolio created successfully!");
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
+  useEffect(() => {
+    const createPortfolio = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/api/portfolio", {
+          method: "POST",
+          headers: {
+            Authorization: user.user,
+          },
+          body: JSON.stringify({ id: selectCoins.id, user_id: user.id }),
+        });
+        if (response.ok) {
+          console.log("Portfolio created successfully!");
+        }
+        if (!response.ok) {
+          console.log("Error creating portfolio");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
+    createPortfolio();
+  }, [selectCoins.id]);
 
   const options = {
     method: "GET",
@@ -119,7 +127,6 @@ export default function Portfolio() {
                 cap: data.market_data.market_cap.usd,
               },
             ]);
-            createPortfolio();
           }
         } catch (error) {
           console.error("Error fetching crypto ID:", error);
