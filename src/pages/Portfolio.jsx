@@ -34,8 +34,6 @@ export default function Portfolio() {
 
   const { user } = useAuthContext();
 
-  console.log(user.user);
-
   const notify = () =>
     toast.error("Coin already added !", { position: "bottom-right" });
 
@@ -53,7 +51,8 @@ export default function Portfolio() {
         const response = await fetch("http://localhost:3001/api/portfolio", {
           method: "POST",
           headers: {
-            Authorization: user.user,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.user}`,
           },
           body: JSON.stringify({ id: selectCoins.id, user_id: user.id }),
         });
@@ -68,7 +67,7 @@ export default function Portfolio() {
       }
     };
     createPortfolio();
-  }, [selectCoins.id]);
+  }, [selectCoins.id, user]);
 
   const options = {
     method: "GET",
