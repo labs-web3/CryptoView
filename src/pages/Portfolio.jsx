@@ -34,7 +34,7 @@ export default function Portfolio() {
 
   const { user } = useAuthContext();
 
-  console.log(user);
+  console.log(user.user);
 
   const notify = () =>
     toast.error("Coin already added !", { position: "bottom-right" });

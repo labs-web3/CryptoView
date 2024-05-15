@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const createPortfolio = async (req, res) => {
   const { id } = req.body;
 
-  const user_id = req.user_id;
+  const user_id = req.user._id;
 
   if (!user_id) {
     return res.status(400).json({ error: "User ID is required" });
