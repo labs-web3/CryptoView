@@ -25,4 +25,10 @@ const createPortfolio = async (req, res) => {
   }
 };
 
-export { createPortfolio };
+const getUserPortfolio = async (req, res) => {
+  const workouts = await PortfolioSchema.find({}).sort({ createdAt: -1 });
+
+  res.status(200).json(workouts);
+};
+
+export { createPortfolio, getUserPortfolio };
