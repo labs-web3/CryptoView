@@ -69,6 +69,31 @@ export default function Portfolio() {
     createPortfolio();
   }, [selectCoins.id, user]);
 
+  useEffect(() => {
+    const readPortfolio = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/api/portfolio", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.user}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          console.log("Getting portfolio successfully!");
+        }
+        if (!response.ok) {
+          console.log("Error getting portfolio");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    readPortfolio();
+  }, []);
+
   const options = {
     method: "GET",
     headers: { x_cg_demo_api_key: "=CG-1t8kdBZJMA1YUmpjF5nypF6R" },

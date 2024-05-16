@@ -29,7 +29,6 @@ const getUserPortfolio = async (req, res) => {
   try {
     // 1. Identifier l'utilisateur connecté
     const userId = req.user.id;
-    console.log(userId);
 
     // 2. Utiliser l'identifiant de l'utilisateur pour filtrer les données
     const userFolio = await PortfolioSchema.find({ user_id: userId }).sort({
