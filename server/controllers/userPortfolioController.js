@@ -26,9 +26,23 @@ const createPortfolio = async (req, res) => {
 };
 
 const getUserPortfolio = async (req, res) => {
-  const workouts = await PortfolioSchema.find({}).sort({ createdAt: -1 });
+  try {
+    // 1. Identifier l'utilisateur connecté
+    const userId = req.user.id;
+    console.log(userId);
 
-  res.status(200).json(workouts);
+    // 2. Utiliser l'identifiant de l'utilisateur pour filtrer les données
+    const userFolio = await PortfolioSchema.find({ user_id: userId }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(userFolio);
+  } catch (error) {
+    res.status(500).json({
+      error:
+        "Une erreur s'est produite lors de la récupération du portfolio de l'utilisateur.",
+    });
+  }
 };
 
 export { createPortfolio, getUserPortfolio };
