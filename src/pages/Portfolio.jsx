@@ -93,9 +93,7 @@ export default function Portfolio() {
       }
     };
     readPortfolio();
-  }, []);
-
-  console.log(coinsData);
+  }, [user]);
 
   const options = {
     method: "GET",
@@ -126,42 +124,44 @@ export default function Portfolio() {
 
   useEffect(() => {
     const updateTableCoin = async () => {
-      if (selectCoins.id) {
-        try {
-          const response = await fetch(
-            `https://api.coingecko.com/api/v3/coins/${selectCoins.id}`,
-            options
-          );
-          const data = await response.json();
-          // Vérifiez si l'élément à ajouter existe déjà dans tableCoin
-          const isDuplicate = tableCoin.some((coin) => coin.id === data.id);
-          // Si ce n'est pas un doublon, j'ajoute à tableCoin
-          if (isDuplicate) {
-            return notify();
+      if (selectCoins) {
+        for (let id of coinsData) {
+          try {
+            const response = await fetch(
+              `https://api.coingecko.com/api/v3/coins/${id.id}`,
+              options
+            );
+            const data = await response.json();
+            // Vérifiez si l'élément à ajouter existe déjà dans tableCoin
+            const isDuplicate = tableCoin.some((coin) => coin.id === data.id);
+            // Si ce n'est pas un doublon, j'ajoute à tableCoin
+            if (isDuplicate) {
+              return notify();
+            }
+            if (!isDuplicate) {
+              setTableCoin((prevState) => [
+                ...prevState,
+                {
+                  id: data.id,
+                  rank: data.market_cap_rank,
+                  img: data.image.thumb,
+                  name: data.name,
+                  symbol: data.symbol,
+                  price: data.market_data.current_price.usd,
+                  change24: data.market_data.price_change_percentage_24h,
+                  change7D: data.market_data.price_change_percentage_7d,
+                  cap: data.market_data.market_cap.usd,
+                },
+              ]);
+            }
+          } catch (error) {
+            console.error("Error fetching crypto ID:", error);
           }
-          if (!isDuplicate) {
-            setTableCoin((prevState) => [
-              ...prevState,
-              {
-                id: data.id,
-                rank: data.market_cap_rank,
-                img: data.image.thumb,
-                name: data.name,
-                symbol: data.symbol,
-                price: data.market_data.current_price.usd,
-                change24: data.market_data.price_change_percentage_24h,
-                change7D: data.market_data.price_change_percentage_7d,
-                cap: data.market_data.market_cap.usd,
-              },
-            ]);
-          }
-        } catch (error) {
-          console.error("Error fetching crypto ID:", error);
         }
       }
     };
     updateTableCoin();
-  }, [selectCoins.id]);
+  }, [selectCoins, coinsData]);
 
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
