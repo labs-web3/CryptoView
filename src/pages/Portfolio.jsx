@@ -31,6 +31,7 @@ export default function Portfolio() {
   const [isOpen, setIsOpen] = useState();
   const [tableCoin, setTableCoin] = useState([]);
   const [searchText, setSearchText] = useState();
+  const [coinsData, setCoinsData] = useState([]);
 
   const { user } = useAuthContext();
 
@@ -81,8 +82,8 @@ export default function Portfolio() {
         });
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
-          console.log("Getting portfolio successfully!");
+          const mappedData = data.map((id) => ({ id: id.id }));
+          setCoinsData(mappedData);
         }
         if (!response.ok) {
           console.log("Error getting portfolio");
@@ -93,6 +94,8 @@ export default function Portfolio() {
     };
     readPortfolio();
   }, []);
+
+  console.log(coinsData);
 
   const options = {
     method: "GET",
