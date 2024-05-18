@@ -29,6 +29,7 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 export default function Portfolio() {
   const [selectCoins, setSelectedCoins] = useState([{ id: "" }]);
   const [isOpen, setIsOpen] = useState();
+  const [isOpenForm, setIsOpenForm] = useState();
   const [tableCoin, setTableCoin] = useState([]);
   const [searchText, setSearchText] = useState();
   const [coinsData, setCoinsData] = useState([]);
@@ -148,7 +149,7 @@ export default function Portfolio() {
           );
 
           if (validResults.length > newCoins.length) {
-            return;
+            return notify();
           }
 
           // Mettre à jour l'état avec les nouvelles données
@@ -376,7 +377,43 @@ export default function Portfolio() {
                   <TableCell>x</TableCell>
                   <TableCell>x</TableCell>
                   <TableCell>
-                    <Plus />
+                    <Dialog open={isOpenForm} onOpenChange={setIsOpenForm}>
+                      <DialogTrigger asChild>
+                        <button>
+                          <Plus />
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Edit profile</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                              Name
+                            </Label>
+                            <Input
+                              id="name"
+                              defaultValue="Pedro Duarte"
+                              className="col-span-3"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Username
+                            </Label>
+                            <Input
+                              id="username"
+                              defaultValue="@peduarte"
+                              className="col-span-3"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Save changes</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </TableCell>
                 </TableRow>
               </>
