@@ -125,41 +125,53 @@ export default function Portfolio() {
   useEffect(() => {
     const updateTableCoin = async () => {
       if (selectCoins) {
-        for (let id of coinsData) {
-          try {
-            const response = await fetch(
-              `https://api.coingecko.com/api/v3/coins/${id.id}`,
-              options
-            );
-            const data = await response.json();
-            // Vérifiez si l'élément à ajouter existe déjà dans tableCoin
-            const isDuplicate = tableCoin.some((coin) => coin.id === data.id);
-            // Si ce n'est pas un doublon, j'ajoute à tableCoin
-            if (isDuplicate) {
-              return notify();
-            }
-            if (!isDuplicate) {
-              setTableCoin((prevState) => [
-                ...prevState,
-                {
-                  id: data.id,
-                  rank: data.market_cap_rank,
-                  img: data.image.thumb,
-                  name: data.name,
-                  symbol: data.symbol,
-                  price: data.market_data.current_price.usd,
-                  change24: data.market_data.price_change_percentage_24h,
-                  change7D: data.market_data.price_change_percentage_7d,
-                  cap: data.market_data.market_cap.usd,
-                },
-              ]);
-            }
-          } catch (error) {
-            console.error("Error fetching crypto ID:", error);
+        try {
+          // Créer un tableau de promesses pour chaque requête fetch
+          const fetchPromises = coinsData.map((id) =>
+            fetch(`https://api.coingecko.com/api/v3/coins/${id.id}`, options)
+              .then((response) => response.json())
+              .catch((error) => {
+                console.error("Error fetching crypto ID:", error);
+                return null; // Retourner null en cas d'erreur pour le gérer plus tard
+              })
+          );
+
+          // Attendre que toutes les requêtes soient terminées
+          const results = await Promise.all(fetchPromises);
+
+          // Filtrer les résultats pour exclure les erreurs (nulls)
+          const validResults = results.filter((data) => data !== null);
+
+          // Filtrer les nouveaux éléments qui ne sont pas des doublons
+          const newCoins = validResults.filter(
+            (data) => !tableCoin.some((coin) => coin.id === data.id)
+          );
+
+          if (newCoins.length > validResults.length) {
+            return;
           }
+
+          // Mettre à jour l'état avec les nouvelles données
+          setTableCoin((prevState) => [
+            ...prevState,
+            ...newCoins.map((data) => ({
+              id: data.id,
+              rank: data.market_cap_rank,
+              img: data.image.thumb,
+              name: data.name,
+              symbol: data.symbol,
+              price: data.market_data.current_price.usd,
+              change24: data.market_data.price_change_percentage_24h,
+              change7D: data.market_data.price_change_percentage_7d,
+              cap: data.market_data.market_cap.usd,
+            })),
+          ]);
+        } catch (error) {
+          console.error("Error updating table coin:", error);
         }
       }
     };
+
     updateTableCoin();
   }, [selectCoins, coinsData]);
 
