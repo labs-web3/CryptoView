@@ -147,7 +147,7 @@ export default function Portfolio() {
             (data) => !tableCoin.some((coin) => coin.id === data.id)
           );
 
-          if (newCoins.length > validResults.length) {
+          if (validResults.length > newCoins.length) {
             return;
           }
 
