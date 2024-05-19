@@ -56,50 +56,54 @@ export default function Portfolio() {
 
   useEffect(() => {
     const createPortfolio = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/api/portfolio", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.user}`,
-          },
-          body: JSON.stringify({
-            id: selectCoins.id,
-            user_id: user.id,
-          }),
-        });
-        if (response.ok) {
-          console.log("Portfolio created successfully!");
+      if (selectCoins.id && user) {
+        try {
+          const response = await fetch("http://localhost:3001/api/portfolio", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.user}`,
+            },
+            body: JSON.stringify({
+              id: selectCoins.id,
+              user_id: user.id,
+            }),
+          });
+          if (response.ok) {
+            console.log("Portfolio created successfully!");
+          }
+          if (!response.ok) {
+            console.log("Error creating portfolio");
+          }
+        } catch (error) {
+          console.log(error);
         }
-        if (!response.ok) {
-          console.log("Error creating portfolio");
-        }
-      } catch (error) {
-        console.log(error);
       }
     };
     createPortfolio();
-  }, [selectCoins.id]);
+  }, [selectCoins.id, user]);
 
   useEffect(() => {
     const readPortfolio = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/api/portfolio", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.user}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setCoinsData(data);
+      if (user) {
+        try {
+          const response = await fetch("http://localhost:3001/api/portfolio", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.user}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setCoinsData(data);
+          }
+          if (!response.ok) {
+            console.log("Error getting portfolio");
+          }
+        } catch (error) {
+          console.log(error);
         }
-        if (!response.ok) {
-          console.log("Error getting portfolio");
-        }
-      } catch (error) {
-        console.log(error);
       }
     };
     readPortfolio();
@@ -181,7 +185,7 @@ export default function Portfolio() {
     };
 
     updateTableCoin();
-  }, [selectCoins, user]);
+  }, [selectCoins.id, user, coinsData]);
 
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
@@ -449,7 +453,7 @@ export default function Portfolio() {
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="date" className="text-right">
-                              Total dépensé
+                              Date
                             </Label>
                             <InputForm
                               type="date"
