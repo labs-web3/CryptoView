@@ -69,7 +69,7 @@ export default function Portfolio() {
       }
     };
     createPortfolio();
-  }, [selectCoins.id, user]);
+  }, [selectCoins.id]);
 
   useEffect(() => {
     const readPortfolio = async () => {
@@ -83,8 +83,7 @@ export default function Portfolio() {
         });
         if (response.ok) {
           const data = await response.json();
-          const mappedData = data.map((id) => ({ id: id.id }));
-          setCoinsData(mappedData);
+          setCoinsData(data);
         }
         if (!response.ok) {
           console.log("Error getting portfolio");
@@ -125,56 +124,54 @@ export default function Portfolio() {
 
   useEffect(() => {
     const updateTableCoin = async () => {
-      if (selectCoins) {
-        try {
-          // Créer un tableau de promesses pour chaque requête fetch
-          const fetchPromises = coinsData.map((id) =>
-            fetch(`https://api.coingecko.com/api/v3/coins/${id.id}`, options)
-              .then((response) => response.json())
-              .catch((error) => {
-                console.error("Error fetching crypto ID:", error);
-                return null; // Retourner null en cas d'erreur pour le gérer plus tard
-              })
-          );
+      try {
+        // Créer un tableau de promesses pour chaque requête fetch
+        const fetchPromises = coinsData.map((id) =>
+          fetch(`https://api.coingecko.com/api/v3/coins/${id.id}`, options)
+            .then((response) => response.json())
+            .catch((error) => {
+              console.error("Error fetching crypto ID:", error);
+              return null; // Retourner null en cas d'erreur pour le gérer plus tard
+            })
+        );
 
-          // Attendre que toutes les requêtes soient terminées
-          const results = await Promise.all(fetchPromises);
+        // Attendre que toutes les requêtes soient terminées
+        const results = await Promise.all(fetchPromises);
 
-          // Filtrer les résultats pour exclure les erreurs (nulls)
-          const validResults = results.filter((data) => data !== null);
+        // Filtrer les résultats pour exclure les erreurs (nulls)
+        const validResults = results.filter((data) => data !== null);
 
-          // Filtrer les nouveaux éléments qui ne sont pas des doublons
-          const newCoins = validResults.filter(
-            (data) => !tableCoin.some((coin) => coin.id === data.id)
-          );
+        // Filtrer les nouveaux éléments qui ne sont pas des doublons
+        const newCoins = validResults.filter(
+          (data) => !tableCoin.some((coin) => coin.id === data.id)
+        );
 
-          if (validResults.length > newCoins.length) {
-            return notify();
-          }
-
-          // Mettre à jour l'état avec les nouvelles données
-          setTableCoin((prevState) => [
-            ...prevState,
-            ...newCoins.map((data) => ({
-              id: data.id,
-              rank: data.market_cap_rank,
-              img: data.image.thumb,
-              name: data.name,
-              symbol: data.symbol,
-              price: data.market_data.current_price.usd,
-              change24: data.market_data.price_change_percentage_24h,
-              change7D: data.market_data.price_change_percentage_7d,
-              cap: data.market_data.market_cap.usd,
-            })),
-          ]);
-        } catch (error) {
-          console.error("Error updating table coin:", error);
+        if (validResults.length > newCoins.length) {
+          return notify();
         }
+
+        // Mettre à jour l'état avec les nouvelles données
+        setTableCoin((prevState) => [
+          ...prevState,
+          ...newCoins.map((data) => ({
+            id: data.id,
+            rank: data.market_cap_rank,
+            img: data.image.thumb,
+            name: data.name,
+            symbol: data.symbol,
+            price: data.market_data.current_price.usd,
+            change24: data.market_data.price_change_percentage_24h,
+            change7D: data.market_data.price_change_percentage_7d,
+            cap: data.market_data.market_cap.usd,
+          })),
+        ]);
+      } catch (error) {
+        console.error("Error updating table coin:", error);
       }
     };
 
     updateTableCoin();
-  }, [selectCoins, coinsData]);
+  }, [selectCoins, user]);
 
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
