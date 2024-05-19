@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input, InputForm } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FetchCrypto from "@/hooks/FetchCrypto";
 import { Plus } from "lucide-react";
@@ -25,6 +25,13 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Portfolio() {
   const [selectCoins, setSelectedCoins] = useState([{ id: "" }]);
@@ -56,7 +63,10 @@ export default function Portfolio() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.user}`,
           },
-          body: JSON.stringify({ id: selectCoins.id, user_id: user.id }),
+          body: JSON.stringify({
+            id: selectCoins.id,
+            user_id: user.id,
+          }),
         });
         if (response.ok) {
           console.log("Portfolio created successfully!");
@@ -380,29 +390,72 @@ export default function Portfolio() {
                           <Plus />
                         </button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
+                      <DialogContent className="sm:max-w-[650px]">
                         <DialogHeader>
-                          <DialogTitle>Edit profile</DialogTitle>
+                          <DialogTitle>Ajouter une transaction</DialogTitle>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="name" className="text-right">
-                              Name
+                              Séléctionner une monnaie
                             </Label>
-                            <Input
-                              id="name"
-                              defaultValue="Pedro Duarte"
-                              className="col-span-3"
+                            <Select>
+                              <SelectTrigger className="col-span-3">
+                                <SelectValue placeholder="Coins" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {coinsData.map((data) => {
+                                  return (
+                                    <SelectItem key={data.id} value={data.id}>
+                                      {data.id}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="quantity" className="text-right">
+                              Quantité
+                            </Label>
+                            <InputForm
+                              type="number"
+                              id="quantity"
+                              defaultValue=""
+                              className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Username
+                            <Label htmlFor="price" className="text-right">
+                              Prix par monnaie
                             </Label>
-                            <Input
-                              id="username"
-                              defaultValue="@peduarte"
-                              className="col-span-3"
+                            <InputForm
+                              type="number"
+                              id="price"
+                              defaultValue=""
+                              className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="spent" className="text-right">
+                              Total dépensé
+                            </Label>
+                            <InputForm
+                              type="number"
+                              id="spent"
+                              defaultValue=""
+                              className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="date" className="text-right">
+                              Total dépensé
+                            </Label>
+                            <InputForm
+                              type="date"
+                              id="date"
+                              defaultValue=""
+                              className="col-span-3 rounded-md"
                             />
                           </div>
                         </div>
