@@ -32,6 +32,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
 
 export default function Portfolio() {
   const [selectCoins, setSelectedCoins] = useState([{ id: "" }]);
@@ -185,7 +189,39 @@ export default function Portfolio() {
     };
 
     updateTableCoin();
-  }, [selectCoins.id, user, coinsData]);
+  }, [selectCoins.id, coinsData]);
+
+  const formSchema = z.object({
+    coins: z.string({
+      message: "Select is not valid",
+    }),
+    quantity: z.number({
+      message: "Invalid number",
+    }),
+    price: z.number({
+      message: "Invalid number",
+    }),
+    spent: z.number({
+      message: "Invalid number",
+    }),
+    date: z.date(),
+  });
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      coins: "",
+      quantity: "",
+      price: "",
+      spent: "",
+      date: "",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    // await signup(data.email, data.password);
+  };
 
   const arrowUpOrDown = (value) => {
     const direction = value?.toString().startsWith("-") ? "down" : "up";
@@ -394,79 +430,94 @@ export default function Portfolio() {
                           <Plus />
                         </button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-[650px]">
-                        <DialogHeader>
-                          <DialogTitle>Ajouter une transaction</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                              Séléctionner une monnaie
-                            </Label>
-                            <Select>
-                              <SelectTrigger className="col-span-3">
-                                <SelectValue placeholder="Coins" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {coinsData.map((data) => {
-                                  return (
-                                    <SelectItem key={data.id} value={data.id}>
-                                      {data.id}
-                                    </SelectItem>
-                                  );
-                                })}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="quantity" className="text-right">
-                              Quantité
-                            </Label>
-                            <InputForm
-                              type="number"
-                              id="quantity"
-                              defaultValue=""
-                              className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="price" className="text-right">
-                              Prix par monnaie
-                            </Label>
-                            <InputForm
-                              type="number"
-                              id="price"
-                              defaultValue=""
-                              className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="spent" className="text-right">
-                              Total dépensé
-                            </Label>
-                            <InputForm
-                              type="number"
-                              id="spent"
-                              defaultValue=""
-                              className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="date" className="text-right">
-                              Date
-                            </Label>
-                            <InputForm
-                              type="date"
-                              id="date"
-                              defaultValue=""
-                              className="col-span-3 rounded-md"
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button type="submit">Save changes</Button>
-                        </DialogFooter>
-                      </DialogContent>
+                      <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                          <DialogContent className="sm:max-w-[650px]">
+                            <DialogHeader>
+                              <DialogTitle>Ajouter une transaction</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="name" className="text-right">
+                                  Séléctionner une monnaie
+                                </Label>
+                                <Select>
+                                  <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="Coins" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {coinsData.map((data) => {
+                                      return (
+                                        <SelectItem
+                                          name="coins"
+                                          key={data.id}
+                                          value={data.id}
+                                        >
+                                          {data.id}
+                                        </SelectItem>
+                                      );
+                                    })}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label
+                                  htmlFor="quantity"
+                                  className="text-right"
+                                >
+                                  Quantité
+                                </Label>
+                                <InputForm
+                                  type="number"
+                                  id="quantity"
+                                  name="quantity"
+                                  defaultValue=""
+                                  className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="price" className="text-right">
+                                  Prix par monnaie
+                                </Label>
+                                <InputForm
+                                  type="number"
+                                  id="price"
+                                  name="price"
+                                  defaultValue=""
+                                  className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="spent" className="text-right">
+                                  Total dépensé
+                                </Label>
+                                <InputForm
+                                  type="number"
+                                  id="spent"
+                                  name="spent"
+                                  defaultValue=""
+                                  className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="date" className="text-right">
+                                  Date
+                                </Label>
+                                <InputForm
+                                  type="date"
+                                  id="date"
+                                  name="date"
+                                  defaultValue=""
+                                  className="col-span-3 rounded-md"
+                                />
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button type="submit">Save changes</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </form>
+                      </Form>
                     </Dialog>
                   </TableCell>
                 </TableRow>
