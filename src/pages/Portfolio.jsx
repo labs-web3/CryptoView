@@ -211,19 +211,21 @@ export default function Portfolio() {
     spent: z.number({
       message: "Invalid number",
     }),
-    date: z.date(),
+    date: z.string(),
   });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       // coins: "",
-      quantity: "",
-      price: "",
-      spent: "",
-      date: "",
+      quantity: "0",
+      price: "0",
+      spent: "0",
+      date: "2024-11-11",
     },
   });
+
+  console.log(formSchema.safeParse(form));
 
   const onSubmit = async (data) => {
     try {
@@ -245,6 +247,7 @@ export default function Portfolio() {
       </svg>
     );
   };
+
   return (
     <div className="container my-5">
       <ToastContainer />
@@ -393,63 +396,66 @@ export default function Portfolio() {
           </TableRow>
         </TableHeader>
         <TableBody className="font-semibold">
-          {tableCoin.map((coin) => {
+          {tableCoin.map((coin, index) => {
             return (
-              <>
-                <TableRow>
-                  <TableCell>{coin.rank}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-3 items-center">
-                      <img src={coin.img} alt={coin.name} />
-                      <span>{coin.name}</span>
-                      <span className="uppercase text-gray-500">
-                        {coin.symbol}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>{coin.price} $US</TableCell>
-                  <TableCell>
-                    <span
-                      className={`flex items-center ${
-                        coin.change24?.toString().startsWith("-")
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {arrowUpOrDown(coin.change24?.toFixed(1))}
-                      {coin.change24?.toFixed(1)}%
+              <TableRow key={coin.id}>
+                <TableCell>{coin.rank}</TableCell>
+                <TableCell>
+                  <div className="flex gap-3 items-center">
+                    <img src={coin.img} alt={coin.name} />
+                    <span>{coin.name}</span>
+                    <span className="uppercase text-gray-500">
+                      {coin.symbol}
                     </span>
-                  </TableCell>
-                  <TableCell>
-                    <span
-                      className={`flex items-center ${
-                        coin.change7D?.toString().startsWith("-")
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {arrowUpOrDown(coin.change7D?.toFixed(1))}
-                      {coin.change7D?.toFixed(1)}%
-                    </span>
-                  </TableCell>
-                  <TableCell>{coin.cap} $US</TableCell>
-                  <TableCell>x</TableCell>
-                  <TableCell>x</TableCell>
-                  <TableCell>
-                    <Dialog open={isOpenForm} onOpenChange={setIsOpenForm}>
-                      <DialogTrigger asChild>
-                        <button>
-                          <Plus />
-                        </button>
-                      </DialogTrigger>
-                      <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                          <DialogContent className="sm:max-w-[650px] p-6">
-                            <DialogHeader>
-                              <DialogTitle>Ajouter une transaction</DialogTitle>
-                            </DialogHeader>
-                            <div className="grid grid-cols-3 gap-4">
-                              {/* <div className="grid grid-cols-4 items-center gap-4">
+                  </div>
+                </TableCell>
+                <TableCell>{coin.price} $US</TableCell>
+                <TableCell>
+                  <span
+                    className={`flex items-center ${
+                      coin.change24?.toString().startsWith("-")
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    {arrowUpOrDown(coin.change24?.toFixed(1))}
+                    {coin.change24?.toFixed(1)}%
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`flex items-center ${
+                      coin.change7D?.toString().startsWith("-")
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }`}
+                  >
+                    {arrowUpOrDown(coin.change7D?.toFixed(1))}
+                    {coin.change7D?.toFixed(1)}%
+                  </span>
+                </TableCell>
+                <TableCell>{coin.cap} $US</TableCell>
+                <TableCell>x</TableCell>
+                <TableCell>x</TableCell>
+                <TableCell>
+                  <Dialog
+                    open={isOpenForm}
+                    onOpenChange={() => setIsOpenForm(!isOpenForm)}
+                    key={index}
+                  >
+                    <DialogTrigger asChild>
+                      <button>
+                        <Plus />
+                      </button>
+                    </DialogTrigger>
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <DialogContent className="sm:max-w-[650px] p-6">
+                          <DialogHeader>
+                            <DialogTitle>Ajouter une transaction</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid grid-cols-3 gap-4">
+                            {/* <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="name" className="text-right">
                                   Séléctionner une monnaie
                                 </Label>
@@ -472,101 +478,96 @@ export default function Portfolio() {
                                   </SelectContent>
                                 </Select>
                               </div> */}
-                              <div className="col-span-3">
-                                <FormField
-                                  control={form.control}
-                                  name="quantity"
-                                  id="quantity"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>Quantité</FormLabel>
-                                      <FormControl>
-                                        <InputForm
-                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                          placeholder="0"
-                                          type="number"
-                                          {...field}
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                              <div className="col-span-3">
-                                <FormField
-                                  control={form.control}
-                                  name="price"
-                                  id="price"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>Prix par monnaie</FormLabel>
-                                      <FormControl>
-                                        <InputForm
-                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                          placeholder="0"
-                                          type="number"
-                                          {...field}
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                              <div className="col-span-3">
-                                <FormField
-                                  control={form.control}
-                                  name="spent"
-                                  id="spent"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>Total dépensé</FormLabel>
-                                      <FormControl>
-                                        <InputForm
-                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                          placeholder="0"
-                                          type="number"
-                                          {...field}
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                              <div className="col-span-3">
-                                <FormField
-                                  control={form.control}
-                                  name="date"
-                                  id="date"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>Date</FormLabel>
-                                      <FormControl>
-                                        <InputForm
-                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                          placeholder="0"
-                                          type="date"
-                                          {...field}
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
+                            <div className="col-span-3">
+                              <FormField
+                                control={form.control}
+                                name="quantity"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Quantité</FormLabel>
+                                    <FormControl>
+                                      <InputForm
+                                        className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        placeholder="0"
+                                        type="number"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
                             </div>
-                            <DialogFooter>
-                              <Button type="submit">Save changes</Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </form>
-                      </Form>
-                    </Dialog>
-                  </TableCell>
-                </TableRow>
-              </>
+                            <div className="col-span-3">
+                              <FormField
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Prix par monnaie</FormLabel>
+                                    <FormControl>
+                                      <InputForm
+                                        className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        placeholder="0"
+                                        type="number"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="col-span-3">
+                              <FormField
+                                control={form.control}
+                                name="spent"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Total dépensé</FormLabel>
+                                    <FormControl>
+                                      <InputForm
+                                        className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        placeholder="0"
+                                        type="number"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="col-span-3">
+                              <FormField
+                                control={form.control}
+                                name="date"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Date</FormLabel>
+                                    <FormControl>
+                                      <InputForm
+                                        className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        placeholder="0"
+                                        type="date"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit">Save changes</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </form>
+                    </Form>
+                  </Dialog>
+                </TableCell>
+              </TableRow>
             );
           })}
         </TableBody>
