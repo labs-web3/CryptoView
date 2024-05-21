@@ -35,7 +35,14 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 export default function Portfolio() {
   const [selectCoins, setSelectedCoins] = useState([{ id: "" }]);
@@ -192,9 +199,9 @@ export default function Portfolio() {
   }, [selectCoins.id, coinsData]);
 
   const formSchema = z.object({
-    coins: z.string({
-      message: "Select is not valid",
-    }),
+    // coins: z.string({
+    //   message: "Select is not valid",
+    // }),
     quantity: z.number({
       message: "Invalid number",
     }),
@@ -210,7 +217,7 @@ export default function Portfolio() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      coins: "",
+      // coins: "",
       quantity: "",
       price: "",
       spent: "",
@@ -219,7 +226,12 @@ export default function Portfolio() {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    try {
+      formSchema.parse(data);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
     // await signup(data.email, data.password);
   };
 
@@ -432,12 +444,12 @@ export default function Portfolio() {
                       </DialogTrigger>
                       <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
-                          <DialogContent className="sm:max-w-[650px]">
+                          <DialogContent className="sm:max-w-[650px] p-6">
                             <DialogHeader>
                               <DialogTitle>Ajouter une transaction</DialogTitle>
                             </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                              <div className="grid grid-cols-4 items-center gap-4">
+                            <div className="grid grid-cols-3 gap-4">
+                              {/* <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="name" className="text-right">
                                   Séléctionner une monnaie
                                 </Label>
@@ -459,56 +471,89 @@ export default function Portfolio() {
                                     })}
                                   </SelectContent>
                                 </Select>
-                              </div>
-                              <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                  htmlFor="quantity"
-                                  className="text-right"
-                                >
-                                  Quantité
-                                </Label>
-                                <InputForm
-                                  type="number"
-                                  id="quantity"
+                              </div> */}
+                              <div className="col-span-3">
+                                <FormField
+                                  control={form.control}
                                   name="quantity"
-                                  defaultValue=""
-                                  className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  id="quantity"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Quantité</FormLabel>
+                                      <FormControl>
+                                        <InputForm
+                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                          placeholder="0"
+                                          type="number"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
                                 />
                               </div>
-                              <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="price" className="text-right">
-                                  Prix par monnaie
-                                </Label>
-                                <InputForm
-                                  type="number"
-                                  id="price"
+                              <div className="col-span-3">
+                                <FormField
+                                  control={form.control}
                                   name="price"
-                                  defaultValue=""
-                                  className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  id="price"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Prix par monnaie</FormLabel>
+                                      <FormControl>
+                                        <InputForm
+                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                          placeholder="0"
+                                          type="number"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
                                 />
                               </div>
-                              <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="spent" className="text-right">
-                                  Total dépensé
-                                </Label>
-                                <InputForm
-                                  type="number"
-                                  id="spent"
+                              <div className="col-span-3">
+                                <FormField
+                                  control={form.control}
                                   name="spent"
-                                  defaultValue=""
-                                  className="col-span-3 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  id="spent"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Total dépensé</FormLabel>
+                                      <FormControl>
+                                        <InputForm
+                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                          placeholder="0"
+                                          type="number"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
                                 />
                               </div>
-                              <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="date" className="text-right">
-                                  Date
-                                </Label>
-                                <InputForm
-                                  type="date"
-                                  id="date"
+                              <div className="col-span-3">
+                                <FormField
+                                  control={form.control}
                                   name="date"
-                                  defaultValue=""
-                                  className="col-span-3 rounded-md"
+                                  id="date"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Date</FormLabel>
+                                      <FormControl>
+                                        <InputForm
+                                          className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                          placeholder="0"
+                                          type="date"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
                                 />
                               </div>
                             </div>
