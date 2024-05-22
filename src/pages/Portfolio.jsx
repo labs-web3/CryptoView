@@ -233,6 +233,7 @@ export default function Portfolio() {
   console.log(formSchema.safeParse(form.getValues()));
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       formSchema.parse(data);
       console.log(data);
@@ -268,14 +269,15 @@ export default function Portfolio() {
               Add transaction
             </Button>
           </DialogTrigger>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <DialogContent className="sm:max-w-[650px] p-6">
-                <DialogHeader>
-                  <DialogTitle>Ajouter une transaction</DialogTitle>
-                </DialogHeader>
-                <div className="grid grid-cols-3 gap-4">
-                  {/* <div className="grid grid-cols-4 items-center gap-4">
+          {isOpenForm && (
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <DialogContent className="sm:max-w-[650px] p-6">
+                  <DialogHeader>
+                    <DialogTitle>Ajouter une transaction</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid grid-cols-3 gap-4">
+                    {/* <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="name" className="text-right">
                                   Séléctionner une monnaie
                                 </Label>
@@ -298,93 +300,102 @@ export default function Portfolio() {
                                   </SelectContent>
                                 </Select>
                               </div> */}
-                  <div className="col-span-3">
-                    <FormField
-                      control={form.control}
-                      name="quantity"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Quantité</FormLabel>
-                          <FormControl>
-                            <InputForm
-                              className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                              placeholder="0"
-                              type="number"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="quantity"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quantité</FormLabel>
+                            <FormControl>
+                              <InputForm
+                                className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                placeholder="0"
+                                type="number"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Prix par monnaie</FormLabel>
+                            <FormControl>
+                              <InputForm
+                                className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                placeholder="0"
+                                type="number"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="spent"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Total dépensé</FormLabel>
+                            <FormControl>
+                              <InputForm
+                                className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                placeholder="0"
+                                type="number"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Date</FormLabel>
+                            <FormControl>
+                              <InputForm
+                                className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                placeholder="0"
+                                type="date"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                  <div className="col-span-3">
-                    <FormField
-                      control={form.control}
-                      name="price"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Prix par monnaie</FormLabel>
-                          <FormControl>
-                            <InputForm
-                              className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                              placeholder="0"
-                              type="number"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="col-span-3">
-                    <FormField
-                      control={form.control}
-                      name="spent"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Total dépensé</FormLabel>
-                          <FormControl>
-                            <InputForm
-                              className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                              placeholder="0"
-                              type="number"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="col-span-3">
-                    <FormField
-                      control={form.control}
-                      name="date"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date</FormLabel>
-                          <FormControl>
-                            <InputForm
-                              className="rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                              placeholder="0"
-                              type="date"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="submit">Save changes</Button>
-                </DialogFooter>
-              </DialogContent>
-            </form>
-          </Form>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      onClick={async () => {
+                        await onSubmit();
+                        setIsOpenForm(!isOpenForm);
+                      }}
+                    >
+                      Save changes
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </form>
+            </Form>
+          )}
         </Dialog>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
