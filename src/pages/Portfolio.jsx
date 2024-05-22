@@ -271,7 +271,7 @@ export default function Portfolio() {
           </DialogTrigger>
           {isOpenForm && (
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
+              <form>
                 <DialogContent className="sm:max-w-[650px] p-6">
                   <DialogHeader>
                     <DialogTitle>Ajouter une transaction</DialogTitle>
@@ -382,13 +382,7 @@ export default function Portfolio() {
                     </div>
                   </div>
                   <DialogFooter>
-                    <Button
-                      type="submit"
-                      onClick={async () => {
-                        await onSubmit();
-                        setIsOpenForm(!isOpenForm);
-                      }}
-                    >
+                    <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
                       Save changes
                     </Button>
                   </DialogFooter>
