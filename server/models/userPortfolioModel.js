@@ -8,13 +8,14 @@ const PortfolioSchema = new Schema(
       unique: true,
     },
     user_id: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    transaction: [
+    transactions: [
       {
-        type: String,
-        unique: true,
+        type: Schema.Types.ObjectId,
+        ref: "Transactions",
       },
     ],
   },

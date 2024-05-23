@@ -17,9 +17,17 @@ const createPortfolio = async (req, res) => {
   }
 
   try {
-    // Créer le portfolio avec les informations fournies
-    const portfolio = await PortfolioSchema.create({ id, user_id });
-    res.status(200).json(portfolio);
+    let portfolio = await PortfolioSchema.findOne({ id });
+
+    if (portfolio) {
+      return res.status(200).json({ message: "Portfolio already exists" });
+    }
+
+    portfolio = await PortfolioSchema.create({
+      id,
+      user_id,
+      transactions: [],
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

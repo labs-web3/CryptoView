@@ -1,8 +1,9 @@
 import TransactionsSchema from "../models/transactionsModel.js";
+import PortfolioSchema from "../models/userPortfolioModel.js";
 import mongoose from "mongoose";
 
 const createTransaction = async (req, res) => {
-  const { id } = req.body;
+  const { id, quantity, price, spent, date } = req.body;
 
   const user_id = req.user._id;
 
@@ -11,15 +12,44 @@ const createTransaction = async (req, res) => {
   }
 
   if (!id) {
-    return res
-      .status(400)
-      .json({ error: "Please provide an ID for the portfolio" });
+    return res.status(400).json({ error: "Please provide an ID" });
+  }
+
+  if (!quantity) {
+    return res.status(400).json({ error: "Please provide a quantity" });
+  }
+
+  if (!price) {
+    return res.status(400).json({ error: "Please provide a price" });
+  }
+
+  if (!spent) {
+    return res.status(400).json({ error: "Please provide a spend" });
+  }
+
+  if (!date) {
+    return res.status(400).json({ error: "Please provide a date" });
   }
 
   try {
-    // Créer le portfolio avec les informations fournies
-    const portfolio = await TransactionsSchema.create({ id, user_id });
-    res.status(200).json(portfolio);
+    const transaction = await TransactionsSchema.create({
+      id,
+      quantity,
+      price,
+      spent,
+      date,
+      user_id,
+    });
+
+    let portfolio = await PortfolioSchema.findOne({ user_id: user_id });
+
+    if (!portfolio) {
+      res.status(404).json({
+        error: "portfolio not found",
+      });
+    }
+
+    res.status(200).json(transaction);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -27,15 +57,17 @@ const createTransaction = async (req, res) => {
 
 const getTransactions = async (req, res) => {
   try {
-    // 1. Identifier l'utilisateur connecté
     const userId = req.user.id;
 
-    // 2. Utiliser l'identifiant de l'utilisateur pour filtrer les données
-    const userFolio = await TransactionsSchema.find({ user_id: userId }).sort({
-      createdAt: -1,
-    });
+    const userFolio = await PortfolioSchema.findOne({
+      user_id: userId,
+    }).populate("transactions");
 
-    res.status(200).json(userFolio);
+    if (!userFolio) {
+      return res.status(404).json({ error: "Portfolio not found" });
+    }
+
+    res.status(200).json(userFolio.transactions);
   } catch (error) {
     res.status(500).json({
       error:
