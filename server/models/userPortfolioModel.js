@@ -11,6 +11,12 @@ const PortfolioSchema = new Schema(
       type: String,
       required: true,
     },
+    transaction: [
+      {
+        type: String,
+        unique: true,
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -78,6 +78,7 @@ export default function Portfolio() {
             body: JSON.stringify({
               id: selectCoins.id,
               user_id: user.id,
+              transaction: "",
             }),
           });
           if (response.ok) {
@@ -230,13 +231,12 @@ export default function Portfolio() {
     },
   });
 
-  console.log(formSchema.safeParse(form.getValues()));
-
   const onSubmit = async (data) => {
     console.log(data);
     try {
       formSchema.parse(data);
       console.log(data);
+      setIsOpenForm(false);
     } catch (error) {
       console.error(error);
     }
