@@ -1,13 +1,11 @@
-import { MoreVertical, ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useContext, createContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuthContext } from "@/hooks/useAuthContext";
 
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
   const [expanded, setExpanded] = useState(true);
-  const { user } = useAuthContext();
 
   return (
     <aside className="h-screen sticky top-0">
@@ -44,11 +42,7 @@ export default function Sidebar({ children }) {
               overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}
           `}
           >
-            <div className="leading-4">
-              <span className="text-sm text-gray-700 font-semibold">
-                {user.email}
-              </span>
-            </div>
+            <div className="leading-4"></div>
             {/* <MoreVertical size={20} /> */}
           </div>
         </div>
