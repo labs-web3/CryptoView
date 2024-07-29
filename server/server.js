@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 // routes
 app.use("/api/workouts/", workoutRoutes);
 app.use("/api/portfolio/", userPortfolio);
-app.use("api/transactions/", transactionsRoutes);
+app.use("/api/transactions/", transactionsRoutes);
 app.use("/api/users/", usersRoutes);
 
 //connect to db et lancement du server
@@ -40,10 +40,12 @@ mongoose
   .connect(process.env.MONG_URI)
   .then(() => {
     // listen requests
-    app.listen(process.env.PORT, () => {
-      console.log(`connected to db & listening on port ${process.env.PORT}`);
-    });
+    console.log(`connected to db`);
   })
   .catch((error) => {
-    console.log(error);
+    // console.log(error);
   });
+
+app.listen(process.env.PORT, () => {
+  console.log(`listening on port ${process.env.PORT}`);
+});

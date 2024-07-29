@@ -1,44 +1,49 @@
 import FetchCrypto from "@/hooks/FetchCrypto";
 import { useParams } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import LineChart from "@/components/LineChart";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function Detailed() {
   const [days, setDays] = useState("days=1");
   const { id } = useParams();
-  const options = {
-    method: "GET",
-    headers: { x_cg_demo_api_key: "=CG-1t8kdBZJMA1YUmpjF5nypF6R" },
-  };
+  const options = { mode: "no-cors" };
 
   const getCrypto = FetchCrypto(
-    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&${days}, ${options}`
+    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&${days}`,
+    options
   );
 
   const getCryptoId = FetchCrypto(
     `https://api.coingecko.com/api/v3/coins/${id}`,
     options
   );
-  console.log(getCryptoId.data);
-  const formattedPrices =
-    getCrypto.data.prices?.map((entry) => ({
-      time: new Date(entry[0]).toLocaleTimeString([], {
-        month: "long",
-        day: "numeric",
-      }),
-      value: entry[1],
-    })) || [];
+  // const getCrypto = useMemo(() => {
+  //   return FetchCrypto(
+  //     `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&${days}`,
+  //     options
+  //   );
+  // }, []);
 
-  const lastPrice = getCrypto.data.prices?.pop();
+  // const getCryptoId = useMemo(() => {
+  //   return FetchCrypto(`https://api.coingecko.com/api/v3/coins/${id}`, options);
+  // }, []);
+
+  const formattedPrices = useMemo(() => {
+    return (
+      getCrypto?.data?.prices?.map((entry) => ({
+        time: new Date(entry[0]).toLocaleTimeString([], {
+          month: "long",
+          day: "numeric",
+        }),
+        value: entry[1],
+      })) || []
+    );
+  }, [getCrypto]);
+
+  const lastPrice = useMemo(() => {
+    return getCrypto?.data?.prices?.pop();
+  }, [getCrypto]);
 
   const arrowUpOrDown = (value) => {
     const direction = value.toString().startsWith("-") ? "down" : "up";
@@ -86,11 +91,21 @@ export default function Detailed() {
     window.location.reload();
   };
 
-  if (getCrypto.loading || getCryptoId.loading) {
+  if (getCrypto?.loading || getCryptoId?.loading) {
     return <p>Loading...</p>;
   }
 
-  if (getCrypto.error || getCryptoId.error) {
+  if (getCrypto?.data === undefined && getCryptoId?.data === undefined) {
+    return (
+      <div className="container">
+        <div className="flex justify-center h-full items-center flex-col space-y-4">
+          <h1 className="text-red-500 text-7xl font-bold">loading</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (getCrypto?.error || getCryptoId?.error) {
     return (
       <div className="container">
         <div className="flex justify-center h-full items-center flex-col space-y-4">
@@ -112,14 +127,14 @@ export default function Detailed() {
         <div className="grid grid-cols-4 gap-4">
           <div className="col-span-1 border-r-2 space-y-3">
             <div className="flex space-x-2">
-              <img src={getCryptoId.data.image.thumb} alt="" />
-              <h1 className="text-xl font-bold">{getCryptoId.data.name}</h1>
+              <img src={getCryptoId?.data?.image?.thumb} alt="" />
+              <h1 className="text-xl font-bold">{getCryptoId?.data?.name}</h1>
               <button className="bg-gray-300 px-2 rounded cursor-auto">
-                #{getCryptoId.data.market_cap_rank}
+                #{getCryptoId?.data?.market_cap_rank}
               </button>
             </div>
             {arrowUpOrDown(
-              getCryptoId.data.market_data.price_change_percentage_24h.toFixed(
+              getCryptoId?.data?.market_data.price_change_percentage_24h.toFixed(
                 1
               )
             )}
@@ -160,7 +175,7 @@ export default function Detailed() {
           </div>
         </div>
         <span
-          dangerouslySetInnerHTML={{ __html: getCryptoId.data.description.en }}
+          dangerouslySetInnerHTML={{ __html: getCryptoId?.data.description.en }}
         ></span>
       </div>
     </>

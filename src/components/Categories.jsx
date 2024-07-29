@@ -39,12 +39,14 @@ const PriceChangeCell = ({ value }) => {
 export default function Categories({ post, index }) {
   return (
     <TableRow>
-      <Link to={`/${post.id}`}>
-        <TableCell className="flex items-center">
-          <span className="mr-2">{index + 1}.</span>
-          <span>{post.name}</span>
-        </TableCell>
-      </Link>
+      <TableCell className="flex items-center">
+        <Link to={`/${post.id}`} className="w-full">
+          <div className="w-full">
+            <span className="mr-2">{index + 1}.</span>
+            <span>{post.name}</span>
+          </div>
+        </Link>
+      </TableCell>
       <TableCell>
         <img
           width={25}

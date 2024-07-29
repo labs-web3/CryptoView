@@ -39,25 +39,23 @@ const PriceChangeCell = ({ value }) => {
 export default function CoinsList({ post }) {
   return (
     <TableRow>
-      <Link to={`/${post.id}`}>
-        <TableCell
-          className={`${
-            post.name === "Chiliz" ? "text-red-500" : ""
-          } flex items-center`}
-        >
-          <span className="mr-2">{post.market_cap_rank}.</span>
-          <img
-            width={25}
-            alt={post.name}
-            src={post.image}
-            style={{ marginRight: "5px" }}
-          />
-          <div className="space-x-3">
-            <span className="font-semibold">{post.name}</span>
-            <span className="uppercase text-gray-500">{post.symbol}</span>
+      <TableCell className={`${post.name === "Chiliz" ? "text-red-500" : ""}`}>
+        <Link to={`/${post.id}`}>
+          <div className="flex items-center">
+            <span className="mr-2">{post.market_cap_rank}.</span>
+            <img
+              width={25}
+              alt={post.name}
+              src={post.image}
+              style={{ marginRight: "5px" }}
+            />
+            <div className="space-x-3">
+              <span className="font-semibold">{post.name}</span>
+              <span className="uppercase text-gray-500">{post.symbol}</span>
+            </div>
           </div>
-        </TableCell>
-      </Link>
+        </Link>
+      </TableCell>
       <TableCell>${post.current_price}</TableCell>
       <PriceChangeCell value={post.price_change_percentage_1h_in_currency} />
       <PriceChangeCell value={post.price_change_percentage_24h_in_currency} />

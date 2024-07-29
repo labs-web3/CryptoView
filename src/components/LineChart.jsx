@@ -6,34 +6,68 @@ ChartJS.register(...registerables);
 // Création d'un plugin pour dessiner une ligne verticale
 const verticalLinePlugin = {
   id: "verticalLineOnTooltip",
-  afterDraw: (chart) => {
-    if (chart.tooltip.getActiveElements().length > 0) {
-      const ctx = chart.ctx;
-      const tooltipElement = chart.tooltip.getActiveElements()[0];
+  // We'll add the drawing logic inside the tooltip's callbacks
+  beforeTooltipDraw: (context) => {
+    const { scales, tooltip, ctx } = context;
+    if (tooltip.getActiveElements().length > 0) {
+      // const ctx = tooltip.ctx;
+      const tooltipElement = tooltip.getActiveElements()[0];
       const x = tooltipElement.element.x;
       const y = tooltipElement.element.y;
 
-      // Sauvegarder le contexte pour restaurer après modifications
+      // Save the context to restore later
       ctx.save();
 
-      // Dessiner la ligne verticale
+      // Draw the vertical line
       ctx.beginPath();
-      ctx.moveTo(x, chart.scales.y.top);
-      ctx.lineTo(x, chart.scales.y.bottom);
+      ctx.moveTo(x, scales.y.top);
+      ctx.lineTo(x, scales.y.bottom);
       ctx.lineWidth = 1;
       ctx.strokeStyle = "rgba(128,128,128)";
       ctx.stroke();
 
-      // Dessiner un cercle
+      // Draw a circle
       ctx.beginPath();
       ctx.arc(x, y, 5, 0, 2 * Math.PI);
       ctx.fillStyle = "red";
       ctx.fill();
 
-      // Restaurer le contexte
+      // Restore the context
       ctx.restore();
     }
   },
+  // afterDraw: (chart) => {
+  //   if (
+  //     chart.isDatasetVisible &&
+  //     chart.tooltip.getActiveElements().length > 0
+  //   ) {
+  //     // if (chart.tooltip.getActiveElements().length > 0) {
+  //     const ctx = chart.ctx;
+  //     const tooltipElement = chart.tooltip.getActiveElements()[0];
+  //     const x = tooltipElement.element.x;
+  //     const y = tooltipElement.element.y;
+
+  //     // Sauvegarder le contexte pour restaurer après modifications
+  //     ctx.save();
+
+  //     // Dessiner la ligne verticale
+  //     ctx.beginPath();
+  //     ctx.moveTo(x, chart.scales.y.top);
+  //     ctx.lineTo(x, chart.scales.y.bottom);
+  //     ctx.lineWidth = 1;
+  //     ctx.strokeStyle = "rgba(128,128,128)";
+  //     ctx.stroke();
+
+  //     // Dessiner un cercle
+  //     ctx.beginPath();
+  //     ctx.arc(x, y, 5, 0, 2 * Math.PI);
+  //     ctx.fillStyle = "red";
+  //     ctx.fill();
+
+  //     // Restaurer le contexte
+  //     ctx.restore();
+  //   }
+  // },
 };
 
 ChartJS.register(verticalLinePlugin);
