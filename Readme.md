@@ -32,7 +32,7 @@ This is a simple MERN stack application that displays current prices of cryptocu
    - Add the following environment variables:
      ```
      SECRET=cryptoviewsecret
-     MONG_URI=
+     MONG_URI=mongodb+srv://salceanu:f34mqJgy29B61Mm7@labsdatabase.5913czx.mongodb.net/?retryWrites=true&w=majority&appName=labsdatabase
      PORT=5000
      ```
 
@@ -43,7 +43,7 @@ This is a simple MERN stack application that displays current prices of cryptocu
    ```
 
 5. **Access the Application:**
-   Open your browser and navigate to `http://localhost:3000`.
+   Open your browser and navigate to `http://localhost:5173`.
 
 **Project Structure:**
 
