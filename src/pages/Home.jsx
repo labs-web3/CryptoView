@@ -33,18 +33,26 @@ export default function Home() {
   const totalPages = Math.ceil(totalCoins / coinPerPage);
 
   const top = FetchCrypto(
-    `https://api.coingecko.com/api/v3/coins/markets?page=${pageNumber}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&sparkline=true&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
+    `https://api.coingecko.com/api/v3/coins/markets?page=${pageNumber}&vs_currency=usd&price_change_percentage=1h%2C24h%2C7d&sparkline=true&x_cg_demo_api_key=${
+      import.meta.env.VITE_X_CG_DEMO_API_KEY
+    }`
   );
   const trend = FetchCrypto(
-    "https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+    `https://api.coingecko.com/api/v3/search/trending?x_cg_demo_api_key=${
+      import.meta.env.VITE_X_CG_DEMO_API_KEY
+    }`
   );
 
   const categories = FetchCrypto(
-    "https://api.coingecko.com/api/v3/coins/categories?x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R"
+    `https://api.coingecko.com/api/v3/coins/categories?x_cg_demo_api_key=${
+      import.meta.env.VITE_X_CG_DEMO_API_KEY
+    }`
   );
 
   const query = FetchCrypto(
-    `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=CG-1t8kdBZJMA1YUmpjF5nypF6R`
+    `https://api.coingecko.com/api/v3/search?query=${searchText}&x_cg_demo_api_key=${
+      import.meta.env.VITE_X_CG_DEMO_API_KEY
+    }`
   );
 
   const handleCategories = () => {
