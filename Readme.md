@@ -34,6 +34,7 @@ This is a simple MERN stack application that displays current prices of cryptocu
      SECRET=cryptoviewsecret
      MONG_URI=mongodb+srv://salceanu:f34mqJgy29B61Mm7@labsdatabase.5913czx.mongodb.net/?retryWrites=true&w=majority&appName=labsdatabase
      PORT=5000
+     VITE_X_CG_DEMO_API_KEY=CG-1t8kdBZJMA1YUmpjF5nypF6R
      ```
 
 4. **Start the Server:**
