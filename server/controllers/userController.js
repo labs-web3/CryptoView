@@ -1,7 +1,7 @@
-import userModel from "../models/userModel.js";
-import mongoose from "mongoose";
-import process from "process";
-import jwt from "jsonwebtoken";
+const userModel = require("../models/userModel.js");
+const mongoose = require("mongoose");
+const process = require("process");
+const jwt = require("jsonwebtoken");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
@@ -161,4 +161,4 @@ const updateUser = async (req, res) => {
   res.status(200).json(user);
 };
 
-export { loginUser, createUser, getUsers, getUser, deleteUser, updateUser };
+module.exports = { loginUser, createUser, getUsers, getUser, deleteUser, updateUser };

@@ -1,6 +1,6 @@
-import TransactionsSchema from "../models/transactionsModel.js";
-import PortfolioSchema from "../models/userPortfolioModel.js";
-import mongoose from "mongoose";
+const TransactionsSchema = require("../models/transactionsModel.js");
+const PortfolioSchema = require("../models/userPortfolioModel.js");
+const mongoose = require("mongoose");
 
 const createTransaction = async (req, res) => {
   const { id, quantity, price, spent, date } = req.body;
@@ -76,4 +76,4 @@ const getTransactions = async (req, res) => {
   }
 };
 
-export { createTransaction, getTransactions };
+module.exports = { createTransaction, getTransactions };

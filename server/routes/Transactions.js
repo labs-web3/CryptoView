@@ -1,9 +1,9 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createTransaction,
   getTransactions,
-} from "../controllers/transactionsController.js";
-import requireAuth from "../middleware/requireAuth.js";
+} = require("../controllers/transactionsController.js");
+const requireAuth = require("../middleware/requireAuth.js");
 
 const router = express.Router();
 
@@ -13,4 +13,4 @@ router.post("/", createTransaction);
 
 router.get("/", getTransactions);
 
-export default router;
+module.exports = router;

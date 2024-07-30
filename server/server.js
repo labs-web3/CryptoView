@@ -1,13 +1,13 @@
 //Config express
-import express from "express";
-import dotenv from "dotenv";
-import process from "process";
-import workoutRoutes from "./routes/workouts.js";
-import usersRoutes from "./routes/users.js";
-import transactionsRoutes from "./routes/Transactions.js";
-import userPortfolio from "./routes/userPortfolio.js";
-import mongoose from "mongoose";
-import cors from "cors";
+const express = require("express");
+const dotenv = require("dotenv");
+const process = require("process");
+const workoutRoutes = require("./routes/workouts.js");
+const usersRoutes = require("./routes/users.js");
+const transactionsRoutes = require("./routes/Transactions.js");
+const userPortfolio = require("./routes/userPortfolio.js");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 dotenv.config();
 

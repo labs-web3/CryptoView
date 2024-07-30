@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
-import process from "process";
-import userModel from "../models/userModel.js";
+const jwt = require("jsonwebtoken");
+const process = require("process");
+const userModel = require("../models/userModel.js");
 
 const requireAuth = async (req, res, next) => {
   // verify authentication
@@ -22,4 +22,4 @@ const requireAuth = async (req, res, next) => {
   }
 };
 
-export default requireAuth;
+module.exports = requireAuth;

@@ -1,9 +1,9 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createPortfolio,
   getUserPortfolio,
-} from "../controllers/userPortfolioController.js";
-import requireAuth from "../middleware/requireAuth.js";
+} = require("../controllers/userPortfolioController.js");
+const requireAuth = require("../middleware/requireAuth.js");
 
 const router = express.Router();
 
@@ -13,4 +13,4 @@ router.post("/", createPortfolio);
 
 router.get("/", getUserPortfolio);
 
-export default router;
+module.exports = router;

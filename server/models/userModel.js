@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import argon2 from "argon2";
-import validator from "validator";
+const mongoose = require("mongoose");
+const argon2 = require("argon2");
+const validator = require("validator");
 
 const { Schema } = mongoose;
 
@@ -63,4 +63,4 @@ UserSchema.methods.valid = async function (email, password) {
   }
 };
 
-export default mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

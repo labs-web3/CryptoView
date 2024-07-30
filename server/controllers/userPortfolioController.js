@@ -1,5 +1,5 @@
-import PortfolioSchema from "../models/userPortfolioModel.js";
-import mongoose from "mongoose";
+const PortfolioSchema = require("../models/userPortfolioModel.js");
+const mongoose = require("mongoose");
 
 const createPortfolio = async (req, res) => {
   const { id } = req.body;
@@ -52,4 +52,4 @@ const getUserPortfolio = async (req, res) => {
   }
 };
 
-export { createPortfolio, getUserPortfolio };
+module.exports = { createPortfolio, getUserPortfolio };
